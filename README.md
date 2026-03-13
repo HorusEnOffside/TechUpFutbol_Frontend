@@ -43,11 +43,16 @@ https://www.figma.com/design/tDLGUeXBQ7ROjQXduZtsp3/TechCup-Futbol?node-id=0-1&t
 Permite el registro, inicio de sesión y gestión de perfiles deportivos.  
 *Funcionalidades*:
 - Registro mediante correo institucional/Gmail
+  
 ![login.png](images/login.png)
 - Sistema de roles
+  
 ![rol.png](images/rol.png)
-- Creación de perfil deportivo 
+
+- Creación de perfil deportivo
+  
 ![perfilDeportivo.png](images/perfilDeportivo.png)
+
 - Marcado de disponibilidad para fichaje
 ![disponibilidad.png](images/disponibilidad.png)
 
@@ -58,8 +63,11 @@ Permite el registro, inicio de sesión y gestión de perfiles deportivos.
 Solo el organizador puede crear, modificar y finalizar torneos.  
 *Funcionalidades:*
 - Creación de torneos con fechas, equipos y estados
+  
 ![creaciónTorneo.png](images/creaci%C3%B3nTorneo.png)
+
 - Configuración de detalles del torneo (reglamento, horarios, sanciones)
+  
 ![reglamentoTorneo.png](images/reglamentoTorneo.png)
 
 
@@ -70,7 +78,9 @@ Solo el organizador puede crear, modificar y finalizar torneos.
 Capitanes y jugadores pueden crear equipos, invitar miembros y gestionar la plantilla.  
 *Funcionalidades:*
 - Creación de equipos
+  
 ![creacionEquipos.png](images/creacionEquipos.png)
+
 - Invitación y aceptación/rechazo de jugadores
 - Control de plantilla y restricción de doble inscripción
 
@@ -82,6 +92,7 @@ Capitanes y jugadores pueden crear equipos, invitar miembros y gestionar la plan
 Capitanes pueden buscar y filtrar jugadores por diferentes criterios.  
 *Funcionalidades:*
 - Búsqueda por posición, semestre, edad, género, nombre, identificación
+  
 ![buscarJugadores.png](images/buscarJugadores.png)
 
 
@@ -92,7 +103,9 @@ Capitanes pueden buscar y filtrar jugadores por diferentes criterios.
 Gestión de comprobantes de pago y estado del proceso de inscripción.  
 *Funcionalidades:*
 - Subida de comprobante de pago
+  
 ![comprobantePago.png](images/comprobantePago.png)
+
 - Validación por organizador
 
 - Notificación de estado
@@ -103,8 +116,10 @@ Gestión de comprobantes de pago y estado del proceso de inscripción.
 
 ### 6. **Alineaciones y Formaciones**
 
-Módulo táctico para fijar alineaciones antes del partido.  
+Módulo táctico para fijar alineaciones antes del partido.
+
 ![alineaciones.png](images/alineaciones.png)
+
 *Funcionalidades:*
 - Gestión de alineación hasta una hora antes del partido
 - Visualización de diferentes formaciones
@@ -126,7 +141,9 @@ Registro de resultados, designación de árbitros y consulta de información de 
 ### 8. **Tabla de Posiciones y Estadísticas**
 
 Visualización automática de tabla de posiciones, goleadores y tarjetas.  
+
 ![estadisticas.png](images/estadisticas.png)
+
 *Funcionalidades:*
 - Generación automática de tabla
 - Estadísticas de jugadores y equipos
@@ -136,6 +153,7 @@ Visualización automática de tabla de posiciones, goleadores y tarjetas.
 ---
 
 ### 9. **Llaves Eliminatorias**
+
 ![llaves.png](images/llaves.png)
 
 Automatización de emparejamientos para la fase final.  
