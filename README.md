@@ -64,7 +64,7 @@ Solo el organizador puede crear, modificar y finalizar torneos.
 *Funcionalidades:*
 - Creación de torneos con fechas, equipos y estados
   
-![creaciónTorneo.png](images/creaci%C3%B3nTorneo.png)
+![creacionTorneo.png](images/creacio    nTorneo.png)
 
 - Configuración de detalles del torneo (reglamento, horarios, sanciones)
   
@@ -82,6 +82,8 @@ Capitanes y jugadores pueden crear equipos, invitar miembros y gestionar la plan
 ![creacionEquipos.png](images/creacionEquipos.png)
 
 - Invitación y aceptación/rechazo de jugadores
+  ![invitacionJugador.png](images/invitacionJugador.png)
+
 - Control de plantilla y restricción de doble inscripción
 
 
@@ -131,9 +133,15 @@ Módulo táctico para fijar alineaciones antes del partido.
 ### 7. **Gestión de Partidos**
 
 Registro de resultados, designación de árbitros y consulta de información de partidos.  
+
+
 *Funcionalidades:*
 - Registro de marcador, goleadores y tarjetas
+
+  ![creacionTorneo.png](images/Registro_partido.png)
+
 - Designación de árbitros, consulta de partidos asignados
+  ![creacionPartido.png](images/creacionPartido.png)
 
 
 ---
