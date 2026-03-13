@@ -43,19 +43,17 @@ https://www.figma.com/design/tDLGUeXBQ7ROjQXduZtsp3/TechCup-Futbol?node-id=0-1&t
 Permite el registro, inicio de sesión y gestión de perfiles deportivos.  
 *Funcionalidades*:
 - Registro mediante correo institucional/Gmail
-
+  
 ![login.png](images/login.png)
-
 - Sistema de roles
-
+  
 ![rol.png](images/rol.png)
 
-- Creación de perfil deportivo 
-
+- Creación de perfil deportivo
+  
 ![perfilDeportivo.png](images/perfilDeportivo.png)
 
 - Marcado de disponibilidad para fichaje
-
 ![disponibilidad.png](images/disponibilidad.png)
 
 ---
@@ -65,12 +63,12 @@ Permite el registro, inicio de sesión y gestión de perfiles deportivos.
 Solo el organizador puede crear, modificar y finalizar torneos.  
 *Funcionalidades:*
 - Creación de torneos con fechas, equipos y estados
-
+  
 ![creaciónTorneo.png](images/creaci%C3%B3nTorneo.png)
 
 - Configuración de detalles del torneo (reglamento, horarios, sanciones)
-
-- ![reglamentoTorneo.png](images/reglamentoTorneo.png)
+  
+![reglamentoTorneo.png](images/reglamentoTorneo.png)
 
 
 ---
@@ -80,7 +78,7 @@ Solo el organizador puede crear, modificar y finalizar torneos.
 Capitanes y jugadores pueden crear equipos, invitar miembros y gestionar la plantilla.  
 *Funcionalidades:*
 - Creación de equipos
-
+  
 ![creacionEquipos.png](images/creacionEquipos.png)
 
 - Invitación y aceptación/rechazo de jugadores
@@ -94,8 +92,8 @@ Capitanes y jugadores pueden crear equipos, invitar miembros y gestionar la plan
 Capitanes pueden buscar y filtrar jugadores por diferentes criterios.  
 *Funcionalidades:*
 - Búsqueda por posición, semestre, edad, género, nombre, identificación
-
-- ![buscarJugadores.png](images/buscarJugadores.png)
+  
+![buscarJugadores.png](images/buscarJugadores.png)
 
 
 ---
@@ -105,7 +103,7 @@ Capitanes pueden buscar y filtrar jugadores por diferentes criterios.
 Gestión de comprobantes de pago y estado del proceso de inscripción.  
 *Funcionalidades:*
 - Subida de comprobante de pago
-
+  
 ![comprobantePago.png](images/comprobantePago.png)
 
 - Validación por organizador
