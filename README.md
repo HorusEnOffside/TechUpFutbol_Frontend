@@ -1,20 +1,41 @@
-<<<<<<< HEAD
-# React + Vite
+# TECH CUP FÚTBOL - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Integrantes
 
-Currently, two official plugins are available:
+- **Andres Felipe Cardozo**
+- **Juan Camilo Cristancho**
+- **Juan David Gómez**
+- **Mariana Malagón**
+- **Sebastian Castillejo**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Contexto del proyecto
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Aplicación web para la gestión de torneos universitarios TECH CUP FÚTBOL.  
+Permite registrar equipos, validar pagos y buscar jugadores.  
+Incluye módulos para administración de torneos, gestión de usuarios y visualización de partidos.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# TechUpFutbol_Frontend
->>>>>>> 1f6aefca3cdee51a4add324889ea861034877c6e
+## Logotipo
+
+
+
+---
+
+## Manual de identidad visual
+
+
+
+---
+
+## Mockups del sistema
+
+https://www.figma.com/design/tDLGUeXBQ7ROjQXduZtsp3/TechCup-Futbol?node-id=0-1&t=sBdHvlgACD74lxO5-1
+
+
+
+## Módulos Web (explicación y mockups)
+
+
