@@ -39,25 +39,28 @@ https://www.figma.com/design/tDLGUeXBQ7ROjQXduZtsp3/TechCup-Futbol?node-id=0-1&t
 
 ### Inicio para mostrar a los usuarios antes de que inicien sesión:
 [inicioTech.mp4](images/inicioTech.mp4)
-
+![inicio1.png](images/inicio1.png)
+![inicio2.png](images/inicio2.png)
+![inicio3.png](images/inicio3.png)
+El incio cuenta con un vídeo de momentos destacados de torneos anteriores, acompañado de un mensaje de bienvenida y un botón para iniciar sesión o registrarse.
 
 ### 1. **Autenticación y Gestión de Usuarios**
 
 Permite el registro, inicio de sesión y gestión de perfiles deportivos.  
 *Funcionalidades*:
-- Registro mediante correo institucional/Gmail
-  
-![login.png](images/login.png)
-- Sistema de roles
-  
-![rol.png](images/rol.png)
+- Inicio de sesión:
+  ![inicioSesion.png](images/inicioSesion.png)
+  El inicio de sesión contiene un carrusel de imágenes de torneos anteriores, junto con un formulario para ingresar correo electrónico y contraseña. También incluye un enlace para recuperar la contraseña y otro para registrarse.
+- Registro de usuarios:
+Va por pasos mientras escogen su rol, ingresan su información, crean usuarios y contraseña y finalizan:
+![registro.png](images/registro.png)
+![registro2.png](images/registro2.png)
+![registro3.png](images/registro3.png)
+![registro4.png](images/registro4.png)
+![registro5.png](images/registro5.png)
 
-- Creación de perfil deportivo
-  
-![perfilDeportivo.png](images/perfilDeportivo.png)
-
-- Marcado de disponibilidad para fichaje
-![disponibilidad.png](images/disponibilidad.png)
+Con sus flujos alternos:
+![FARegistro.png](images/FARegistro.png)
 
 ---
 
