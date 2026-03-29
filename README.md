@@ -70,12 +70,13 @@ Solo el organizador puede crear, modificar y finalizar torneos.
 *Funcionalidades:*
 - Creación de torneos con fechas, equipos y estados
   
-![creacionTorneo.png](images/creacio    nTorneo.png)
+![creacionTorneo.png](images/creacionTorneo.png)
+![creacionTorneo.png](images/creacionTorneo2.png)
 
 - Configuración de detalles del torneo (reglamento, horarios, sanciones)
   
 ![reglamentoTorneo.png](images/reglamentoTorneo.png)
-
+![reglamentoTorneo.png](images/reglamentoTorneo2.png)
 
 ---
 
@@ -86,12 +87,12 @@ Capitanes y jugadores pueden crear equipos, invitar miembros y gestionar la plan
 - Creación de equipos
   
 ![creacionEquipos.png](images/creacionEquipos.png)
+![creacionEquipos.png](images/creacionEquipos2.png)
 
-- Invitación y aceptación/rechazo de jugadores
-  ![invitacionJugador.png](images/invitacionJugador.png)
 
 - Control de plantilla y restricción de doble inscripción
 
+![creacionPlantilla.png](images/creacionPlantilla.png)
 
 ---
 
@@ -101,8 +102,8 @@ Capitanes pueden buscar y filtrar jugadores por diferentes criterios.
 *Funcionalidades:*
 - Búsqueda por posición, semestre, edad, género, nombre, identificación
   
-![buscarJugadores.png](images/buscarJugadores.png)
-
+  ![invitacionJugador.png](images/invitacionJugadores.png)
+  ![invitacionJugador.png](images/invitacionJugadores2.png)
 
 ---
 
@@ -120,13 +121,14 @@ Gestión de comprobantes de pago y estado del proceso de inscripción.
 
 ![estadoPago.png](images/estadoPago.png)
 
+![Pagos.png](images/Pagos.png)
 ---
 
 ### 6. **Alineaciones y Formaciones**
 
 Módulo táctico para fijar alineaciones antes del partido.
 
-![alineaciones.png](images/alineaciones.png)
+![creacionPlantilla.png](images/creacionPlantilla2.png)
 
 *Funcionalidades:*
 - Gestión de alineación hasta una hora antes del partido
@@ -144,7 +146,7 @@ Registro de resultados, designación de árbitros y consulta de información de 
 *Funcionalidades:*
 - Registro de marcador, goleadores y tarjetas
 
-  ![creacionTorneo.png](images/Registro_partido.png)
+  ![creacionTorneo.png](images/creacionTorneo3.png)
 
 - Designación de árbitros, consulta de partidos asignados
   ![creacionPartido.png](images/creacionPartido.png)
@@ -158,6 +160,7 @@ Visualización automática de tabla de posiciones, goleadores y tarjetas.
 
 ![estadisticas.png](images/estadisticas.png)
 
+![estadisticas.png](images/estadisticas2.png)
 *Funcionalidades:*
 - Generación automática de tabla
 - Estadísticas de jugadores y equipos
@@ -169,6 +172,7 @@ Visualización automática de tabla de posiciones, goleadores y tarjetas.
 ### 9. **Llaves Eliminatorias**
 
 ![llaves.png](images/llaves.png)
+![llaves.png](images/llaves2.png)
 
 Automatización de emparejamientos para la fase final.  
 *Funcionalidades:*
