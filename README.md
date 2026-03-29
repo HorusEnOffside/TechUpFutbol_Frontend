@@ -37,6 +37,9 @@ https://www.figma.com/design/tDLGUeXBQ7ROjQXduZtsp3/TechCup-Futbol?node-id=0-1&t
 
 ## Módulos de la Aplicación Web
 
+### Inicio para mostrar a los usuarios antes de que inicien sesión:
+[inicioTech.mp4](images/inicioTech.mp4)
+
 
 ### 1. **Autenticación y Gestión de Usuarios**
 
