@@ -1,5 +1,25 @@
 # TECH CUP FÚTBOL - Frontend
 
+## Índice
+
+- [Integrantes](#integrantes)
+- [Contexto del proyecto](#contexto-del-proyecto)
+- [Logotipo](#logotipo)
+- [Manual de identidad visual](#manual-de-identidad-visual)
+- [Mockups del sistema](#mockups-del-sistema)
+- [Módulos de la Aplicación Web](#módulos-de-la-aplicación-web)
+  - [Inicio (antes de iniciar sesión)](#inicio-para-mostrar-a-los-usuarios-antes-de-que-inicien-sesión)
+  - [1. Autenticación y Gestión de Usuarios](#1-autenticación-y-gestión-de-usuarios)
+  - [2. Gestión de Torneos](#2-gestión-de-torneos)
+  - [3. Gestión de Equipos](#3-gestión-de-equipos)
+  - [4. Búsqueda de Jugadores](#4-búsqueda-de-jugadores)
+  - [5. Pagos e Inscripción de Equipos](#5-pagos-e-inscripción-de-equipos)
+  - [6. Alineaciones y Formaciones](#6-alineaciones-y-formaciones)
+  - [7. Gestión de Partidos](#7-gestión-de-partidos)
+  - [8. Tabla de Posiciones y Estadísticas](#8-tabla-de-posiciones-y-estadísticas)
+  - [9. Llaves Eliminatorias](#9-llaves-eliminatorias)
+- [Sustento y justificación técnica](#sustento-y-justificación-técnica)
+
 ## Integrantes
 
 - **Andres Felipe Cardozo**
@@ -26,23 +46,29 @@ Incluye módulos para administración de torneos, gestión de usuarios y visuali
 
 ## Manual de identidad visual
 
-https://pruebacorreoescuelaingeduco.sharepoint.com/:p:/s/DOSW-2026-1/IQA1oPTMzFDaSpldO_fjkOzEAQrW69M2W3Ogkj8GeMJL3mQ?e=SzFiPT
+[Manual de identidad visual (SharePoint)](https://pruebacorreoescuelaingeduco.sharepoint.com/:p:/s/DOSW-2026-1/IQA1oPTMzFDaSpldO_fjkOzEAQrW69M2W3Ogkj8GeMJL3mQ?e=SzFiPT)  
+Este enlace dirige a la presentación oficial con lineamientos de marca, uso de colores y elementos visuales.
 
 ---
 
 ## Mockups del sistema
 
-https://www.figma.com/design/tDLGUeXBQ7ROjQXduZtsp3/TechCup-Futbol?node-id=0-1&t=sBdHvlgACD74lxO5-1
+[Mockups del sistema en Figma](https://www.figma.com/design/tDLGUeXBQ7ROjQXduZtsp3/TechCup-Futbol?node-id=0-1&t=sBdHvlgACD74lxO5-1)  
+Este enlace permite revisar el diseño base, pantallas y flujo visual de la aplicación.
 
 
 ## Módulos de la Aplicación Web
 
 ### Inicio para mostrar a los usuarios antes de que inicien sesión:
 [inicioTech.mp4](images/inicioTech.mp4)
+
 ![inicio1.png](images/inicio1.png)
+
 ![inicio2.png](images/inicio2.png)
+
 ![inicio3.png](images/inicio3.png)
-El incio cuenta con un vídeo de momentos destacados de torneos anteriores, acompañado de un mensaje de bienvenida y un botón para iniciar sesión o registrarse.
+
+El inicio cuenta con un video de momentos destacados de torneos anteriores, acompañado de un mensaje de bienvenida y un botón para iniciar sesión o registrarse.
 
 ### 1. **Autenticación y Gestión de Usuarios**
 
@@ -50,13 +76,19 @@ Permite el registro, inicio de sesión y gestión de perfiles deportivos.
 *Funcionalidades*:
 - Inicio de sesión:
   ![inicioSesion.png](images/inicioSesion.png)
+
   El inicio de sesión contiene un carrusel de imágenes de torneos anteriores, junto con un formulario para ingresar correo electrónico y contraseña. También incluye un enlace para recuperar la contraseña y otro para registrarse.
 - Registro de usuarios:
 Va por pasos mientras escogen su rol, ingresan su información, crean usuarios y contraseña y finalizan:
+
 ![registro.png](images/registro.png)
+
 ![registro2.png](images/registro2.png)
+
 ![registro3.png](images/registro3.png)
+
 ![registro4.png](images/registro4.png)
+
 ![registro5.png](images/registro5.png)
 
 Con sus flujos alternos:
@@ -71,11 +103,13 @@ Solo el organizador puede crear, modificar y finalizar torneos.
 - Creación de torneos con fechas, equipos y estados
   
 ![creacionTorneo.png](images/creacionTorneo.png)
+
 ![creacionTorneo.png](images/creacionTorneo2.png)
 
 - Configuración de detalles del torneo (reglamento, horarios, sanciones)
   
 ![reglamentoTorneo.png](images/reglamentoTorneo.png)
+
 ![reglamentoTorneo.png](images/reglamentoTorneo2.png)
 
 ---
@@ -87,6 +121,7 @@ Capitanes y jugadores pueden crear equipos, invitar miembros y gestionar la plan
 - Creación de equipos
   
 ![creacionEquipos.png](images/creacionEquipos.png)
+
 ![creacionEquipos.png](images/creacionEquipos2.png)
 
 
@@ -103,6 +138,7 @@ Capitanes pueden buscar y filtrar jugadores por diferentes criterios.
 - Búsqueda por posición, semestre, edad, género, nombre, identificación
   
   ![invitacionJugador.png](images/invitacionJugadores.png)
+
   ![invitacionJugador.png](images/invitacionJugadores2.png)
 
 ---
@@ -121,7 +157,7 @@ Gestión de comprobantes de pago y estado del proceso de inscripción.
 
 ![estadoPago.png](images/estadoPago.png)
 
-![Pagos.png](images/Pagos.png)
+![Pagos.png](images/pagos.png)
 ---
 
 ### 6. **Alineaciones y Formaciones**
@@ -161,6 +197,7 @@ Visualización automática de tabla de posiciones, goleadores y tarjetas.
 ![estadisticas.png](images/estadisticas.png)
 
 ![estadisticas.png](images/estadisticas2.png)
+
 *Funcionalidades:*
 - Generación automática de tabla
 - Estadísticas de jugadores y equipos
@@ -172,11 +209,24 @@ Visualización automática de tabla de posiciones, goleadores y tarjetas.
 ### 9. **Llaves Eliminatorias**
 
 ![llaves.png](images/llaves.png)
+
 ![llaves.png](images/llaves2.png)
 
 Automatización de emparejamientos para la fase final.  
 *Funcionalidades:*
 - Generación automática de llaves de eliminación
+
+
+---
+
+## Sustento y justificación técnica
+
+En este repositorio no solo se encuentran los artefactos funcionales del frontend, también el criterio técnico detrás de su diseño y evolución.
+
+- Cada requerimiento se discutió y organizó priorizando bajo acoplamiento, alta cohesión y facilidad de mantenimiento.
+- Los módulos y funcionalidades se definieron a partir de los flujos críticos del torneo estudiantil (registro, equipos, pagos, partidos y fases eliminatorias).
+- La estructura de interfaz y la lógica por roles se fundamentan en principios de seguridad, usabilidad y trazabilidad de acciones.
+- La base técnica con React y Vite permite iteración rápida, escalabilidad del código y una experiencia consistente para usuario final y equipo de desarrollo.
 
 
 ---
