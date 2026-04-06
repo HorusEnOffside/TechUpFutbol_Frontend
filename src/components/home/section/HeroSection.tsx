@@ -1,5 +1,6 @@
 import { Zap, ArrowRight, Calendar } from "lucide-react";
 import logoTechCup from "../../../assets/logo.png";
+import carruselLogin1 from "../../../assets/carruselLogin1.jpeg";
 import { HeroHighlight } from "../HeroHighlight";
 import { HeroTitle } from "../HeroTitle";
 import { HeroDescription } from "../HeroDescription";
@@ -8,9 +9,15 @@ import { HeroImage } from "../HeroImage";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen overflow-hidden" style={{
-      background: 'linear-gradient(135deg, #39D17D 0%, #17A65B 35%, #144C9F 70%, #071F4A 100%)'
-    }}>
+    <section
+      className="relative min-h-screen overflow-hidden"
+      style={{
+        backgroundImage: `linear-gradient(135deg, rgba(57,209,125,0.85) 0%, rgba(23,166,91,0.75) 35%, rgba(20,76,159,0.65) 70%, rgba(7,31,74,0.6) 100%), url(${carruselLogin1})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 flex flex-col lg:flex-row items-center justify-between gap-16 min-h-[calc(100vh-200px)]">
         {/* Left Content */}

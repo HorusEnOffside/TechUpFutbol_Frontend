@@ -2,6 +2,8 @@ import React from "react";
 import AboutTitle from "../AboutTitle";
 import AboutStep from "../AboutStep";
 
+import carruselLogin3 from "../../../assets/carruselLogin3.jpeg";
+
 interface Step {
   title: string;
   description: string;
@@ -34,9 +36,16 @@ const defaultSteps: Step[] = [
 
 export function ComoParticiparSection({ steps = defaultSteps, className = "" }: ComoParticiparSectionProps) {
   return (
-    <div id="como-participar" className={`relative rounded-3xl overflow-hidden max-w-7xl mx-auto ${className}`} style={{
-      background: 'linear-gradient(135deg, #39D17D 0%, #17A65B 35%, #144C9F 70%, #071F4A 100%)'
-    }}>
+    <div
+      id="como-participar"
+      className={`relative rounded-3xl overflow-hidden max-w-7xl mx-auto ${className}`}
+      style={{
+        backgroundImage: `linear-gradient(135deg, rgba(57,209,125,0.85) 0%, rgba(23,166,91,0.75) 35%, rgba(20,76,159,0.65) 70%, rgba(7,31,74,0.6) 100%), url(${carruselLogin3})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full -ml-24 -mb-24"></div>
