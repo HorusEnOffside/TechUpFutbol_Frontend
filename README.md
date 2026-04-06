@@ -36,6 +36,36 @@ Aplicación web para la gestión de torneos universitarios TECH CUP FÚTBOL.
 Permite registrar equipos, validar pagos y buscar jugadores.  
 Incluye módulos para administración de torneos, gestión de usuarios y visualización de partidos.
 
+## Requisitos
+
+- Node.js (recomendado v18 o superior)
+- npm (v9 o superior)
+
+## Pasos para correr el proyecto localmente
+
+1. Clona el repositorio o descarga el código fuente.
+2. Abre una terminal y navega a la carpeta del proyecto.
+3. Instala las dependencias:
+   ```
+   npm install
+   ```
+4. Inicia el servidor de desarrollo:
+   ```
+   npm run dev
+   ```
+5. Abre tu navegador en la URL que aparece en la terminal (por ejemplo, http://localhost:5173).
+
+Opcional:
+- Para revisar el código con ESLint:
+  ```
+  npm run lint
+  ```
+- Para generar la build de producción:
+  ```
+  npm run build
+  ```
+
+
 ---
 
 ## Logotipo
