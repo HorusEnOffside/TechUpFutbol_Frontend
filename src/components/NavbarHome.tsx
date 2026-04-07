@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import { LogIn, UserPlus } from "lucide-react";
 import logoMain from "../assets/logo.png";
 
@@ -7,6 +7,7 @@ import logoMain from "../assets/logo.png";
 
 export function HomeNavbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <nav className="bg-transparent backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 shadow-sm">
@@ -14,7 +15,19 @@ export function HomeNavbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <img src={logoMain} alt="Logo Tech Cup Fútbol" className="h-16 w-auto" />
+            <button
+              onClick={() => {
+                if (location.pathname === "/") {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                } else {
+                  navigate("/");
+                }
+              }}
+              className="flex items-center gap-2 focus:outline-none cursor-pointer"
+              aria-label="Ir a la página principal"
+            >
+              <img src={logoMain} alt="Logo Tech Cup Fútbol" className="h-16 w-auto" />
+            </button>
           </div>
 
           {/* Navigation Links */}

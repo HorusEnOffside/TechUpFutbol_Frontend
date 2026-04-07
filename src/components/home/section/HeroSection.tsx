@@ -1,5 +1,5 @@
 import { Zap, ArrowRight, Calendar } from "lucide-react";
-import logoTechCup from "../../../assets/logo.png";
+import logoTechCup from "../../../assets/logoBlanco.png";
 import carruselLogin1 from "../../../assets/carruselLogin1.jpeg";
 import { HeroHighlight } from "../HeroHighlight";
 import { HeroTitle } from "../HeroTitle";

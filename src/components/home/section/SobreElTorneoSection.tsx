@@ -1,7 +1,7 @@
 import React from "react";
 import AboutTitle from "../AboutTitle";
 import AboutDescription from "../AboutDescription";
-import { Users, Trophy, Shield } from "lucide-react";
+import { Users, Trophy, Shield, Monitor, UserCog, Star } from "lucide-react";
 import CardAboutFeature from "../CardAboutFeature";
 
 
@@ -48,9 +48,33 @@ export function SobreElTorneoSection({ className = "" }: SobreElTorneoSectionPro
             iconBg="bg-gradient-to-br from-[#144C9F] to-[#071F4A]"
           />
           <CardAboutFeature
-            icon={<Shield className="w-8 h-8 text-white" />}
+            icon={<Monitor className="w-8 h-8 text-white" />}
             title="Plataforma Digital"
             description="Gestión completa de inscripciones, pagos, calendario y estadísticas en un solo lugar."
+            borderColor="border-gray-100"
+            hoverColor="hover:border-[#17A65B]"
+            iconBg="bg-gradient-to-br from-[#17A65B] to-[#144C9F]"
+          />
+          <CardAboutFeature
+            icon={<UserCog className="w-8 h-8 text-white" />}
+            title="Cada rol tiene su propio menú"
+            description="Si eres jugador, árbitro u organizador, tendrás tus propios espacios personalizados."
+            borderColor="border-gray-100"
+            hoverColor="hover:border-[#17A65B]"
+            iconBg="bg-gradient-to-br from-[#17A65B] to-[#144C9F]"
+          />
+          <CardAboutFeature
+            icon={<Star className="w-8 h-8 text-white" />}
+            title="Demuestra tu talento en un día"
+            description="Prepárate con tu equipo, juega todos los partidos en un día y conviértete en el campeón."
+            borderColor="border-gray-100"
+            hoverColor="hover:border-[#17A65B]"
+            iconBg="bg-gradient-to-br from-[#17A65B] to-[#144C9F]"
+          />
+          <CardAboutFeature
+            icon={<Shield className="w-8 h-8 text-white" />}
+            title="Seguridad de tus datos"
+            description="No te preocupes por tus datos personales, tenemos seguridad integrada que respalda la confidencialidad. "
             borderColor="border-gray-100"
             hoverColor="hover:border-[#17A65B]"
             iconBg="bg-gradient-to-br from-[#17A65B] to-[#144C9F]"
