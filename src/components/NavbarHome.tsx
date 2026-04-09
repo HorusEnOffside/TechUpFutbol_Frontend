@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router";
 import { LogIn, UserPlus } from "lucide-react";
 import logoMain from "../assets/logo.png";
+import teamBack from "../assets/match1.jpeg";
 
 // Si en el futuro el Navbar recibe props, define aquí la interfaz
 // interface NavbarProps {}
