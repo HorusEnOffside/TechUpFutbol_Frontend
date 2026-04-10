@@ -97,3 +97,8 @@ buildNumber.properties
  # Sublime Text
  *.sublime-workspace
  *.sublime-project
+
+
+.idea
+*.iml
+
