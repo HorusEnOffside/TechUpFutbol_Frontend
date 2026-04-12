@@ -4,6 +4,7 @@ import { AuthenticatedLayout } from '../components/AuthenticatedLayout';
 import { Home } from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import { GruposPage } from '../pages/GruposPage';
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
   {
     path: '/register',
     element: <LandingLayout><Register /></LandingLayout>,
+  },
+  {
+    path: '/grupos',
+    element: <GruposPage />,
   },
   {
     path: '/app',
