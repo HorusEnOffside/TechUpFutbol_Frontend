@@ -1,46 +1,66 @@
 import axios from 'axios';
-import type { AxiosInstance } from 'axios';
-import type { AxiosResponse } from 'axios';
+import type { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import type { AppError, ApiError, NetworkError } from '../types/api.types';
 
-const apiBaseUrl = (import.meta as ImportMeta & { env: { VITE_API_BASE_URL: string } }).env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
+const TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT ?? 10000);
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: apiBaseUrl,
-  timeout: 10000, // 10 segundos
+  baseURL: BASE_URL,
+  timeout: TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
+    Accept: 'application/json',
   },
 });
 
-export default apiClient;
+// ─── Request interceptor — inject auth token ──────────────────────────────────
 
-
-// Interceptor de request para inyectar token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     if (token && config.headers) {
-      (config.headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error: AxiosError) => Promise.reject(error),
 );
 
+// ─── Response interceptor — normalize errors (no alerts) ─────────────────────
 
-// Interceptor de response para manejo centralizado de errores
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => response, // No normaliza aquí, para mantener el tipado
-  (error) => {
-    if (error.response?.data?.message) {
-      alert(error.response.data.message);
-    } else if (error.response) {
-      alert('Error de servidor');
-    } else if (error.request) {
-      alert('No hay respuesta del servidor');
-    } else {
-      alert('Error al configurar la petición');
-    }
-    return Promise.reject(error);
-  }
+  (response: AxiosResponse) => response,
+  (error: AxiosError<{ message?: string; errors?: Record<string, string[]> }>) => {
+    const appError = buildAppError(error);
+    return Promise.reject(appError);
+  },
 );
+
+function buildAppError(
+  error: AxiosError<{ message?: string; errors?: Record<string, string[]> }>,
+): AppError {
+  if (!error.response) {
+    const networkError: NetworkError = {
+      message: error.message || 'No se pudo conectar con el servidor.',
+      isNetworkError: true,
+    };
+    return networkError;
+  }
+
+  const { status, data } = error.response;
+
+  if (status === 401) {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  }
+
+  const apiError: ApiError = {
+    message: data?.message ?? 'Ha ocurrido un error inesperado.',
+    statusCode: status,
+    errors: data?.errors,
+  };
+  return apiError;
+}
+
+export default apiClient;

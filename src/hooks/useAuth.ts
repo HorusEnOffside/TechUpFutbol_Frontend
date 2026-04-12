@@ -1,64 +1,92 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import AuthService from '../services/auth.service';
 import type { LoginRequest, LoginResponse } from '../types/auth';
+import type { AppError } from '../types/api.types';
 
-// Hook para login de usuario
-export function useLogin() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [networkError, setNetworkError] = useState<string | null>(null);
-  const [businessError, setBusinessError] = useState<string | null>(null);
+interface UseLoginReturn {
+  user: LoginResponse | null;
+  isLoading: boolean;
+  error: string | null;
+  isNetworkError: boolean;
+  login: (credentials: LoginRequest) => Promise<LoginResponse | null>;
+  logout: () => void;
+  reset: () => void;
+}
+
+// ─── useLogin ─────────────────────────────────────────────────────────────────
+
+export function useLogin(): UseLoginReturn {
   const [user, setUser] = useState<LoginResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isNetworkError, setIsNetworkError] = useState(false);
 
-  const login = async (credentials: LoginRequest) => {
-    setLoading(true);
+  const login = useCallback(async (credentials: LoginRequest): Promise<LoginResponse | null> => {
+    setIsLoading(true);
     setError(null);
-    setNetworkError(null);
-    setBusinessError(null);
+    setIsNetworkError(false);
+
     try {
       const data = await AuthService.login(credentials);
       setUser(data);
       return data;
-    } catch (err: any) {
-      // Axios error: err.response = error de negocio, err.request = error de red
-      if (err.response) {
-        setBusinessError(err.response.data?.message || 'Error de negocio');
-        setError(err.response.data?.message || 'Error de negocio');
-      } else if (err.request) {
-        setNetworkError('No hay respuesta del servidor');
-        setError('No hay respuesta del servidor');
+    } catch (err) {
+      const appError = err as AppError;
+      if ('isNetworkError' in appError) {
+        setIsNetworkError(true);
+        setError('No se pudo conectar con el servidor. Verifica tu conexión.');
       } else {
-        setError('Error desconocido');
+        setError(appError.message ?? 'Error al iniciar sesión.');
       }
-      throw err;
+      return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  };
+  }, []);
 
-  return { user, loading, error, networkError, businessError, login };
+  const logout = useCallback(() => {
+    AuthService.logout();
+    setUser(null);
+    setError(null);
+    setIsNetworkError(false);
+  }, []);
+
+  const reset = useCallback(() => {
+    setError(null);
+    setIsNetworkError(false);
+  }, []);
+
+  return { user, isLoading, error, isNetworkError, login, logout, reset };
 }
 
-// Hook para refrescar el token JWT
-export function useRefreshToken() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [tokenData, setTokenData] = useState<LoginResponse | null>(null);
+// ─── useRefreshToken ──────────────────────────────────────────────────────────
 
-  const refresh = async (token: string) => {
-    setLoading(true);
+interface UseRefreshTokenReturn {
+  tokenData: LoginResponse | null;
+  isLoading: boolean;
+  error: string | null;
+  refresh: (token: string) => Promise<LoginResponse | null>;
+}
+
+export function useRefreshToken(): UseRefreshTokenReturn {
+  const [tokenData, setTokenData] = useState<LoginResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const refresh = useCallback(async (token: string): Promise<LoginResponse | null> => {
+    setIsLoading(true);
     setError(null);
     try {
       const data = await AuthService.refresh(token);
       setTokenData(data);
       return data;
-    } catch (err) {
-      setError('No se pudo refrescar el token');
-      throw err;
+    } catch {
+      setError('No se pudo refrescar la sesión.');
+      return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  };
+  }, []);
 
-  return { tokenData, loading, error, refresh };
+  return { tokenData, isLoading, error, refresh };
 }
