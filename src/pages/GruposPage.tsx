@@ -1,19 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
-
-// Escala el canvas de 905×653 para llenar el viewport manteniendo proporciones
-function useGruposScale() {
-  const [scale, setScale] = useState(1);
-  useEffect(() => {
-    function update() {
-      setScale(Math.min(window.innerWidth / 905, window.innerHeight / 653));
-    }
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
-  return scale;
-}
 import { GruposCard, LlavesCard } from '../features/grupos';
 import type { Group, Bracket, GruposTab } from '../features/grupos';
 import '../styles/grupos.css';
@@ -103,20 +89,19 @@ function UserIcon() {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export function GruposPage() {
   const navigate = useNavigate();
-  const scale = useGruposScale();
   const [activeTab, setActiveTab] = useState<GruposTab>('GRUPOS');
   const [groupIndex, setGroupIndex] = useState(0);
   const [bracketIndex, setBracketIndex] = useState(0);
 
   return (
     <div className="grupos-wrapper">
-      <div className="grupos-page" style={{ transform: `scale(${scale})`, transformOrigin: 'center center' }}>
+      <div className="grupos-page">
         <div className="grupos-bg" style={{ backgroundImage: `url(${bgImage})` }} />
         <div className="grupos-left-overlay" />
 
         {/* ── Top bar ── */}
         <header className="grupos-topbar">
-          <img src={techcupLogo} alt="TechCup Fútbol" className="grupos-topbar-logo" />
+          <img src={techcupLogo} alt="TechCup Fútbol" className="grupos-topbar-logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/player/menu')} />
           <button className="grupos-avatar" onClick={() => navigate('/login')} aria-label="Perfil">
             <UserIcon />
           </button>
