@@ -73,7 +73,7 @@ export function TorneoActualSection() {
             <button
               className="w-full mt-8 bg-gradient-to-r from-[#39D17D] to-[#17A65B] text-white py-5 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-[#39D17D]/50 transition-all duration-300 hover:scale-105 transform"
               aria-label="Inscribir equipo al torneo"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/auth")}
             >
               Inscribir mi Equipo Ahora
             </button>

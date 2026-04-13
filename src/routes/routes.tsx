@@ -3,8 +3,7 @@ import { LandingLayout } from '../components/LandingLayout';
 import { AuthenticatedLayout } from '../components/AuthenticatedLayout';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { Home } from '../pages/Home';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
+import AuthContainer from '../pages/AuthContainer';
 import { GruposPage } from '../pages/GruposPage';
 import { PlayerHomePage } from '../pages/PlayerHomePage';
 import { PlayerMenuPage } from '../pages/PlayerMenuPage';
@@ -19,12 +18,8 @@ export const router = createBrowserRouter([
     element: <LandingLayout><Home /></LandingLayout>,
   },
   {
-    path: '/login',
-    element: <LandingLayout><Login /></LandingLayout>,
-  },
-  {
-    path: '/register',
-    element: <LandingLayout><Register /></LandingLayout>,
+    path: '/auth',
+    element: <LandingLayout><AuthContainer /></LandingLayout>,
   },
   {
     path: '/grupos',
