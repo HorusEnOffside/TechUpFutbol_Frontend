@@ -8,7 +8,7 @@ import { StandingsSection } from "../components/home/section/StandingsSection";
 
 export function Home() {
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden bg-white">
       
 
       {/* PRIMERA PARTE INFORMATIVA*/}
