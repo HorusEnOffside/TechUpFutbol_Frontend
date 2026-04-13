@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 
 interface LoginFormProps {
@@ -7,6 +8,7 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -40,7 +42,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
     setPasswordError(passErr);
     if (emailErr || passErr) return;
     setLoading(true);
-    setTimeout(() => setLoading(false), 1000); // Simulación
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/player");
+    }, 1000); // Simulación
   };
 
   return (
