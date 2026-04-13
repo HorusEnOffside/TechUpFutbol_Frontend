@@ -100,7 +100,7 @@
 /* texto bienvenida home */
 .player-main {
   position: absolute;
-  top: 28%;
+  top: 35%;
   left: 22.32%;
   width: 53.37%;
   z-index: 2;
@@ -110,7 +110,7 @@
   color: #fff;
   text-align: center;
   font-family: 'Russo One', sans-serif;
-  font-size: clamp(20px, 3.98vw, 54px);
+  font-size: clamp(26px, 5vw, 70px);
   font-weight: 400;
   line-height: 1.0;
   letter-spacing: 1px;
@@ -223,6 +223,9 @@
 .player-section-img--tabla   { width: 10.57%; top: 32%; }
 .player-section-img--stats   { width: 33.15%; top: 22%; }
 .player-section-img--pagos   { width: 12.1%;  top: 37%; }
+
+/* imagen árbitro */
+.player-section-img--arbitro { width: 38%; top: 18%; left: 50%; }
 
 /* logo capitán */
 .player-section-img--capi {
