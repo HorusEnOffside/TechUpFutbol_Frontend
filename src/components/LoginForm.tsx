@@ -1,0 +1,115 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { Mail, Lock, ArrowRight } from "lucide-react";
+
+interface LoginFormProps {
+  onSwitch: () => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const validateEmail = (value: string) => {
+    if (!value) return "El correo es obligatorio";
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) return "Correo inválido";
+    return null;
+  };
+  const validatePassword = (value: string) => {
+    if (!value) return "La contraseña es obligatoria";
+    if (value.length < 6) return "Mínimo 6 caracteres";
+    return null;
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setEmailError(validateEmail(e.target.value));
+  };
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setPasswordError(validatePassword(e.target.value));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const emailErr = validateEmail(email);
+    const passErr = validatePassword(password);
+    setEmailError(emailErr);
+    setPasswordError(passErr);
+    if (emailErr || passErr) return;
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/player");
+    }, 1000); // Simulación
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto">
+      <h2 className="text-4xl font-bold mb-3 text-center text-[#071F4A] ">Iniciar Sesión</h2>
+      
+      <h3 className="text-center text-sm mb-6 text-gray-600">Accede a tu cuenta de Tech Cup</h3>
+      <div className="mb-4">
+        <label className="block mb-1 font-semibold text-[#071F4A]">Correo Electrónico</label>
+        <div className="flex items-center bg-[#F7F9FA] border border-gray-200 rounded-xl px-4 py-3">
+          <Mail className="w-5 h-5 text-gray-400 mr-2" />
+          <input
+            type="text"
+            className={`flex-1 bg-transparent outline-none border-none text-[#071F4A] placeholder-gray-400 font-medium ${emailError ? 'border-red-400' : ''}`}
+            value={email}
+            onChange={handleEmailChange}
+            autoComplete="email"
+            placeholder="correo@escuelaing.edu.co"
+          />
+        </div>
+        {emailError && <div className="text-red-600 text-xs mt-1">{emailError}</div>}
+      </div>
+      <div className="mb-6">
+        <label className="block mb-1 font-semibold text-[#071F4A]">Contraseña</label>
+        <div className="flex items-center bg-[#F7F9FA] border border-gray-200 rounded-xl px-4 py-3">
+          <Lock className="w-5 h-5 text-gray-400 mr-2" />
+          <input
+            type="password"
+            className={`flex-1 bg-transparent outline-none border-none text-[#071F4A] placeholder-gray-400 font-medium ${passwordError ? 'border-red-400' : ''}`}
+            value={password}
+            onChange={handlePasswordChange}
+            autoComplete="current-password"
+            placeholder="••••••••"
+          />
+        </div>
+        {passwordError && <div className="text-red-600 text-xs mt-1">{passwordError}</div>}
+      </div>
+      <button
+        type="submit"
+        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#17A65B] to-[#17A65B] text-white font-bold py-3 rounded-2xl text-lg shadow-none hover:opacity-90 transition disabled:opacity-60 mt-2"
+        disabled={loading || !!emailError || !!passwordError || !email || !password}
+      >
+        <ArrowRight className="w-5 h-5" />
+        {loading ? 'Ingresando...' : 'Iniciar Sesión'}
+      </button>
+
+      {/* Separador */}
+      <div className="flex items-center my-6">
+        <div className="flex-1 h-px bg-gray-200" />
+        <span className="mx-4 text-gray-400 text-sm">O continúa con</span>
+        <div className="flex-1 h-px bg-gray-200" />
+      </div>
+
+      {/* Botón Google */}
+      <button
+        type="button"
+        className="w-full flex items-center justify-center gap-2 border border-gray-200 bg-white py-3 rounded-2xl font-semibold text-[#071F4A] hover:bg-gray-50 transition"
+      >
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
+        Google
+      </button>
+      
+    </form>
+  );
+};
+
+export default LoginForm;
