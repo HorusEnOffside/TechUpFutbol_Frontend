@@ -5,7 +5,7 @@ import type { Group, Bracket, GruposTab } from '../features/grupos';
 import '../styles/grupos.css';
 
 // ─── Assets ──────────────────────────────────────────────────────────────────
-import bgImage from '../assets/ChatGPT Image 17 mar 2026, 07_57_21 p.m. 2.png';
+import bgImage from '../assets/Background1.png';
 import techcupLogo from '../assets/image 88.png';
 import logo1 from '../assets/descarga 1.png';
 import logo2 from '../assets/descarga (1) 1.png';

@@ -34,23 +34,14 @@ export function HomeNavbar() {
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Button */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate("/register")}
-              className="bg-gradient-to-r from-[#144C9F] to-[#071F4A] text-white px-6 py-3 rounded-2xl hover:shadow-xl hover:shadow-[#144C9F]/30 transition-all duration-300 flex items-center gap-2 font-bold hover:scale-105 transform"
-              aria-label="Registrarse como jugador"
+              onClick={() => navigate("/auth")}
+              className="bg-gradient-to-r from-[#144C9F] to-[#17A65B] text-white px-12 py-3 rounded-2xl hover:shadow-xl hover:shadow-[#144C9F]/30 transition-all duration-300 flex items-center gap-2 font-bold hover:scale-105 transform"
+              aria-label="Comenzar en la plataforma"
             >
-              <UserPlus className="w-5 h-5" />
-              <span className="hidden lg:inline">Registrarse</span>
-            </button>
-            <button
-              onClick={() => navigate("/login")}
-              className="bg-gradient-to-r from-[#39D17D] to-[#17A65B] text-white px-6 py-3 rounded-2xl hover:shadow-xl hover:shadow-[#39D17D]/30 transition-all duration-300 flex items-center gap-2 font-bold hover:scale-105 transform"
-              aria-label="Iniciar sesión en la plataforma"
-            >
-              <LogIn className="w-5 h-5" />
-              <span className="hidden lg:inline">Iniciar Sesión</span>
+              <span className="lg:inline">Comenzar</span>
             </button>
           </div>
         </div>
