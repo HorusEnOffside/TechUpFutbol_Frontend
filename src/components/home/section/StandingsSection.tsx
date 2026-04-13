@@ -3,8 +3,8 @@ import React from "react";
 
 export const StandingsSection: React.FC = () => {
   return (
-    <section id="standings" className="py-24 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="standings" className="py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="text-center mb-16">
           <div className="inline-block mb-4">
             <span className="bg-gradient-to-r from-[#144C9F] to-[#071F4A] text-white px-6 py-2 rounded-full text-sm font-bold">
@@ -16,7 +16,7 @@ export const StandingsSection: React.FC = () => {
           </h2>
         </div>
 
-        <div className="bg-white rounded-3xl border-2 border-gray-100 shadow-2xl overflow-hidden">
+        <div className="rounded-3xl border-2 border-gray-100 shadow-2xl overflow-hidden" style={{background: "rgba(255,255,255,0.85)"}}>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead style={{
