@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useAuth } from "../store/AuthContext";
+import { useNavigate } from "react-router";
 
 const Login: React.FC = () => {
   const { login, loading, error } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState("");
@@ -11,7 +13,9 @@ const Login: React.FC = () => {
     e.preventDefault();
     setLocalError("");
     try {
-      await login({ email, password });
+      const data = await login({ email, password });
+      if (data?.roles?.includes('Referee')) navigate('/arbitro');
+      else navigate('/player');
     } catch (err: any) {
       setLocalError(err.message || "Error al iniciar sesión");
     }
