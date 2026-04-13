@@ -1,0 +1,10 @@
+/* sidenav con más espacio entre ítems que el jugador */
+.org-sidenav {
+  gap: 6.5dvh;
+}
+
+/* tamaños de imagen por sección */
+.org-section-img--pagos     { width: 16%; top: 32%; }
+.org-section-img--partidos  { width: 25%; top: 26%; }
+.org-section-img--torneos   { width: 27%; top: 24%; }
+.org-section-img--sanciones { width: 25%; top: 27%; }
