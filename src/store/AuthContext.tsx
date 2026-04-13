@@ -7,7 +7,7 @@ interface AuthContextType {
   user: LoginResponse | null;
   loading: boolean;
   error: string | null;
-  login: (credentials: LoginRequest) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<LoginResponse>;
   logout: () => void;
   isAuthenticated: boolean;
   hasRole: (role: string) => boolean;
@@ -28,13 +28,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (credentials: LoginRequest) => {
+  const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
     setLoading(true);
     setError(null);
     try {
       const data = await AuthService.login(credentials);
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
+      return data;
     } catch (err: any) {
       setError(err.response?.data?.message || 'Error de autenticación');
       throw err;

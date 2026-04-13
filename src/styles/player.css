@@ -224,6 +224,9 @@
 .player-section-img--stats   { width: 33.15%; top: 22%; }
 .player-section-img--pagos   { width: 12.1%;  top: 37%; }
 
+/* imagen árbitro */
+.player-section-img--arbitro { width: 38%; top: 18%; left: 50%; }
+
 /* logo capitán */
 .player-section-img--capi {
   width: 15.22%;
