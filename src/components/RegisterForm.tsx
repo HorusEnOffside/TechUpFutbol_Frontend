@@ -9,6 +9,10 @@ interface RegisterFormProps {
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
   const [step, setStep] = useState(0);
   const [values, setValues] = useState<any>({});
+
+  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+  const [submitted, setSubmitted] = useState(false);
+
   // Validación de cada paso y mensajes de error
   const getStepErrors = () => {
     const errs: any = {};
@@ -43,16 +47,24 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
 
   const handleChange = (field: string, value: any) => {
     setValues((prev: any) => ({ ...prev, [field]: value }));
+    setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
   const handleNext = () => {
-    setStep((s) => s + 1);
+    setSubmitted(true);
+    if (validateStep()) {
+      setStep((s) => s + 1);
+      setTouched({});
+      setSubmitted(false);
+    }
   };
   const handleBack = () => {
     setStep((s) => s - 1);
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitted(true);
+    if (!validateStep()) return;
     setLoading(true);
     setTimeout(() => setLoading(false), 1000);
   };
@@ -83,7 +95,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
                 <User className="w-5 h-5 text-gray-400 mr-2" />
                 <input id="register-name" className={`flex-1 bg-transparent outline-none border-none text-[#071F4A] placeholder-gray-400 font-medium ${step === 0 && getStepErrors().name ? 'border-b-2 border-red-500' : ''}`} value={values.name || ""} onChange={e => handleChange("name", e.target.value)} placeholder="Nombre completo" />
               </div>
-              {step === 0 && getStepErrors().name && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().name}</div>}
+              {step === 0 && getStepErrors().name && (touched.name || submitted) && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().name}</div>}
             </div>
           </div>
           <div className="mb-4">
@@ -93,7 +105,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
                 <Calendar className="w-5 h-5 text-gray-400 mr-2" />
                 <input id="register-birth" type="date" className={`flex-1 bg-transparent outline-none border-none text-[#071F4A] font-medium ${step === 0 && getStepErrors().birth ? 'border-b-2 border-red-500' : ''}`} value={values.birth || ""} onChange={e => handleChange("birth", e.target.value)} />
               </div>
-              {step === 0 && getStepErrors().birth && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().birth}</div>}
+              {step === 0 && getStepErrors().birth && (touched.birth || submitted) && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().birth}</div>}
             </div>
           </div>
           <div className="mb-8">
@@ -114,7 +126,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
                   <option value="otro">Otro</option>
                 </select>
               </div>
-              {step === 0 && getStepErrors().gender && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().gender}</div>}
+              {step === 0 && getStepErrors().gender && (touched.gender || submitted) && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().gender}</div>}
             </div>
           </div>
           <button

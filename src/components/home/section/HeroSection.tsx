@@ -22,7 +22,7 @@ export function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 flex flex-col lg:flex-row items-center justify-between gap-16 min-h-[calc(100vh-200px)]">
         {/* Left Content */}
         <div className="flex-1 space-y-8 text-white animate-fade-in">
-          <HeroHighlight text="Torneo 2026-I • Inscripciones Abiertas" icon={<Zap className="w-4 h-4 text-[#39D17D]" />} />
+          <HeroHighlight text="Torneo 2026-I • Inscripciones Abiertas" icon={<Zap className="w-5 h-5 text-[#FFFFFF]" />} />
           <HeroTitle>
             TECH CUP<br />
             <span className="text-[#39D17D]">FÚTBOL</span>

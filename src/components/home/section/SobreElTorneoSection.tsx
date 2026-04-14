@@ -11,7 +11,7 @@ interface SobreElTorneoSectionProps {
 
 export function SobreElTorneoSection({ className = "" }: SobreElTorneoSectionProps) {
   return (
-    <section id="about" className={`py-24 bg-white relative ${className}`}>
+    <section id="about" className={`py-24 relative ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
           <div className="inline-block mb-4">
