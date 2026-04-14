@@ -21,10 +21,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Recuperar usuario de localStorage si existe
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setUser(JSON.parse(storedUser) as LoginResponse);
     }
   }, []);
 
@@ -32,12 +31,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
+      // AuthService.login also stores the token in localStorage
       const data = await AuthService.login(credentials);
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
       return data;
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Error de autenticación');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error de autenticación';
+      setError(message);
       throw err;
     } finally {
       setLoading(false);
@@ -47,6 +48,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    // Fire-and-forget: notify the backend (ignore failures)
+    AuthService.logout().catch(() => undefined);
   };
 
   const isAuthenticated = !!user;
