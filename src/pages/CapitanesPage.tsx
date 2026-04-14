@@ -201,7 +201,7 @@ export function CapitanesPage() {
                   <p className="text-white/70 text-[10px] uppercase">Color Identificativo</p>
                   <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{ background: mainColor }} />
                 </div>
-                <button onClick={() => navigate('/player/menu')}
+                <button onClick={() => navigate('/player/capitanes/jugadores')}
                   className="cap-confirm-btn mt-4 px-10 py-2 rounded-full text-white font-bold uppercase transition-all hover:scale-105 shadow-lg">
                   Confirmar Registro
                 </button>
