@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { LandingLayout } from '../components/LandingLayout';
 import { AuthenticatedLayout } from '../components/AuthenticatedLayout';
-import { ProtectedRoute } from '../components/ProtectedRoute';
 import { Home } from '../pages/Home';
 import AuthContainer from '../pages/AuthContainer';
 import { GruposPage } from '../pages/GruposPage';
@@ -12,6 +11,7 @@ import { ArbitroMenuPage } from '../pages/ArbitroMenuPage';
 import { OrganizadorHomePage } from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
 import { CapitanesPage } from '../pages/CapitanesPage';
+import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +53,10 @@ export const router = createBrowserRouter([
   {
     path: '/player/capitanes',
     element: <CapitanesPage />,
+  },
+  {
+    path: '/player/capitanes/jugadores',
+    element: <SeleccionJugadoresPage />,
   },
   {
     path: '/app',
