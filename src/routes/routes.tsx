@@ -11,6 +11,7 @@ import { ArbitroHomePage } from '../pages/ArbitroHomePage';
 import { ArbitroMenuPage } from '../pages/ArbitroMenuPage';
 import { OrganizadorHomePage } from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
+import { CapitanesPage } from '../pages/CapitanesPage';
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
   {
     path: '/organizador/menu',
     element: <OrganizadorMenuPage />,
+  },
+  {
+    path: '/player/capitanes',
+    element: <CapitanesPage />,
   },
   {
     path: '/app',
