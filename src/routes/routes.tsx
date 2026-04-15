@@ -63,5 +63,5 @@ export const router = createBrowserRouter([
     path: '/app',
     element: <AuthenticatedLayout><Home /></AuthenticatedLayout>,
     // children: [...]
-  },
+  }
 ]);
