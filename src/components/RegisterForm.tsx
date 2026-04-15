@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { RegisterSteps } from "./RegisterSteps";
-import { User, Calendar, Venus, Briefcase, BookOpen, Shield, Hash, Mail, Lock } from "lucide-react";
+import { User, Calendar, Venus, Briefcase, BookOpen, Shield, Hash, Mail, Lock, Camera } from "lucide-react";
+import PlayerService from "../services/player.service";
 
 interface RegisterFormProps {
   onSwitch: () => void;
@@ -9,9 +10,14 @@ interface RegisterFormProps {
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
   const [step, setStep] = useState(0);
   const [values, setValues] = useState<any>({});
+  const [foto, setFoto] = useState<File | null>(null);
+  const [fotoPreview, setFotoPreview] = useState<string | null>(null);
+  const fotoRef = useRef<HTMLInputElement>(null);
 
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
   const [submitted, setSubmitted] = useState(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   // Validación de cada paso y mensajes de error
   const getStepErrors = () => {
@@ -45,6 +51,22 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
   };
   const [loading, setLoading] = useState(false);
 
+  // Mapeo de valores del form al formato del backend
+  const GENDER_MAP: Record<string, 'MALE' | 'FEMALE'> = {
+    masculino: 'MALE', femenino: 'FEMALE', otro: 'MALE',
+  };
+  const POSITION_MAP: Record<string, 'GOALKEEPER' | 'DEFENDER' | 'MIDFIELDER' | 'FORWARD'> = {
+    portero: 'GOALKEEPER', defensa: 'DEFENDER', mediocampo: 'MIDFIELDER', delantero: 'FORWARD',
+  };
+  const CAREER_MAP: Record<string, 'ENGINEERING' | 'DATA_SCIENCE' | 'OTHER'> = {
+    sistemas: 'ENGINEERING', ia: 'DATA_SCIENCE', ciberseguridad: 'OTHER', estadistica: 'OTHER',
+  };
+
+  const handleFotoChange = (file: File) => {
+    setFoto(file);
+    setFotoPreview(URL.createObjectURL(file));
+  };
+
   const handleChange = (field: string, value: any) => {
     setValues((prev: any) => ({ ...prev, [field]: value }));
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -61,12 +83,43 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
   const handleBack = () => {
     setStep((s) => s - 1);
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     if (!validateStep()) return;
     setLoading(true);
-    setTimeout(() => setLoading(false), 1000);
+    setApiError(null);
+    try {
+      const base = {
+        name:         values.name,
+        mail:         values.email,
+        dateOfBirth:  values.birth,
+        gender:       GENDER_MAP[values.gender] ?? 'MALE',
+        password:     values.password,
+        dorsalNumber: Number(values.dorsal),
+        position:     POSITION_MAP[values.posicion],
+      };
+      const career = CAREER_MAP[values.carrera] ?? 'OTHER';
+
+      if (values.tipo === 'estudiante') {
+        await PlayerService.createSportsProfileStudent(
+          { ...base, career, semester: Number(values.semestre) }, foto
+        );
+      } else if (values.tipo === 'profesor') {
+        await PlayerService.createSportsProfileTeacher({ ...base, career }, foto);
+      } else if (values.tipo === 'graduado') {
+        await PlayerService.createSportsProfileGraduate({ ...base, career }, foto);
+      } else {
+        await PlayerService.createSportsProfileFamiliar(base as any, foto);
+      }
+
+      setSuccessMsg('¡Cuenta creada! Ya puedes iniciar sesión.');
+      setTimeout(() => onSwitch(), 2000);
+    } catch (err: any) {
+      setApiError(err?.message ?? 'Error al crear la cuenta. Intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -234,7 +287,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
               {step === 2 && getStepErrors().posicion && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().posicion}</div>}
             </div>
           </div>
-          <div className="mb-8">
+          <div className="mb-4">
             <label htmlFor="register-dorsal" className="block mb-1 font-semibold">Número de dorsal</label>
             <div>
               <div className="flex items-center bg-[#F7F9FA] border border-gray-200 rounded-xl px-4 py-3">
@@ -243,6 +296,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
               </div>
               {step === 2 && getStepErrors().dorsal && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().dorsal}</div>}
             </div>
+          </div>
+          {/* Foto de perfil — opcional */}
+          <div className="mb-8">
+            <label className="block mb-1 font-semibold">Foto de perfil <span className="text-gray-400 font-normal text-xs">(opcional)</span></label>
+            <button type="button" onClick={() => fotoRef.current?.click()}
+              className="w-full flex items-center gap-3 bg-[#F7F9FA] border border-gray-200 rounded-xl px-4 py-3 hover:bg-gray-100 transition">
+              {fotoPreview
+                ? <img src={fotoPreview} alt="preview" className="w-8 h-8 rounded-full object-cover" />
+                : <Camera className="w-5 h-5 text-gray-400" />}
+              <span className="text-sm text-gray-500 truncate">{foto ? foto.name : 'Subir foto'}</span>
+            </button>
+            <input ref={fotoRef} type="file" accept="image/*" className="hidden"
+              onChange={e => { if (e.target.files?.[0]) handleFotoChange(e.target.files[0]); }} />
           </div>
           <div className="flex gap-2">
             <button type="button" className="w-1/2 bg-gray-200 text-[#071F4A] font-bold py-2 rounded-lg" onClick={handleBack}>Atrás</button>
@@ -288,6 +354,16 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
               {step === 3 && getStepErrors().password2 && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().password2}</div>}
             </div>
           </div>
+          {apiError && (
+            <div className="mb-3 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+              {apiError}
+            </div>
+          )}
+          {successMsg && (
+            <div className="mb-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm font-semibold">
+              {successMsg}
+            </div>
+          )}
           <div className="flex gap-2">
             <button type="button" className="w-1/2 bg-gray-200 text-[#071F4A] font-bold py-2 rounded-lg" onClick={handleBack}>Atrás</button>
             <button

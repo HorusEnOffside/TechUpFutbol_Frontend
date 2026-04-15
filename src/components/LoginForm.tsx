@@ -52,9 +52,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
       if (result.roles.includes('ADMIN')) {
         navigate('/admin');
       } else if (result.roles.includes('ORGANIZER')) {
-        navigate('/organizer');
+        navigate('/organizador');
       } else if (result.roles.includes('REFEREE')) {
-        navigate('/referee');
+        navigate('/arbitro');
       } else {
         navigate('/player');
       }
