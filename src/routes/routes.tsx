@@ -9,7 +9,7 @@ import { PlayerHomePage } from '../pages/PlayerHomePage';
 import { PlayerMenuPage } from '../pages/PlayerMenuPage';
 import { ArbitroHomePage } from '../pages/ArbitroHomePage';
 import { ArbitroMenuPage } from '../pages/ArbitroMenuPage';
-import { OrganizadorHomePage } from '../pages/OrganizadorHomePage';
+import OrganizadorHomePage from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
 
 export const router = createBrowserRouter([

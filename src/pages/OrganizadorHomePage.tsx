@@ -1,72 +1,61 @@
-import { useNavigate } from 'react-router';
-import '../styles/player.css';
 
-import logoBlanco from '../assets/logoBlanco.png';
-import bgVideo    from '../assets/menuOrganizador.mp4';
+import { User, Users, Calendar, AlertCircle, DollarSign } from "lucide-react";
+import { AuthenticatedLayout } from "../components/AuthenticatedLayout";
+import { ResumenCard } from "../components/ResumenCard";
+import { PagoPendienteCard } from "../components/PagoPendienteCard";
+import { QuickActionButton } from "../components/QuickActionButton";
+import bgImage from '../assets/Background1.png';
 
-function UserIcon() {
-  return (
-    <svg width="28" height="32" viewBox="0 0 40 46" fill="none">
-      <path
-        d="M33.33 40.25V36.42C33.33 34.38 32.63 32.43 31.38 30.99C30.13 29.56 28.44 28.75 26.67 28.75H13.33C11.57 28.75 9.87 29.56 8.62 30.99C7.37 32.43 6.67 34.38 6.67 36.42V40.25M26.67 13.42C26.67 17.65 23.68 21.08 20 21.08C16.32 21.08 13.33 17.65 13.33 13.42C13.33 9.18 16.32 5.75 20 5.75C23.68 5.75 26.67 9.18 26.67 13.42Z"
-        stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
-function BellIcon() {
-  return (
-    <svg width="22" height="26" viewBox="0 0 29 29" fill="none">
-      <path
-        d="M14.5 3C9.25 3 5 7.25 5 12.5V20L2 23v1.5h25V23l-3-3.5V12.5C24 7.25 19.75 3 14.5 3ZM14.5 28c1.66 0 3-1.34 3-3h-6c0 1.66 1.34 3 3 3Z"
-        fill="rgba(29,27,32,1)"
-      />
-    </svg>
-  );
-}
 
-export function OrganizadorHomePage() {
-  const navigate = useNavigate();
+export default function OrganizadorHomePage() {
+  // Datos de ejemplo
+  const pagosPendientes = [
+    { equipo: "Sistemas FC", monto: 2000, fecha: "11/4/2026" },
+    { equipo: "Industrial United", monto: 2000, fecha: "12/4/2026" },
+    { equipo: "Electrónica FC", monto: 2000, fecha: "13/4/2026" },
+  ];
 
   return (
-    <div className="player-wrapper">
-      <div className="player-page">
+    <div className="min-h-screen w-full overflow-hidden relative">
+      {/* Fondo */}
+      <div className="absolute inset-0 w-full h-full -z-10" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+      
+      <AuthenticatedLayout>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Banner principal */}
+          <section className="text-center mb-12">
+            <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-[#144C9F] to-[#17A65B] text-white rounded-full text-xs font-semibold mb-4">Organizador</span>
+            <h1 className="text-4xl md:text-5xl font-black mb-2">Panel de Administración</h1>
+            <p className="text-lg text-gray-700">Gestiona el torneo Tech Cup Fútbol Universitario</p>
+          </section>
 
-        <video className="player-bg-video" src={bgVideo} autoPlay loop muted playsInline />
-
-        <div className="player-sidebar-overlay" />
-        <div className="player-topbar-overlay" />
-
-        <header className="player-topbar">
-          <img src={logoBlanco} alt="TechCup Fútbol" className="player-logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/organizador/menu')} />
-          <span className="player-welcome-text">¡Bienvenido Juan!</span>
-          <button className="player-avatar" aria-label="Perfil">
-            <UserIcon />
-          </button>
-        </header>
-
-        <main className="player-main">
-          <div className="player-hero-text">
-            Organizador!<br /><br />
-            Te damos la bienvenida a<br />
-            TECHCUP FÚTBOL!<br /><br />
-            &ldquo;Donde el ingenio no<br />
-            solo se juega<br />
-            en el campeonato&rdquo;
-          </div>
-        </main>
-
-        <footer className="player-footer">
-          <button className="player-notif-btn" aria-label="Notificaciones">
-            <BellIcon />
-          </button>
-          <button className="player-logout-btn" onClick={() => navigate('/login')}>
-            Cerrar Sesión
-          </button>
-        </footer>
-
-      </div>
+          {/* Pagos pendientes y acciones rápidas */}
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            {/* Pagos pendientes */}
+            <div className="lg:col-span-2 bg-white rounded-2xl p-8 shadow border border-gray-100 flex flex-col">
+              <div className="flex justify-between items-center mb-4">
+                <div className="text-[#17A65B] font-bold text-lg">Pagos Pendientes de Aprobación</div>
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-500">{pagosPendientes.length} pendientes</span>
+              </div>
+              <div className="text-sm text-gray-500 mb-4">Revisa y aprueba los pagos de los equipos</div>
+              <div className="flex flex-col gap-3">
+                {pagosPendientes.map((pago) => (
+                  <PagoPendienteCard key={pago.equipo} {...pago} onVer={() => {}} onAprobar={() => {}} onRechazar={() => {}} />
+                ))}
+              </div>
+            </div>
+            {/* Acciones rápidas */}
+            <div className="bg-white rounded-2xl p-8 shadow border border-gray-100 flex flex-col gap-4 h-fit">
+              <div className="text-[#144C9F] font-bold text-lg mb-2">Acciones Rápidas</div>
+              <QuickActionButton label="Crear Torneo" icon={<Calendar className="w-5 h-5" />} primary onClick={() => {}} />
+              <QuickActionButton label="Revisar Pagos" icon={<DollarSign className="w-5 h-5" />} onClick={() => {}} primary={false} />
+              <QuickActionButton label="Ver Equipos" icon={<Users className="w-5 h-5" />} onClick={() => {}} primary={false} />
+              <QuickActionButton label="Reportes" icon={<User className="w-5 h-5" />} onClick={() => {}} primary={false} />
+            </div>
+          </section>
+        </div>
+      </AuthenticatedLayout>
     </div>
   );
 }
