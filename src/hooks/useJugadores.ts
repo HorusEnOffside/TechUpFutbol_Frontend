@@ -1,71 +1,89 @@
 import { useState, useEffect, useMemo } from 'react';
 import type { Jugador, FiltrosJugador, Posicion, Genero } from '../types/jugador';
 import { FILTROS_INICIAL } from '../types/jugador';
+import type { PlayerResponseDTO, Position } from '../types/player';
+import PlayerService from '../services/player.service';
 
-// Mock data — reemplazar con llamada a PlayerService cuando el backend esté listo
-import p1 from '../assets/sj_player1.png';
-import p2 from '../assets/sj_player2.png';
-import p3 from '../assets/sj_player3.png';
-import p4 from '../assets/sj_player4.png';
-import p5 from '../assets/sj_player5.png';
-import p6 from '../assets/sj_player6.png';
+import placeholder from '../assets/sj_player1.png';
 
-const MOCK_JUGADORES: Jugador[] = [
-  { id: 1, nombre: 'Juan David', carrera: 'Ing. Sistemas',    posicion: 'DL', semestre: 6, edad: 21, genero: 'M', identificacion: '1001234567', foto: p1 },
-  { id: 2, nombre: 'Manuel',     carrera: 'Ing. Sistemas',    posicion: 'DF', semestre: 4, edad: 20, genero: 'M', identificacion: '1002345678', foto: p2 },
-  { id: 3, nombre: 'Daniel',     carrera: 'Ing. Sistemas',    posicion: 'MD', semestre: 8, edad: 23, genero: 'M', identificacion: '1003456789', foto: p3 },
-  { id: 4, nombre: 'Mariana',    carrera: 'Ing. Estadística', posicion: 'DL', semestre: 5, edad: 22, genero: 'F', identificacion: '1004567890', foto: p4 },
-  { id: 5, nombre: 'Tatiana',    carrera: 'Ing. Estadística', posicion: 'AR', semestre: 3, edad: 19, genero: 'F', identificacion: '1005678901', foto: p5 },
-  { id: 6, nombre: 'Marcos',     carrera: 'Ing. Sistemas',    posicion: 'DF', semestre: 7, edad: 24, genero: 'M', identificacion: '1006789012', foto: p6 },
-  { id: 7, nombre: 'Marcos',     carrera: 'Ing. Sistemas',    posicion: 'DF', semestre: 7, edad: 24, genero: 'M', identificacion: '1006789012', foto: p6 },
-];
+// ── Mapping backend → frontend ────────────────────────────────────────────────
+const POS_MAP: Record<Position, Posicion> = {
+  GOALKEEPER: 'AR',
+  DEFENDER:   'DF',
+  MIDFIELDER: 'MD',
+  FORWARD:    'DL',
+};
+
+const GEN_MAP: Record<string, Genero> = {
+  MALE:   'M',
+  FEMALE: 'F',
+  OTHER:  'M',
+};
+
+function calcEdad(dateOfBirth: string): number {
+  if (!dateOfBirth) return 0;
+  return new Date().getFullYear() - new Date(dateOfBirth).getFullYear();
+}
+
+function mapPlayer(p: PlayerResponseDTO): Jugador {
+  return {
+    id:             p.id,
+    nombre:         p.name,
+    carrera:        '',                          // no disponible en backend
+    posicion:       POS_MAP[p.position] ?? 'MD',
+    semestre:       0,                           // no disponible en backend
+    edad:           calcEdad(p.dateOfBirth),
+    genero:         GEN_MAP[p.gender] ?? 'M',
+    identificacion: p.mail,                      // mail como identificador
+    foto:           placeholder,                 // sin URL de foto en backend
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 interface UseJugadoresReturn {
-  // Data
-  jugadores: Jugador[];
-  filtered: Jugador[];
-  selected: number | null;
-  addedIds: number[];
-  // States
-  isLoading: boolean;
-  error: string | null;
-  // Filters
-  filtros: FiltrosJugador;
-  setFiltro: <K extends keyof FiltrosJugador>(key: K, value: FiltrosJugador[K]) => void;
+  jugadores:  Jugador[];
+  filtered:   Jugador[];
+  selected:   string | null;
+  addedIds:   string[];
+  isLoading:  boolean;
+  error:      string | null;
+  filtros:    FiltrosJugador;
+  setFiltro:  <K extends keyof FiltrosJugador>(key: K, value: FiltrosJugador[K]) => void;
   resetFiltros: () => void;
-  // Actions
-  selectJugador: (id: number) => void;
-  addJugador: (id: number) => void;
+  selectJugador: (id: string) => void;
+  addJugador:    (id: string) => void;
   retry: () => void;
 }
 
 export function useJugadores(): UseJugadoresReturn {
-  const [jugadores, setJugadores] = useState<Jugador[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [addedIds, setAddedIds] = useState<number[]>([]);
-  const [filtros, setFiltros] = useState<FiltrosJugador>(FILTROS_INICIAL);
-  const [fetchKey, setFetchKey] = useState(0);
+  const [jugadores,  setJugadores]  = useState<Jugador[]>([]);
+  const [isLoading,  setIsLoading]  = useState(true);
+  const [error,      setError]      = useState<string | null>(null);
+  const [selected,   setSelected]   = useState<string | null>(null);
+  const [addedIds,   setAddedIds]   = useState<string[]>([]);
+  const [filtros,    setFiltros]    = useState<FiltrosJugador>(FILTROS_INICIAL);
+  const [fetchKey,   setFetchKey]   = useState(0);
 
-  // Simula fetch al backend — reemplazar por PlayerService.getAllPlayers()
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setError(null);
 
-    const timer = setTimeout(() => {
-      if (cancelled) return;
-      // Simular error aleatorio para probar el estado de error:
-      // if (Math.random() < 0.3) { setError('Error al cargar jugadores'); setIsLoading(false); return; }
-      setJugadores(MOCK_JUGADORES);
-      setIsLoading(false);
-    }, 900);
+    PlayerService.getAllPlayers()
+      .then((players) => {
+        if (cancelled) return;
+        setJugadores(players.map(mapPlayer));
+      })
+      .catch((err: Error) => {
+        if (cancelled) return;
+        setError(err.message ?? 'Error al cargar jugadores');
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
 
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
+    return () => { cancelled = true; };
   }, [fetchKey]);
 
   const filtered = useMemo(() => {
@@ -86,10 +104,10 @@ export function useJugadores(): UseJugadoresReturn {
 
   const resetFiltros = () => setFiltros(FILTROS_INICIAL);
 
-  const selectJugador = (id: number) =>
+  const selectJugador = (id: string) =>
     setSelected((prev) => (prev === id ? null : id));
 
-  const addJugador = (id: number) => {
+  const addJugador = (id: string) => {
     setAddedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
     setSelected(null);
   };

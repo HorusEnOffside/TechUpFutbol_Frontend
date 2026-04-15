@@ -2,7 +2,7 @@ export type Posicion = 'DL' | 'DF' | 'MD' | 'AR';
 export type Genero = 'M' | 'F';
 
 export interface Jugador {
-  id: number;
+  id: string;
   nombre: string;
   carrera: string;
   posicion: Posicion;

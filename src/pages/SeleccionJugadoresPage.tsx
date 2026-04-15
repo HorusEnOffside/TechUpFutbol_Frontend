@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import TeamService from '../services/team.service';
 import sjBg   from '../assets/sj_bg.png';
 import sjLogo from '../assets/sj_logo.png';
 
@@ -34,15 +35,24 @@ export function SeleccionJugadoresPage() {
   const confirmarEquipo = async () => {
     if (!cumpleHeuristica) return;
 
+    const teamId = localStorage.getItem('teamId');
+    if (!teamId) {
+      setErrorMessage('No se encontró el equipo. Vuelve a Capitanes y crea el equipo primero.');
+      return;
+    }
+
     setIsSending(true);
     setErrorMessage(null);
 
     try {
-      // Simulación de envío masivo al backend
-      await new Promise(res => setTimeout(res, 1500)); 
+      // Enviar invitación a cada jugador seleccionado
+      await Promise.all(
+        addedIds.map((playerId) => TeamService.invitePlayer(teamId, playerId))
+      );
       setShowSuccessModal(true);
-    } catch (err: any) {
-      setErrorMessage(err.response?.data || "Error al procesar las solicitudes.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al enviar las invitaciones.';
+      setErrorMessage(message);
     } finally {
       setIsSending(false);
     }

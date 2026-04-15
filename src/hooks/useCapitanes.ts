@@ -1,4 +1,18 @@
 import { useState, useRef } from 'react';
+import { useAuth } from '../store/AuthContext';
+import TeamService from '../services/team.service';
+
+/** Lee el claim `sub` (o `id`) del JWT almacenado en localStorage. */
+function getUserIdFromToken(): string | null {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1])) as Record<string, unknown>;
+    return (payload.sub ?? payload.id ?? null) as string | null;
+  } catch {
+    return null;
+  }
+}
 
 export type StepNum = 1 | 2 | 3;
 
@@ -28,20 +42,22 @@ interface UseCapitanesReturn {
 }
 
 export function useCapitanes(): UseCapitanesReturn {
-  const [step, setStep] = useState<StepNum>(1);
-  const [teamName, setTeamName] = useState('');
-  const [shield, setShield] = useState<File | null>(null);
+  const { user, refreshSession } = useAuth();
+
+  const [step,          setStep]          = useState<StepNum>(1);
+  const [teamName,      setTeamName]      = useState('');
+  const [shield,        setShield]        = useState<File | null>(null);
   const [shieldPreview, setShieldPreview] = useState<string | null>(null);
-  const [mainColor, setMainColor] = useState('#04156B');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [mainColor,     setMainColor]     = useState('#04156B');
+  const [isLoading,     setIsLoading]     = useState(false);
+  const [error,         setError]         = useState<string | null>(null);
+  const [isSuccess,     setIsSuccess]     = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
   const isNameValid = teamName.trim().length >= 5;
-  const canGoNext = step === 1 ? isNameValid : step < 3;
-  const canGoBack = step > 1;
+  const canGoNext   = step === 1 ? isNameValid : step < 3;
+  const canGoBack   = step > 1;
 
   const handleNext = () => {
     if (step < 3) setStep((s) => (s + 1) as StepNum);
@@ -57,19 +73,36 @@ export function useCapitanes(): UseCapitanesReturn {
     setShieldPreview(URL.createObjectURL(file));
   };
 
-  /**
-   * Simula el POST al backend para crear el equipo.
-   * Reemplazar el setTimeout por la llamada real a la API.
-   */
   const handleSubmit = async () => {
+    // Leer captainUserId del claim `sub` del JWT (fuente de verdad del backend)
+    const captainUserId = getUserIdFromToken() ?? user?.id ?? null;
+    if (!captainUserId) {
+      setError('Sesión no válida. Por favor inicia sesión de nuevo.');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
+
     try {
-      // TODO: reemplazar con AuthService / TeamService real
-      await new Promise<void>((res) => setTimeout(res, 1000));
+      const team = await TeamService.createTeam(
+        teamName,
+        mainColor,       // uniformColors → hex del color elegido
+        captainUserId,
+        shield ?? null,
+      );
+
+      // Guardar el teamId para que SeleccionJugadoresPage lo use en las invitaciones
+      localStorage.setItem('teamId', team.id);
+
+      // Refrescar el token: el backend ya asignó rol CAPTAIN al usuario,
+      // necesitamos un JWT nuevo que lo incluya antes de llamar invitePlayer
+      await refreshSession();
+
       setIsSuccess(true);
-    } catch {
-      setError('No se pudo crear el equipo. Inténtalo de nuevo.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'No se pudo crear el equipo. Inténtalo de nuevo.';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
