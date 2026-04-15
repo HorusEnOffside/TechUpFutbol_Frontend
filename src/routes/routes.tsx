@@ -12,6 +12,7 @@ import { OrganizadorHomePage } from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
 import { CapitanesPage } from '../pages/CapitanesPage';
 import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
+import Standings from '../pages/Standings';    
 
 //cambio
 export const router = createBrowserRouter([
@@ -63,5 +64,9 @@ export const router = createBrowserRouter([
     path: '/app',
     element: <AuthenticatedLayout><Home /></AuthenticatedLayout>,
     // children: [...]
-  }
+  },
+  {
+    path: '/standings',
+    element: <Standings />,
+  },
 ]);
