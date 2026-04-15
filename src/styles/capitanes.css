@@ -1,0 +1,68 @@
+/* ─── Step Pill ────────────────────────────────────────────────────────────── */
+.cap-step-num {
+  font-family: 'Russo One', sans-serif;
+  font-size: 18px;
+  color: #e0e0e0;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.cap-step-num--active {
+  font-size: 22px;
+  color: #fff;
+  background: #04156B;
+  box-shadow: 0 0 15px rgba(4, 21, 107, 0.5);
+}
+
+.cap-step-label {
+  font-family: 'Russo One', sans-serif;
+  color: #e0e0e0;
+}
+
+.cap-step-label--active {
+  color: #fff;
+}
+
+/* ─── Arrow Button ─────────────────────────────────────────────────────────── */
+.cap-arrow-btn {
+  width: 45px;
+  height: 30px;
+  font-size: 20px;
+  background: linear-gradient(to bottom, #04156B, #046B10);
+}
+
+/* ─── Títulos ──────────────────────────────────────────────────────────────── */
+.cap-title {
+  font-family: 'Russo One', sans-serif;
+  text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.8);
+}
+
+.cap-subtitle {
+  font-family: 'Russo One', sans-serif;
+  text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* ─── Card principal ───────────────────────────────────────────────────────── */
+.cap-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+/* ─── Imagen jugador ───────────────────────────────────────────────────────── */
+.cap-player-img {
+  mask-image: linear-gradient(to right, black 100%, transparent 1%);
+}
+
+/* ─── Formulario ───────────────────────────────────────────────────────────── */
+.cap-label {
+  font-family: 'Russo One', sans-serif;
+}
+
+/* ─── Resumen (Step 3) ─────────────────────────────────────────────────────── */
+.cap-summary-name {
+  font-family: 'Russo One', sans-serif;
+}
+
+.cap-confirm-btn {
+  background: linear-gradient(90deg, #04156B, #046B10);
+  font-family: 'Russo One', sans-serif;
+}
