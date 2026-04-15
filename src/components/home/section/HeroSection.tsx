@@ -2,12 +2,52 @@ import { Zap, ArrowRight, Calendar } from "lucide-react";
 import logoTechCup from "../../../assets/logoBlanco.png";
 import carruselLogin1 from "../../../assets/carruselLogin1.jpeg";
 import { HeroHighlight } from "../HeroHighlight";
+import { useTournamentStatus } from '../../../hooks/useTournamentStatus';
+import { useTournamentTerm } from '../../../hooks/useTournamentTerm';
 import { HeroTitle } from "../HeroTitle";
 import { HeroDescription } from "../HeroDescription";
 import { HeroButton } from "../HeroButton";
 import { HeroImage } from "../HeroImage";
 
+
 export function HeroSection() {
+  const { status, loading: statusLoading, error: statusError } = useTournamentStatus();
+  const { term, loading: termLoading, error: termError } = useTournamentTerm();
+
+  let highlightText = 'Torneo';
+  let highlightColor = '';
+
+  if (termLoading || statusLoading) {
+    highlightText = 'Cargando...';
+  } else if (statusError || termError) {
+    highlightText = 'No se pudo cargar';
+    highlightColor = 'text-red-500';
+  } else {
+    let statusText = '';
+    switch (status) {
+      case 'DRAFT':
+        statusText = 'En planeación';
+        break;
+      case 'ACTIVE':
+        statusText = 'Inscripciones abiertas';
+        break;
+      case 'IN_PROGRESS':
+        statusText = 'Inscripciones cerradas';
+        break;
+      case 'COMPLETED':
+        statusText = 'Finalizado';
+        break;
+      default:
+        statusText = '';
+    }
+    if (term) {
+      highlightText = `Torneo ${term}`;
+      if (statusText) {
+        highlightText += ` • ${statusText}`;
+      }
+    }
+  }
+
   return (
     <section
       className="relative min-h-screen overflow-hidden"
@@ -22,7 +62,7 @@ export function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 flex flex-col lg:flex-row items-center justify-between gap-16 min-h-[calc(100vh-200px)]">
         {/* Left Content */}
         <div className="flex-1 space-y-8 text-white animate-fade-in">
-          <HeroHighlight text="Torneo 2026-I • Inscripciones Abiertas" icon={<Zap className="w-5 h-5 text-[#FFFFFF]" />} />
+          <HeroHighlight text={highlightText} icon={<Zap className="w-5 h-5 text-[#FFFFFF]" />} className={highlightColor} />
           <HeroTitle>
             TECH CUP<br />
             <span className="text-[#39D17D]">FÚTBOL</span>

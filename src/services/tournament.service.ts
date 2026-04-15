@@ -1,14 +1,35 @@
 import apiClient from './api';
 import type { TournamentResponseDTO, StandingRowDTO } from '../types/tournament';
-
 const TournamentService = {
-    /**
-     * Obtener el estado de inscripciones del torneo actual
-     * GET /tournament/status
-     * Retorna: { status: 'OPEN' | 'CLOSED' }
+
+/**
+     * Obtener el número de equipos inscritos en el torneo actual
+     * GET /tournament/registered-teams
+     * Retorna: { registeredTeams: number }
      */
-    getCurrentTournamentStatus: async (): Promise<{ status: 'OPEN' | 'CLOSED' }> => {
-      const response = await apiClient.get<{ status: 'OPEN' | 'CLOSED' }>(`/tournament/status`);
+    getCurrentTournamentRegisteredTeams: async (): Promise<{ registeredTeams: number }> => {
+      const response = await apiClient.get<{ registeredTeams: number }>(`/tournament/registered-teams`);
+      return response.data;
+    },
+
+    /**
+     * Obtener el número máximo de equipos permitidos en el torneo actual
+     * GET /tournament/max-teams
+     * Retorna: { maxTeams: number }
+     */
+    getCurrentTournamentMaxTeams: async (): Promise<{ maxTeams: number }> => {
+      const response = await apiClient.get<{ maxTeams: number }>(`/tournament/max-teams`);
+      return response.data;
+    },
+
+
+    /**
+     * Obtener el estado del torneo actual
+     * GET /tournament/status
+     * Retorna: { status: 'DRAFT' | 'ACTIVE' | 'IN_PROGRESS' | 'COMPLETED' }
+     */
+    getCurrentTournamentStatus: async (): Promise<{ status: 'DRAFT' | 'ACTIVE' | 'IN_PROGRESS' | 'COMPLETED' }> => {
+      const response = await apiClient.get<{ status: 'DRAFT' | 'ACTIVE' | 'IN_PROGRESS' | 'COMPLETED' }>(`/tournament/status`);
       return response.data;
     },
 
