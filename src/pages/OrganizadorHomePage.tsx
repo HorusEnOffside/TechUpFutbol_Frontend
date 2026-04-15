@@ -1,19 +1,15 @@
 
-import { User, Users, Calendar, AlertCircle, DollarSign } from "lucide-react";
+import { User, Users, Calendar, AlertCircle, DollarSign, Loader2 } from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
 import { PagoPendienteCard } from "../components/PagoPendienteCard";
 import { QuickActionButton } from "../components/QuickActionButton";
 import canchaImg from "../assets/cancha.png";
+import { usePendingPayments } from "../hooks/usePendingPayments";
 
 
 
 export default function OrganizadorHomePage() {
-  const pagosPendientes = [
-    { equipo: "Sistemas FC", monto: 2000, fecha: "11/4/2026" },
-    { equipo: "Industrial United", monto: 2000, fecha: "12/4/2026" },
-    { equipo: "Electrónica FC", monto: 2000, fecha: "13/4/2026" },
-  ];
-
+  const { payments: pagosPendientes, loading, error } = usePendingPayments();
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
       {/* Fondo */}
@@ -70,12 +66,38 @@ export default function OrganizadorHomePage() {
             <div className="lg:col-span-2 rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col" style={{background: "rgba(7,31,74,0.92)"}}>
               <div className="flex justify-between items-center mb-4">
                 <div className="text-[#17A65B] font-black text-2xl" style={{fontFamily: 'Montserrat, sans-serif'}}>Pagos Pendientes de Aprobación</div>
-                <span className="text-xs bg-white/10 px-3 py-1 rounded-full text-white font-bold">{pagosPendientes.length} pendientes</span>
+                <span className="text-xs bg-white/10 px-3 py-1 rounded-full text-white font-bold">{pagosPendientes.length}</span>
               </div>
               <div className="text-base text-white/80 mb-4">Revisa y aprueba los pagos de los equipos</div>
-              <div className="flex flex-col gap-3">
-                {pagosPendientes.map((pago) => (
-                  <PagoPendienteCard key={pago.equipo} {...pago} onVer={() => {}} onAprobar={() => {}} onRechazar={() => {}} />
+              <div className="flex flex-col gap-3 min-h-[120px]">
+                {loading && (
+                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
+                    <Loader2 className="w-7 h-7 animate-spin text-[#39D17D]" />
+                    <span className="text-sm">Cargando pagos…</span>
+                  </div>
+                )}
+                {!loading && error && (
+                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
+                    <AlertCircle className="w-7 h-7 text-red-400" />
+                    <span className="text-sm">{error}</span>
+                  </div>
+                )}
+                {!loading && !error && pagosPendientes.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
+                    <User className="w-7 h-7" />
+                    <span className="text-sm">Aún no hay pagos pendientes.</span>
+                  </div>
+                )}
+                {!loading && !error && pagosPendientes.length > 0 && pagosPendientes.map((pago) => (
+                  <PagoPendienteCard
+                    key={pago.id}
+                    equipo={pago.description}
+                    monto={0} // Ajusta si tienes el monto
+                    fecha={pago.paymentDate}
+                    onVer={() => {}}
+                    onAprobar={() => {}}
+                    onRechazar={() => {}}
+                  />
                 ))}
               </div>
             </div>
