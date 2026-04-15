@@ -3,6 +3,7 @@ import type { UserDTO, UserResponseDTO } from './user';
 export type Position = 'GOALKEEPER' | 'DEFENDER' | 'MIDFIELDER' | 'FORWARD';
 
 export interface PlayerResponseDTO extends UserResponseDTO {
+  id: string;
   dorsalNumber: number;
   position: Position;
 }

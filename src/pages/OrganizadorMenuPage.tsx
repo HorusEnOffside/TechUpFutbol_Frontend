@@ -35,8 +35,8 @@ function BellIcon() {
 const MENU_ITEMS = [
   { id: 'pagos',    label: 'Pagos e inscripciones', path: null },
   { id: 'partidos', label: 'Gestión de partidos',   path: null },
-  { id: 'torneos',  label: 'Gestión de torneos',    path: null },
-  { id: 'sanciones',label: 'Sanciones',             path: null },
+  { id: 'torneos',  label: 'Gestión de torneos',    path: '/organizador/configuracion' },
+  { id: 'sanciones',label: 'Sanciones',             path: '/organizador/sanciones' },
 ];
 
 function SectionContent({ id }: { id: string }) {
