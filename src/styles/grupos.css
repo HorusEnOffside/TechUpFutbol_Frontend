@@ -78,6 +78,7 @@
   display: flex;
   gap: 3vw;
   padding: 1.5dvh 0 0 19%;
+  margin-top: 80px;
 }
 
 .grupos-tab {
@@ -213,6 +214,23 @@
   color: #ffffff;
   min-width: 20px;
   text-align: right;
+}
+
+/* próximamente */
+.grupos-proximamente {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(120px, 30dvh, 400px);
+}
+
+.grupos-proximamente-text {
+  font-family: 'Russo One', sans-serif;
+  font-size: clamp(18px, 3vw, 44px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 1px;
+  margin: 0;
 }
 
 /* llaves */

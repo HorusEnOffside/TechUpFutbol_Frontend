@@ -7,9 +7,19 @@ import logoBlanco from "../assets/logoBlanco.png";
  * Reutiliza el patrón de HomeNavbar pero con logo blanco
  * e iconos blancos para contraste sobre fondos oscuros.
  */
-export function NavBarTransparent() {
+interface NavBarTransparentProps {
+  onLogoClick?: () => void;
+}
+
+export function NavBarTransparent({ onLogoClick }: NavBarTransparentProps = {}) {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleLogoClick = onLogoClick ?? (() =>
+    location.pathname === "/"
+      ? window.scrollTo({ top: 0, behavior: "smooth" })
+      : navigate("/")
+  );
 
   return (
     <nav
@@ -19,13 +29,9 @@ export function NavBarTransparent() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo — clic vuelve al inicio */}
+          {/* Logo */}
           <button
-            onClick={() =>
-              location.pathname === "/"
-                ? window.scrollTo({ top: 0, behavior: "smooth" })
-                : navigate("/")
-            }
+            onClick={handleLogoClick}
             className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg"
             aria-label="Ir a la página principal"
           >
