@@ -12,6 +12,7 @@ import { OrganizadorHomePage } from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
 import { CapitanesPage } from '../pages/CapitanesPage';
 import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
+import { SancionesPage } from '../pages/SancionesPage';
 import Standings from '../pages/Standings';    
 
 //cambio
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
   {
     path: '/organizador/menu',
     element: <OrganizadorMenuPage />,
+  },
+  {
+    path: '/organizador/sanciones',
+    element: <SancionesPage />,
   },
   {
     path: '/player/capitanes',
