@@ -8,9 +8,10 @@ interface AuthSidePanelProps {
 
 export const AuthSidePanel: React.FC<AuthSidePanelProps> = ({ mode, onSwitch }) => {
   // Gradiente animado con transición suave usando un pseudo-elemento
-  const gradientFrom = mode === "login" ? '#17A65B' : '#071F4A';
+  const gradientFrom = mode === "login" ? '#0f5833' : '#071F4A';
   const gradientVia = '#144C9F';
-  const gradientTo = mode === "login" ? '#071F4A' : '#17A65B';
+  const gradientTo = mode === "login" ? '#071F4A' : '#0f5833';
+
 
   // Posición animada del círculo decorativo
   const circlePosition = mode === "login"

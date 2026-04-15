@@ -8,7 +8,7 @@ import { PlayerHomePage } from '../pages/PlayerHomePage';
 import { PlayerMenuPage } from '../pages/PlayerMenuPage';
 import { ArbitroHomePage } from '../pages/ArbitroHomePage';
 import { ArbitroMenuPage } from '../pages/ArbitroMenuPage';
-import { OrganizadorHomePage } from '../pages/OrganizadorHomePage';
+import OrganizadorHomePage from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
 import { CapitanesPage } from '../pages/CapitanesPage';
 import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    element: <LandingLayout><AuthContainer /></LandingLayout>,
+    element: <AuthContainer />,
   },
   {
     path: '/grupos',
@@ -64,11 +64,6 @@ export const router = createBrowserRouter([
   {
     path: '/player/capitanes/jugadores',
     element: <SeleccionJugadoresPage />,
-  },
-  {
-    path: '/app',
-    element: <AuthenticatedLayout><Home /></AuthenticatedLayout>,
-    // children: [...]
   },
   {
     path: '/standings',

@@ -19,8 +19,7 @@ export function Home() {
       <TorneoActualSection />
       
       
-      {/* TERCERA PARTE CLASIFICACIÓN */}
-      <StandingsSection />
+  
 
 
       <FooterHome />
