@@ -11,6 +11,7 @@ import { ArbitroHomePage } from '../pages/ArbitroHomePage';
 import { ArbitroMenuPage } from '../pages/ArbitroMenuPage';
 import OrganizadorHomePage from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
+import Standings from '../pages/Standings';
 
 export const router = createBrowserRouter([
   {
@@ -53,5 +54,9 @@ export const router = createBrowserRouter([
     path: '/app',
     element: <AuthenticatedLayout><Home /></AuthenticatedLayout>,
     // children: [...]
+  },
+  {
+    path: '/standings',
+    element: <Standings />,
   },
 ]);
