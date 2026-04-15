@@ -28,14 +28,14 @@ export function PagoPendienteCard({ equipo, monto, fecha, onVer, onAprobar, onRe
         </button>
         {/* Botón Aprobar */}
         <button
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 text-white font-semibold text-sm shadow-sm hover:bg-green-700 transition"
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-600/50 text-white font-semibold text-sm shadow-sm hover:bg-green-600/80 transition"
           onClick={onAprobar}
         >
           <CheckCircle className="w-5 h-5" /> Aprobar
         </button>
         {/* Botón Rechazar */}
         <button
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-500 text-white font-semibold text-sm shadow-sm hover:bg-red-600 transition"
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/50 text-white font-semibold text-sm shadow-sm hover:bg-red-500/80 transition"
           onClick={onRechazar}
         >
           <XCircle className="w-5 h-5" />

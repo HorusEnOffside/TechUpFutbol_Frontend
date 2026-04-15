@@ -2,15 +2,13 @@ import { Link, useNavigate, useLocation } from "react-router";
 import { LogIn, UserPlus } from "lucide-react";
 import logoMain from "../assets/logo.png";
 
-// Si en el futuro el Navbar recibe props, define aquí la interfaz
-// interface NavbarProps {}
 
 export function HomeNavbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
-    <nav className="bg-transparent backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-transparent backdrop-blur-md border-b border-white/20 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}

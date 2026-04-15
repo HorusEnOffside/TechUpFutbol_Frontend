@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    element: <LandingLayout><AuthContainer /></LandingLayout>,
+    element: <AuthContainer />,
   },
   {
     path: '/grupos',
@@ -49,11 +49,6 @@ export const router = createBrowserRouter([
   {
     path: '/organizador/menu',
     element: <OrganizadorMenuPage />,
-  },
-  {
-    path: '/app',
-    element: <AuthenticatedLayout><Home /></AuthenticatedLayout>,
-    // children: [...]
   },
   {
     path: '/standings',
