@@ -13,6 +13,7 @@ import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
 import { CapitanesPage } from '../pages/CapitanesPage';
 import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
 
+//cambio
 export const router = createBrowserRouter([
   {
     path: '/',
