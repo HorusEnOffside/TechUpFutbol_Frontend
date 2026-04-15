@@ -100,7 +100,7 @@ export default function Standings() {
           {/* Encabezado */}
           <div
             className="px-6 sm:px-8 py-5 flex items-center gap-3"
-            style={{ background: "linear-gradient(90deg, #071F4A 0%, #144C9F 100%)" }}
+            style={{ background: "linear-gradient(90deg, #144C9F 0%, #17A65B 100%)" }}
           >
             <Trophy className="w-6 h-6 text-[#39D17D] shrink-0" aria-hidden="true" />
             <h1
