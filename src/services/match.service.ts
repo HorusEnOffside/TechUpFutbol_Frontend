@@ -3,6 +3,7 @@ import type { MatchDTO, MatchResultDTO } from '../types/match';
 
 const MatchService = {
   /**
+<<<<<<< HEAD
    * Obtener todos los partidos
    * GET /matches  — requiere rol: USER, ADMIN o REFEREE
    */
@@ -17,6 +18,8 @@ const MatchService = {
   },
 
   /**
+=======
+>>>>>>> 644e3b6f447b7c3a68722e7412088ed6c273d44e
    * Obtener partido por ID
    * GET /matches/{id}
    */
@@ -25,6 +28,7 @@ const MatchService = {
     return data;
   },
 
+<<<<<<< HEAD
   /** Alias semántico de getMatch para uso en estadísticas */
   getMatchById: async (matchId: string): Promise<MatchDTO> => {
     try {
@@ -36,6 +40,8 @@ const MatchService = {
     }
   },
 
+=======
+>>>>>>> 644e3b6f447b7c3a68722e7412088ed6c273d44e
   /**
    * Registrar resultado de un partido
    * POST /matches/{id}/result
