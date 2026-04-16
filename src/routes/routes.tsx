@@ -13,7 +13,8 @@ import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
 import { CapitanesPage } from '../pages/CapitanesPage';
 import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
 import { SancionesPage } from '../pages/SancionesPage';
-import Standings from '../pages/Standings';    
+import Standings from '../pages/Standings';
+import MatchManagementPage from '../pages/MatchManagementPage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -68,5 +69,9 @@ export const router = createBrowserRouter([
   {
     path: '/standings',
     element: <Standings />,
+  },
+  {
+    path: '/organizador/match',
+    element: <MatchManagementPage />,
   },
 ]);
