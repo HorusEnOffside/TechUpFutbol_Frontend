@@ -1,17 +1,13 @@
-import { Bell, User } from "lucide-react";
+import { Bell, User, ChevronLeft } from "lucide-react";
 import { useNavigate, useLocation } from "react-router";
 import logoBlanco from "../assets/logoBlanco.png";
 
-/**
- * Navbar transparente para pantallas con fondo oscuro.
- * Reutiliza el patrón de HomeNavbar pero con logo blanco
- * e iconos blancos para contraste sobre fondos oscuros.
- */
 interface NavBarTransparentProps {
   onLogoClick?: () => void;
+  showBack?: boolean;
 }
 
-export function NavBarTransparent({ onLogoClick }: NavBarTransparentProps = {}) {
+export function NavBarTransparent({ onLogoClick, showBack = true }: NavBarTransparentProps = {}) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,22 +25,30 @@ export function NavBarTransparent({ onLogoClick }: NavBarTransparentProps = {}) 
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo */}
-          <button
-            onClick={handleLogoClick}
-            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg"
-            aria-label="Ir a la página principal"
-          >
-            <img
-              src={logoBlanco}
-              alt="Tech Cup Fútbol"
-              className="h-14 w-auto"
-            />
-          </button>
 
-          {/* Acciones de usuario */}
+          {/* Izquierda: botón volver + logo */}
           <div className="flex items-center gap-3">
-            {/* Notificaciones */}
+            {showBack && (
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all text-sm"
+                aria-label="Volver a la pantalla anterior"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                <span className="hidden sm:inline">Volver</span>
+              </button>
+            )}
+            <button
+              onClick={handleLogoClick}
+              className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg"
+              aria-label="Ir a la página principal"
+            >
+              <img src={logoBlanco} alt="Tech Cup Fútbol" className="h-14 w-auto" />
+            </button>
+          </div>
+
+          {/* Derecha: notificaciones + perfil */}
+          <div className="flex items-center gap-3">
             <button
               className="relative p-2 rounded-full hover:bg-white/10 transition-colors"
               aria-label="Notificaciones"
@@ -56,7 +60,6 @@ export function NavBarTransparent({ onLogoClick }: NavBarTransparentProps = {}) 
               />
             </button>
 
-            {/* Perfil */}
             <button
               onClick={() => navigate("/app")}
               className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white font-semibold text-sm hover:bg-white/20 transition-all"

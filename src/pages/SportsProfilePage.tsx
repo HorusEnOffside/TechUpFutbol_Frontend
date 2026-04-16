@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Pencil, Check, X, Upload, User, LogOut } from "lucide-react";
+import { BackButton } from "../components/BackButton";
 import { useNavigate } from "react-router";
 import PlayerService from "../services/player.service";
 import type { PlayerResponseDTO, Position } from "../types/player";
@@ -21,7 +22,7 @@ const SEMESTERS = Array.from({ length: 10 }, (_, i) => i + 1);
 type Availability = "Para jugar" | "No disponible" | "Lesionado";
 const AVAILABILITIES: Availability[] = ["Para jugar", "No disponible", "Lesionado"];
 
-// ─── Campo editable inline ─────────────────────────────────────────────────
+// campo editable
 function EditableField({
   label,
   value,
@@ -86,7 +87,7 @@ function EditableField({
   );
 }
 
-// ─── Página principal ──────────────────────────────────────────────────────
+// pagina principal
 export default function SportsProfilePage() {
   const { user } = useAuth();
   const navigate         = useNavigate();
@@ -96,7 +97,7 @@ export default function SportsProfilePage() {
   const [loading,      setLoading]      = useState(true);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
-  // Campos editables locales (se sincronizarían con PATCH al backend)
+  // campos editables
   const [position,     setPosition]     = useState<Position>("FORWARD");
   const [semester,     setSemester]     = useState<number>(1);
   const [availability, setAvailability] = useState<Availability>("Para jugar");
@@ -141,6 +142,7 @@ export default function SportsProfilePage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-[#050d1a]">
+      <BackButton />
 
       {/* ── Fondo ── */}
       <div

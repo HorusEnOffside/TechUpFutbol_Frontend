@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-
+import { BackButton } from '../components/BackButton';
 import logoBlanco from '../assets/logoBlanco.png';
 import bgImage    from '../assets/Background1.png';
 import { useSanciones } from '../hooks/useSanciones';
@@ -30,6 +30,7 @@ export function SancionesPage() {
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', background: '#000' }}>
+      <BackButton />
 
       {/* Fondo */}
       <img src={bgImage} alt="" aria-hidden
