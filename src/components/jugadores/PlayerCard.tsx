@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Jugador } from '../../types/jugador';
+import cartaVacia from '../../assets/CartaVacia.png';
 
 interface PlayerCardProps {
   jugador: Jugador;
@@ -37,14 +38,9 @@ export function PlayerCard({ jugador, selected, onClick, onAdd }: PlayerCardProp
               : '0 15px 35px rgba(0,0,0,0.5)',
           }}
         >
-          <img
-            src={jugador.foto}
-            alt={jugador.nombre}
-            className="w-full h-full object-cover"
-          />
+          <img src={jugador.foto} alt={jugador.nombre} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
 
-          {/* Posición badge */}
           <span
             className="absolute top-2 left-2 px-2 py-0.5 rounded border border-white/10 bg-black/70 text-white text-[10px] font-bold italic"
             style={{ fontFamily: 'Russo One' }}
@@ -52,12 +48,8 @@ export function PlayerCard({ jugador, selected, onClick, onAdd }: PlayerCardProp
             {jugador.posicion}
           </span>
 
-          {/* Nombre y carrera */}
           <div className="absolute bottom-3 left-0 right-0 text-center px-2">
-            <p
-              className="text-white text-[12px] leading-tight truncate uppercase italic"
-              style={{ fontFamily: 'Russo One' }}
-            >
+            <p className="text-white text-[12px] leading-tight truncate uppercase italic" style={{ fontFamily: 'Russo One' }}>
               {jugador.nombre}
             </p>
             <p className="text-green-500 text-[9px] mt-0.5 truncate font-bold uppercase tracking-wider">
@@ -66,68 +58,57 @@ export function PlayerCard({ jugador, selected, onClick, onAdd }: PlayerCardProp
           </div>
         </div>
 
-        {/* ── Cara trasera ── */}
+        {/* ── Cara trasera — CartaVacia como silueta ── */}
         <div
-          className="absolute inset-0 w-full h-full rounded-2xl flex flex-col p-3 shadow-2xl"
+          className="absolute inset-0 w-full h-full"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
-            background: 'linear-gradient(145deg, #050505, #151515)',
-            border: selected ? '3px solid #17A65B' : '1px solid rgba(255,255,255,0.4)',
           }}
         >
-          <div className="flex flex-col h-full">
-            <div className="border-b border-green-500/40 pb-1 mb-2">
-              <p
-                className="text-green-500 text-[10px] uppercase font-bold text-center"
-                style={{ fontFamily: 'Russo One' }}
-              >
-                PERFIL TÉCNICO
-              </p>
-            </div>
+          {/* Carta vacía — contiene su propia forma/transparencia */}
+          <img
+            src={cartaVacia}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 w-full h-full"
+            style={{
+              objectFit: 'contain',
+              filter: selected ? 'drop-shadow(0 0 10px rgba(23,166,91,0.8))' : 'drop-shadow(0 4px 12px rgba(0,0,0,0.7))',
+            }}
+          />
 
-            <div className="flex flex-col gap-2 flex-1 justify-center">
+          {/* Contenido dentro de la silueta de la carta */}
+          <div className="absolute inset-0 flex flex-col justify-center gap-2"
+            style={{ padding: '30px 22px 45px' }}>
+
+            <div className="flex flex-col gap-[4px]">
               {(
                 [
-                  ['ID', jugador.identificacion.slice(-4)],
-                  ['Edad', `${jugador.edad} años`],
+                  ['ID',       jugador.identificacion.slice(-4)],
+                  ['Edad',     `${jugador.edad} años`],
                   ['Semestre', `${jugador.semestre}º`],
-                  ['Género', jugador.genero === 'M' ? 'Masculino' : 'Femenino'],
+                  ['Género',   jugador.genero === 'M' ? 'Masc.' : 'Fem.'],
                 ] as [string, string][]
               ).map(([k, v]) => (
-                <div
-                  key={k}
-                  className="flex justify-between items-center border-b border-white/5 pb-1"
-                >
-                  <span className="text-[8px] text-white/50 uppercase font-bold tracking-tighter">
-                    {k}:
-                  </span>
-                  <span
-                    className="text-[9px] text-white font-bold"
-                    style={{ fontFamily: 'Russo One' }}
-                  >
-                    {v}
-                  </span>
+                <div key={k} className="flex items-center gap-2 pb-[3px]" style={{ borderBottom: '1px solid rgba(255,255,255,0.10)', marginRight: 10 }}>
+                  <span className="text-[8px] text-white/50 uppercase font-bold w-14 flex-shrink-0" style={{ fontFamily: 'Russo One' }}>{k}</span>
+                  <span className="text-[9px] text-white font-bold" style={{ fontFamily: 'Russo One' }}>{v}</span>
                 </div>
               ))}
             </div>
 
             <button
               onClick={onAdd}
-              className="mt-3 w-full py-2 rounded-lg bg-gradient-to-r from-green-600 to-green-800 text-white text-[10px] font-black italic uppercase tracking-widest hover:brightness-125 transition-all shadow-[0_0_15px_rgba(22,163,74,0.4)]"
-              style={{ fontFamily: 'Russo One' }}
+              className="w-3/4 mx-auto py-1 rounded-md text-white text-[8px] font-black uppercase tracking-widest hover:brightness-125 transition-all"
+              style={{ fontFamily: 'Russo One', background: 'linear-gradient(to right, #04156B, #046B10)' }}
             >
               Añadir
             </button>
 
-            <div
-              className="mt-2 pt-1 text-center opacity-30 uppercase text-[7px] tracking-[0.2em]"
-              style={{ fontFamily: 'Russo One' }}
-            >
-              TechCup ECI
-            </div>
           </div>
         </div>
+
       </div>
     </div>
   );
