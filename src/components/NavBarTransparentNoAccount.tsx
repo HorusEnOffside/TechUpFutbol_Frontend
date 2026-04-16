@@ -1,0 +1,69 @@
+import { Bell, User, ChevronLeft } from "lucide-react";
+import { useNavigate, useLocation } from "react-router";
+import logoBlanco from "../assets/logoBlanco.png";
+
+interface NavBarTransparentProps {
+  onLogoClick?: () => void;
+  showBack?: boolean;
+}
+
+export function NavBarTransparent({ onLogoClick, showBack = true }: NavBarTransparentProps = {}) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogoClick = onLogoClick ?? (() =>
+    location.pathname === "/"
+      ? window.scrollTo({ top: 0, behavior: "smooth" })
+      : navigate("/")
+  );
+
+  return (
+    <nav
+      className="absolute top-0 inset-x-0 z-50"
+      role="navigation"
+      aria-label="Navegación principal"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+
+          {/* Izquierda: botón volver + logo */}
+          <div className="flex items-center gap-3">
+            {showBack && (
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all text-sm "
+                aria-label="Volver a la pantalla anterior"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                <span className="hidden sm:inline">Volver</span>
+              </button>
+            )}
+            <button
+              onClick={handleLogoClick}
+              className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg"
+              aria-label="Ir a la página principal"
+            >
+              <img src={logoBlanco} alt="Tech Cup Fútbol" className="h-14 w-auto cursor-pointer" />
+            </button>
+          </div>
+
+          {/* Derecha: notificaciones + perfil */}
+          <div className="flex items-center gap-3">
+            <button
+              className="relative p-2 rounded-full hover:bg-white/10 transition-colors"
+              aria-label="Notificaciones"
+            >
+              <Bell className="w-6 h-6 text-white" />
+              <span
+                className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#39D17D] rounded-full"
+                aria-hidden="true"
+              />
+            </button>
+
+           
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
