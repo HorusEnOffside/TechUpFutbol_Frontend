@@ -49,7 +49,6 @@ export default function OrganizadorPaymentManagement() {
     }
   }, [busqueda]);
 
-  // Filtrar pagos por nombre de equipo
   const pagosFiltrados = pagosPendientes.filter(p =>
     p.equipo.toLowerCase().includes(busqueda.toLowerCase())
   );
@@ -114,9 +113,7 @@ export default function OrganizadorPaymentManagement() {
 
           
 
-          {/* Layout maestro: lateral izquierda (buscador + lista), lateral derecha (detalle o mensaje) */}
           <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {/* Lateral izquierda: buscador y lista */}
             <div className="col-span-1 rounded-2xl p-6 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col gap-4 bg-[#071F4A]/80 min-h-[400px]">
               <input
                 type="text"
@@ -146,7 +143,6 @@ export default function OrganizadorPaymentManagement() {
                 ))}
               </div>
             </div>
-            {/* Lateral derecha: detalle o mensaje */}
             <div className="col-span-2 rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col justify-center items-center bg-[#071F4A]/80 min-h-[400px]">
               {!pagoSeleccionado ? (
                 <div className="text-white/60 text-lg text-center">Escoge un pago de la lista para revisarlo.</div>
