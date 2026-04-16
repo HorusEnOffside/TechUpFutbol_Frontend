@@ -5,17 +5,7 @@ import { useAuth } from '../store/AuthContext';
 import { Users, Calendar} from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
 import canchaImg from "../assets/cancha.png";
-import { useNavigate } from "react-router";
 
-
-
-export default function ArbitroHomePage() {
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-
-  return (
-    <div className="player-wrapper">
-      <div className="player-page">
 
   // Simulación de partidos asignados al árbitro
   const partidos = [
@@ -52,6 +42,12 @@ export default function ArbitroHomePage() {
     if (!partidosPorFecha[key]) partidosPorFecha[key] = [];
     partidosPorFecha[key].push(p);
   });
+
+export default function ArbitroHomePage() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+
 
   return (
     <div className="min-h-screen w-full overflow-hidden relative">

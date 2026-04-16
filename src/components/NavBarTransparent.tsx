@@ -25,29 +25,13 @@ export function NavBarTransparent({ onLogoClick, showBack = true }: NavBarTransp
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo — clic vuelve al inicio */}
-          <button
-            onClick={() =>
-              location.pathname === "/"
-                ? window.scrollTo({ top: 0, behavior: "smooth" })
-                : navigate("/")
-            }
-            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg cursor-pointer"
-            aria-label="Ir a la página principal"
-          >
-            <img
-              src={logoBlanco}
-              alt="Tech Cup Fútbol"
-              className="h-14 w-auto"
-            />
-          </button>
 
           {/* Izquierda: botón volver + logo */}
           <div className="flex items-center gap-3">
             {showBack && (
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all text-sm"
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all text-sm "
                 aria-label="Volver a la pantalla anterior"
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -59,7 +43,7 @@ export function NavBarTransparent({ onLogoClick, showBack = true }: NavBarTransp
               className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg"
               aria-label="Ir a la página principal"
             >
-              <img src={logoBlanco} alt="Tech Cup Fútbol" className="h-14 w-auto" />
+              <img src={logoBlanco} alt="Tech Cup Fútbol" className="h-14 w-auto cursor-pointer" />
             </button>
           </div>
 
