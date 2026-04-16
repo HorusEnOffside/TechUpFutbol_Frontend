@@ -26,7 +26,7 @@ export function NavBarTransparent() {
                 ? window.scrollTo({ top: 0, behavior: "smooth" })
                 : navigate("/")
             }
-            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg"
+            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-lg cursor-pointer"
             aria-label="Ir a la página principal"
           >
             <img

@@ -14,6 +14,8 @@ import { CapitanesPage } from '../pages/CapitanesPage';
 import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
 import { SancionesPage } from '../pages/SancionesPage';
 import Standings from '../pages/Standings';    
+import OrganizadorPaymentManagement from '../pages/OrganizadorPaymentManagement';
+import HistorialPagosPage from '../pages/HistorialPagosPage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -52,6 +54,14 @@ export const router = createBrowserRouter([
   {
     path: '/organizador/menu',
     element: <OrganizadorMenuPage />,
+  },
+  {
+    path: '/organizador/Payments',
+    element: <OrganizadorPaymentManagement />,
+  },
+  {
+    path: '/organizador/historial-pagos',
+    element: <HistorialPagosPage />,
   },
   {
     path: '/organizador/sanciones',

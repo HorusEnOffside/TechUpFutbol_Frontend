@@ -5,10 +5,12 @@ import { PagoPendienteCard } from "../components/PagoPendienteCard";
 import { QuickActionButton } from "../components/QuickActionButton";
 import canchaImg from "../assets/cancha.png";
 import { usePendingPayments } from "../hooks/usePendingPayments";
+import { useNavigate } from "react-router";
 
 
 
 export default function OrganizadorHomePage() {
+  const navigate = useNavigate();
   const { payments: pagosPendientes, loading, error } = usePendingPayments();
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
@@ -48,13 +50,13 @@ export default function OrganizadorHomePage() {
                 <div className="flex flex-wrap items-center gap-3 mb-2">
                   <span className="inline-flex items-center gap-2 bg-[#17A65B]/20 border border-[#39D17D]/40 text-[#39D17D] px-4 py-1.5 rounded-full text-sm font-semibold backdrop-blur-sm">
                     <span className="w-2 h-2 bg-[#39D17D] rounded-full animate-pulse" aria-hidden="true" />
-                    Organizador de esta clase
+                    Organizador
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-white/40 text-xs">
 
                   </span>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-black text-white mb-1" style={{fontFamily: 'Montserrat, sans-serif'}}>Panel de Administración</h1>
+                <h1 className="text-3xl md:text-4xl font-black text-white mb-1" style={{fontFamily: 'Montserrat, sans-serif'}}>Panel del Organizador</h1>
                 <p className="text-base md:text-lg text-white/80">Gestiona el torneo Tech Cup Fútbol Universitario</p>
               </div>
             </div>
@@ -105,7 +107,7 @@ export default function OrganizadorHomePage() {
             <div className="rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col gap-4 h-fit" style={{background: "rgba(7,31,74,0.92)"}}>
               <div className="text-[#39D17D] font-black text-2xl mb-2" style={{fontFamily: 'Montserrat, sans-serif'}}>Acciones Rápidas</div>
               <QuickActionButton label="Crear Torneo" icon={<Calendar className="w-5 h-5" />} primary onClick={() => {}} />
-              <QuickActionButton label="Revisar Pagos" icon={<DollarSign className="w-5 h-5" />} onClick={() => {}} primary={false} />
+              <QuickActionButton label="Revisar Pagos" icon={<DollarSign className="w-5 h-5" />} onClick={() => navigate('/organizador/Payments')} primary={false} />
               <QuickActionButton label="Ver Equipos" icon={<Users className="w-5 h-5" />} onClick={() => {}} primary={false} />
               <QuickActionButton label="Reportes" icon={<User className="w-5 h-5" />} onClick={() => {}} primary={false} />
             </div>
