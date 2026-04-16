@@ -87,16 +87,20 @@ export const PagoDetalleCard: React.FC<PagoDetalleCardProps> = ({
           </button>
         </div>
       </div>
-      {/* Columna derecha: foto comprobante */}
-      {urlComprobante && (
-        <div className="flex-shrink-0 flex items-center justify-center md:w-64 w-full mt-6 md:mt-0">
+      {/* Columna derecha: foto comprobante (real o simulada) */}
+      <div className="flex-shrink-0 flex items-center justify-center md:w-64 w-full mt-6 md:mt-0">
+        {urlComprobante ? (
           <img
             src={urlComprobante}
             alt="Comprobante de pago"
             className="rounded-xl border border-white/20 max-h-64 object-contain bg-white/10"
           />
-        </div>
-      )}
+        ) : (
+          <div className="rounded-xl border border-white/20 max-h-64 w-full h-40 flex items-center justify-center bg-white/10">
+            <span className="text-white/60 text-sm">[Foto del comprobante]</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

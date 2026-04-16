@@ -16,6 +16,7 @@ import { SancionesPage } from '../pages/SancionesPage';
 import Standings from '../pages/Standings';    
 import OrganizadorPaymentManagement from '../pages/OrganizadorPaymentManagement';
 import HistorialPagosPage from '../pages/HistorialPagosPage';
+import OrganizadorCreationTournamentPage from '../pages/OrganizadorCreationTournamentPage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
   {
     path: '/organizador/historial-pagos',
     element: <HistorialPagosPage />,
+  },
+  {
+    path: '/organizador/creacion-torneo',
+    element: <OrganizadorCreationTournamentPage />,
   },
   {
     path: '/organizador/sanciones',

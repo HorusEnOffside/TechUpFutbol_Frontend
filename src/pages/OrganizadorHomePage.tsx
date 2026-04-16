@@ -1,17 +1,37 @@
 
-import { User, Users, Calendar, AlertCircle, DollarSign, Loader2 } from "lucide-react";
+import { User, Users, Calendar, AlertCircle, DollarSign, Loader2, ChartColumnBig, History } from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
 import { PagoPendienteCard } from "../components/PagoPendienteCard";
 import { QuickActionButton } from "../components/QuickActionButton";
 import canchaImg from "../assets/cancha.png";
-import { usePendingPayments } from "../hooks/usePendingPayments";
+// import { usePendingPayments } from "../hooks/usePendingPayments";
 import { useNavigate } from "react-router";
 
 
 
 export default function OrganizadorHomePage() {
   const navigate = useNavigate();
-  const { payments: pagosPendientes, loading, error } = usePendingPayments();
+  // Lista quemada de pagos pendientes
+  const pagosPendientes = [
+    {
+      id: '1',
+      status: 'PENDING',
+      description: 'Equipo Los Tigres',
+      paymentDate: '2026-04-15 10:30',
+      urlComprobante: '',
+      monto: 80000,
+    },
+    {
+      id: '2',
+      status: 'PENDING',
+      description: 'Equipo Los Leones',
+      paymentDate: '2026-04-14 15:00',
+      urlComprobante: '',
+      monto: 90000,
+    },
+  ];
+  const loading = false;
+  const error = null;
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
       {/* Fondo */}
@@ -90,26 +110,29 @@ export default function OrganizadorHomePage() {
                     <span className="text-sm">Aún no hay pagos pendientes.</span>
                   </div>
                 )}
-                {!loading && !error && pagosPendientes.length > 0 && pagosPendientes.map((pago) => (
-                  <PagoPendienteCard
-                    key={pago.id}
-                    equipo={pago.description}
-                    monto={0} // Ajusta si tienes el monto
-                    fecha={pago.paymentDate}
-                    onVer={() => {}}
-                    onAprobar={() => {}}
-                    onRechazar={() => {}}
-                  />
-                ))}
+                {!loading && !error && pagosPendientes.length > 0 &&
+                  pagosPendientes
+                    .filter((pago) => pago.status === 'PENDING')
+                    .map((pago) => (
+                      <PagoPendienteCard
+                        key={pago.id}
+                        equipo={pago.description}
+                        monto={pago.monto}
+                        fecha={pago.paymentDate}
+                        onVer={() => navigate('/organizador/Payments')}
+                        revisarMode
+                      />
+                    ))}
               </div>
             </div>
             {/* Acciones rápidas */}
             <div className="rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col gap-4 h-fit" style={{background: "rgba(7,31,74,0.92)"}}>
               <div className="text-[#39D17D] font-black text-2xl mb-2" style={{fontFamily: 'Montserrat, sans-serif'}}>Acciones Rápidas</div>
-              <QuickActionButton label="Crear Torneo" icon={<Calendar className="w-5 h-5" />} primary onClick={() => {}} />
+              <QuickActionButton label="Crear Torneo" icon={<Calendar className="w-5 h-5" />} primary onClick={() => {navigate('/organizador/creacion-torneo')}} />
               <QuickActionButton label="Revisar Pagos" icon={<DollarSign className="w-5 h-5" />} onClick={() => navigate('/organizador/Payments')} primary={false} />
               <QuickActionButton label="Ver Equipos" icon={<Users className="w-5 h-5" />} onClick={() => {}} primary={false} />
-              <QuickActionButton label="Reportes" icon={<User className="w-5 h-5" />} onClick={() => {}} primary={false} />
+              <QuickActionButton label="Reportes" icon={<ChartColumnBig className="w-5 h-5" />} onClick={() => {}} primary={false} />
+              <QuickActionButton label="Historial Torneos" icon={<History className="w-5 h-5" />} onClick={() => {}} primary={false} />
             </div>
           </section>
         </div>

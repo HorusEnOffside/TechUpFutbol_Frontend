@@ -7,15 +7,16 @@ import { QuickActionButton } from "../components/QuickActionButton";
 import canchaImg from "../assets/cancha.png";
 import { useNavigate } from "react-router";
 
+import { useState, useEffect } from "react";
+
 export default function OrganizadorPaymentManagement() {
   const navigate = useNavigate();
   // Simulación de pagos pendientes
-  const loading = false;
-  const error = null;
   const pagosPendientes = [
     {
       id: '10000088456',
       status: 'PENDING' as const,
+      equipo: 'Los Tigres',
       description: 'Monto de $80.000 confirmado. Inscripción exitosa para la fase de grupos.',
       descripcionComprobante: 'Pago realizado por el equipo Los Tigres. Referencia: 123456.',
       paymentDate: '2026-04-15T10:30:00Z',
@@ -23,6 +24,7 @@ export default function OrganizadorPaymentManagement() {
     {
       id: '10000088457',
       status: 'PENDING' as const,
+      equipo: 'Los Leones',
       description: 'Pago pendiente de verificación.',
       descripcionComprobante: 'Pago realizado por el equipo Los Leones. Referencia: 654321.',
       paymentDate: '2026-04-14T15:00:00Z',
@@ -30,11 +32,28 @@ export default function OrganizadorPaymentManagement() {
     {
       id: '10000088458',
       status: 'PENDING' as const,
+      equipo: 'Las Águilas',
       description: 'Pago recibido, falta comprobante.',
       descripcionComprobante: 'Pago realizado por el equipo Las Águilas. Referencia: 789012.',
       paymentDate: '2026-04-13T18:45:00Z',
-    },
+    }
+    
   ];
+  const [busqueda, setBusqueda] = useState("");
+  const [pagoSeleccionado, setPagoSeleccionado] = useState<typeof pagosPendientes[0] | null>(null);
+
+  // Limpiar selección si el pago seleccionado ya no está en la lista filtrada
+  useEffect(() => {
+    if (pagoSeleccionado && !pagosFiltrados.some(p => p.id === pagoSeleccionado.id)) {
+      setPagoSeleccionado(null);
+    }
+  }, [busqueda]);
+
+  // Filtrar pagos por nombre de equipo
+  const pagosFiltrados = pagosPendientes.filter(p =>
+    p.equipo.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
       {/* Fondo */}
@@ -95,48 +114,54 @@ export default function OrganizadorPaymentManagement() {
 
           
 
-          {/* Pagos pendientes y acciones rápidas */}
-          <section className="grid gap-8 mb-16">
-            {/* Pagos pendientes */}
-            <div className="lg:col-span-2 rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col" style={{background: "rgba(7,31,74,0.92)"}}>
-              <div className="flex justify-between items-center mb-4">
-                <div className="text-[#17A65B] font-black text-2xl" style={{fontFamily: 'Montserrat, sans-serif'}}>Pagos Pendientes de Aprobación</div>
-                <span className="text-xs bg-white/10 px-3 py-1 rounded-full text-white font-bold">{pagosPendientes.length}</span>
-              </div>
-              <div className="text-base text-white/80 mb-4">Revisa y aprueba los pagos de los equipos</div>
-              <div className="flex flex-col gap-3 min-h-[120px]">
-                {loading && (
-                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
-                    <Loader2 className="w-7 h-7 animate-spin text-[#39D17D]" />
-                    <span className="text-sm">Cargando pagos…</span>
-                  </div>
+          {/* Layout maestro: lateral izquierda (buscador + lista), lateral derecha (detalle o mensaje) */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            {/* Lateral izquierda: buscador y lista */}
+            <div className="col-span-1 rounded-2xl p-6 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col gap-4 bg-[#071F4A]/80 min-h-[400px]">
+              <input
+                type="text"
+                placeholder="Buscar equipo..."
+                className="mb-4 px-4 py-2 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#39D17D]"
+                value={busqueda}
+                onChange={e => setBusqueda(e.target.value)}
+              />
+              <div className="flex flex-col gap-2 overflow-y-auto max-h-[350px] scrollbar-hide">
+                {pagosFiltrados.length === 0 && (
+                  <div className="text-white/60 text-center py-8">No hay pagos para mostrar.</div>
                 )}
-                {!loading && error && (
-                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
-                    <AlertCircle className="w-7 h-7 text-red-400" />
-                    <span className="text-sm">{error}</span>
-                  </div>
-                )}
-                {!loading && !error && pagosPendientes.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
-                    <User className="w-7 h-7" />
-                    <span className="text-sm">Aún no hay pagos pendientes.</span>
-                  </div>
-                )}
-                {!loading && !error && pagosPendientes.length > 0 && pagosPendientes.map((pago) => (
-                  <PagoDetalleCard
+                {pagosFiltrados.map((pago) => (
+                  <button
                     key={pago.id}
-                    id={pago.id}
-                    status={pago.status}
-                    description={pago.description}
-                    descripcionComprobante={pago.descripcionComprobante}
-                    monto={undefined} // Si tienes el monto, pásalo aquí
-                    fecha={pago.paymentDate}
-                    onAprobar={() => {}}
-                    onRechazar={() => {}}
-                  />
+                    type="button"
+                    className={`flex flex-col items-start w-full text-left rounded-lg px-4 py-3 border bg-white/5 hover:bg-[#144C9F]/40 transition
+                      ${pagoSeleccionado && pagoSeleccionado.id === pago.id
+                        ? 'bg-[#144C9F] border-4 border-[#39FFB0] shadow-lg text-white'
+                        : 'border border-white/10'}
+                    `}
+                    onClick={() => setPagoSeleccionado(pago)}
+                  >
+                    <span className="font-bold text-white text-base">{pago.equipo}</span>
+                    <span className="text-xs text-white/60">{new Date(pago.paymentDate).toLocaleDateString()} {new Date(pago.paymentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  </button>
                 ))}
               </div>
+            </div>
+            {/* Lateral derecha: detalle o mensaje */}
+            <div className="col-span-2 rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col justify-center items-center bg-[#071F4A]/80 min-h-[400px]">
+              {!pagoSeleccionado ? (
+                <div className="text-white/60 text-lg text-center">Escoge un pago de la lista para revisarlo.</div>
+              ) : (
+                <PagoDetalleCard
+                  id={pagoSeleccionado.id}
+                  status={pagoSeleccionado.status}
+                  description={pagoSeleccionado.description}
+                  descripcionComprobante={pagoSeleccionado.descripcionComprobante}
+                  monto={undefined}
+                  fecha={pagoSeleccionado.paymentDate}
+                  onAprobar={() => {}}
+                  onRechazar={() => {}}
+                />
+              )}
             </div>
           </section>
         </div>
