@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router';
 import { LandingLayout } from '../components/LandingLayout';
-import { AuthenticatedLayout } from '../components/AuthenticatedLayout';
 import { Home } from '../pages/Home';
 import AuthContainer from '../pages/AuthContainer';
 import { GruposPage } from '../pages/GruposPage';
@@ -13,7 +12,11 @@ import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
 import { CapitanesPage } from '../pages/CapitanesPage';
 import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
 import { SancionesPage } from '../pages/SancionesPage';
-import Standings from '../pages/Standings';    
+import Standings from '../pages/Standings';
+import { EstadisticasPage } from '../pages/EstadisticasPage';
+import { PlantillaPage } from '../pages/PlantillaPage';
+import MatchManagementPage from '../pages/MatchManagementPage';
+import SportsProfilePage from '../pages/SportsProfilePage';
 import OrganizadorPaymentManagement from '../pages/OrganizadorPaymentManagement';
 import HistorialPagosPage from '../pages/HistorialPagosPage';
 import OrganizadorCreationTournamentPage from '../pages/OrganizadorCreationTournamentPage';
@@ -83,5 +86,21 @@ export const router = createBrowserRouter([
   {
     path: '/standings',
     element: <Standings />,
+  },
+  {
+    path: '/organizador/match',
+    element: <MatchManagementPage />,
+  },
+  {
+    path: '/player/plantilla',
+    element: <PlantillaPage />,
+  },
+  {
+    path: '/player/sports-profile',
+    element: <SportsProfilePage />,
+  },
+  {
+    path: '/player/estadisticas',
+    element: <EstadisticasPage />,
   },
 ]);

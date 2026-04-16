@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import '../styles/player.css';
+import { useAuth } from '../store/AuthContext';
 
 import logoBlanco  from '../assets/logoBlanco.png';
 import bgVideo     from '../assets/James.mp4';
@@ -35,8 +36,8 @@ function BellIcon() {
 // ─── Menu items — label + where to navigate on content click ─────────────────
 const MENU_ITEMS = [
   { id: 'llaves',    label: 'Llaves eliminatorias', path: '/grupos' },
-  { id: 'tabla',     label: 'Tabla de posiciones',  path: null },
-  { id: 'stats',     label: 'Estadísticas',          path: null },
+  { id: 'tabla',     label: 'Tabla de posiciones',  path: '/standings' },
+  { id: 'stats',     label: 'Estadísticas',          path: '/player/estadisticas' },
   { id: 'capitanes', label: 'Capitanes',             path: '/player/capitanes' },
   { id: 'pagos',     label: 'Pagos',                 path: null },
 ];
@@ -101,6 +102,7 @@ function SectionContent({ id, onNavigate }: { id: string; onNavigate: (path: str
 
 export function PlayerMenuPage() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [activeId, setActiveId] = useState('llaves');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
@@ -119,7 +121,7 @@ export function PlayerMenuPage() {
         <header className="player-topbar">
           <img src={logoBlanco} alt="TechCup Fútbol" className="player-logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/player')} />
           <span className="player-welcome-text">¡Bienvenido James!</span>
-          <button className="player-avatar" onClick={() => navigate('/login')} aria-label="Perfil">
+          <button className="player-avatar" onClick={() => navigate('/player/sports-profile')} aria-label="Perfil">
             <UserIcon />
           </button>
         </header>
@@ -147,7 +149,10 @@ export function PlayerMenuPage() {
           <button className="player-notif-btn" aria-label="Notificaciones">
             <BellIcon />
           </button>
-          <button className="player-logout-btn" onClick={() => navigate('/login')}>
+          <button className="player-logout-btn" onClick={() => navigate(-1)}>
+            ← Volver
+          </button>
+          <button className="player-logout-btn" onClick={() => { logout(); navigate('/auth'); }}>
             Cerrar Sesión
           </button>
         </footer>

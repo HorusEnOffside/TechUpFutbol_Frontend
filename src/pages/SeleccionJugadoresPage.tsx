@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import TeamService from '../services/team.service';
+import { BackButton } from '../components/BackButton';
 import sjBg   from '../assets/sj_bg.png';
 import sjLogo from '../assets/sj_logo.png';
 
@@ -60,6 +61,7 @@ export function SeleccionJugadoresPage() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
+      <BackButton />
       {/* Background */}
       <img src={sjBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-black/40" aria-hidden />
@@ -110,6 +112,16 @@ export function SeleccionJugadoresPage() {
           <button onClick={resetFiltros} className="text-green-400/70 hover:text-green-400 text-[11px] underline text-left font-bold" style={{ fontFamily: 'Russo One' }}>
             Limpiar filtros
           </button>
+
+          {showSuccessModal && (
+            <button
+              onClick={() => navigate('/player/menu')}
+              className="w-full py-3 rounded-lg text-white font-bold transition-all hover:scale-105"
+              style={{ fontFamily: 'Russo One', background: 'linear-gradient(to right, #04156B, #046B10)', marginTop: 8 }}
+            >
+              IR AL MENÚ →
+            </button>
+          )}
         </div>
       </aside>
 
@@ -193,13 +205,22 @@ export function SeleccionJugadoresPage() {
             <p className="text-gray-400 text-sm mb-6">
               Se han generado {total} invitaciones correctamente para tu equipo en <strong>TechCup</strong>.
             </p>
-            <button
-              onClick={() => navigate('/player/menu')}
-              className="w-full py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg transition-colors"
-              style={{ fontFamily: 'Russo One' }}
-            >
-              VOLVER AL MENÚ
-            </button>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => navigate('/player/menu')}
+                className="w-full py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg transition-colors"
+                style={{ fontFamily: 'Russo One' }}
+              >
+                IR AL MENÚ
+              </button>
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className="w-full py-3 bg-white/10 hover:bg-white/20 text-white font-bold rounded-lg transition-colors border border-white/10"
+                style={{ fontFamily: 'Russo One' }}
+              >
+                SEGUIR SELECCIONANDO
+              </button>
+            </div>
           </div>
         </div>
       )}
