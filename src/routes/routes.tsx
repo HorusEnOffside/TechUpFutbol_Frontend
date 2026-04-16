@@ -17,6 +17,7 @@ import Standings from '../pages/Standings';
 import { EstadisticasPage } from '../pages/EstadisticasPage';
 import { PlantillaPage } from '../pages/PlantillaPage';
 import MatchManagementPage from '../pages/MatchManagementPage';
+import SportsProfilePage from '../pages/SportsProfilePage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -79,5 +80,9 @@ export const router = createBrowserRouter([
   {
     path: '/player/plantilla',
     element: <PlantillaPage />,
+  },
+  {
+    path: '/player/sports-profile',
+    element: <SportsProfilePage />,
   },
 ]);

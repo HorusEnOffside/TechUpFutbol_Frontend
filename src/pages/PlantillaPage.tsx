@@ -259,7 +259,6 @@ export function PlantillaPage() {
       <div
         className="absolute top-20 left-1/2 z-50 pointer-events-none"
         style={{
-          transform: 'translateX(-50%)',
           transition: 'opacity 0.25s, transform 0.25s',
           opacity: toast ? 1 : 0,
           transform: toast ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-12px)',
