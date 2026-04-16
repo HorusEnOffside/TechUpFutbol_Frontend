@@ -14,7 +14,7 @@ import { CapitanesPage } from '../pages/CapitanesPage';
 import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
 import { SancionesPage } from '../pages/SancionesPage';
 import Standings from '../pages/Standings';
-import { EstadisticasPage } from '../pages/EstadisticasPage';
+import MatchManagementPage from '../pages/MatchManagementPage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -71,7 +71,7 @@ export const router = createBrowserRouter([
     element: <Standings />,
   },
   {
-    path: '/player/estadisticas',
-    element: <EstadisticasPage />,
+    path: '/organizador/match',
+    element: <MatchManagementPage />,
   },
 ]);
