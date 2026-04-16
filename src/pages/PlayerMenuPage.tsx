@@ -36,7 +36,7 @@ function BellIcon() {
 const MENU_ITEMS = [
   { id: 'llaves',    label: 'Llaves eliminatorias', path: '/grupos' },
   { id: 'tabla',     label: 'Tabla de posiciones',  path: null },
-  { id: 'stats',     label: 'Estadísticas',          path: null },
+  { id: 'stats',     label: 'Estadísticas',          path: '/player/estadisticas' },
   { id: 'capitanes', label: 'Capitanes',             path: '/player/capitanes' },
   { id: 'pagos',     label: 'Pagos',                 path: null },
 ];
