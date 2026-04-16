@@ -1,5 +1,6 @@
 import apiClient from './api';
 import type { MatchDTO, MatchResultDTO } from '../types/match';
+import type { Match } from '../types/bracket';
 
 const MatchService = {
   /**
@@ -34,6 +35,34 @@ const MatchService = {
       if (error instanceof Error) throw error;
       throw new Error('Error inesperado');
     }
+  },
+
+  /**
+   * Partidos de un torneo específico.
+   * GET /matches — el backend devuelve todos; filtramos por torneoId en frontend.
+   * Requiere rol: USER, ADMIN o REFEREE.
+   */
+  getMatchesByTournament: async (tournamentId: string): Promise<Match[]> => {
+    try {
+      const { data } = await apiClient.get<Match[]>('/matches');
+      return data.filter(
+        (m) =>
+          m.teamA?.tournament?.id === tournamentId ||
+          m.teamB?.tournament?.id === tournamentId,
+      );
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Error inesperado');
+    }
+  },
+
+  /**
+   * Partidos de fase de grupos de un torneo (PENDING y FINISHED).
+   * Retorna todos los partidos del torneo — el componente usa el status
+   * para mostrar el estado actual de cada partido en la vista de grupo.
+   */
+  getGroupPhaseMatches: async (tournamentId: string): Promise<Match[]> => {
+    return MatchService.getMatchesByTournament(tournamentId);
   },
 
   /**

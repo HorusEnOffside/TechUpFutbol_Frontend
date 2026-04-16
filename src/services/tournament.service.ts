@@ -91,6 +91,21 @@ const TournamentService = {
   },
 
   /**
+   * Obtener torneo activo (status IN_PROGRESS o ACTIVE)
+   * GET /tournaments/active  — requiere autenticación
+   * Punto de entrada principal del módulo de fases.
+   */
+  getActiveTournament: async (): Promise<TournamentResponseDTO> => {
+    try {
+      const response = await apiClient.get<TournamentResponseDTO>('/tournaments/active');
+      return response.data;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Error inesperado');
+    }
+  },
+
+  /**
    * Obtener tabla de posiciones de un torneo
    * GET /tournaments/{id}/standings
    */
