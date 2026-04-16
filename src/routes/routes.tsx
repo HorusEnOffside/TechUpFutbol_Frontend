@@ -15,6 +15,7 @@ import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
 import { SancionesPage } from '../pages/SancionesPage';
 import Standings from '../pages/Standings';
 import { EstadisticasPage } from '../pages/EstadisticasPage';
+import { PlantillaPage } from '../pages/PlantillaPage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -73,5 +74,9 @@ export const router = createBrowserRouter([
   {
     path: '/player/estadisticas',
     element: <EstadisticasPage />,
+  },
+  {
+    path: '/player/plantilla',
+    element: <PlantillaPage />,
   },
 ]);
