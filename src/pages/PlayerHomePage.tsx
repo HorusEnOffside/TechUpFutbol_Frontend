@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 import '../styles/player.css';
+import { useAuth } from '../store/AuthContext';
 
 import logoBlanco from '../assets/logoBlanco.png';
 import bgVideo    from '../assets/James.mp4';
@@ -28,6 +29,7 @@ function BellIcon() {
 
 export function PlayerHomePage() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   return (
     <div className="player-wrapper">
@@ -58,7 +60,7 @@ export function PlayerHomePage() {
           <span className="player-welcome-text">¡Bienvenido James!</span>
 
           {/* Avatar */}
-          <button className="player-avatar" onClick={() => navigate('/login')} aria-label="Perfil">
+          <button className="player-avatar" onClick={() => navigate('/player/sports-profile')} aria-label="Perfil">
             <UserIcon />
           </button>
         </header>
@@ -80,7 +82,10 @@ export function PlayerHomePage() {
           <button className="player-notif-btn" aria-label="Notificaciones">
             <BellIcon />
           </button>
-          <button className="player-logout-btn" onClick={() => navigate('/login')}>
+          <button className="player-logout-btn" onClick={() => navigate(-1)}>
+            ← Volver
+          </button>
+          <button className="player-logout-btn" onClick={() => { logout(); navigate('/auth'); }}>
             Cerrar Sesión
           </button>
         </footer>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
+import { BackButton } from '../components/BackButton';
 import cancha     from '../assets/capitanes_bg.png';
 import capitanImg from '../assets/capitanes_player.png';
 import subirImagen from '../assets/capitanes_upload.png';
@@ -64,6 +65,7 @@ export function CapitanesPage() {
 
   return (
     <div className="relative w-full h-screen overflow-hidden font-sans bg-black flex flex-col">
+      <BackButton />
       {isLoading && <LoadingOverlay />}
 
       {/* Header */}

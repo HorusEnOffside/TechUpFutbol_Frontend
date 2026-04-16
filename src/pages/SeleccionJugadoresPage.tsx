@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import TeamService from '../services/team.service';
+import { BackButton } from '../components/BackButton';
 import sjBg   from '../assets/sj_bg.png';
 import sjLogo from '../assets/sj_logo.png';
 
@@ -60,6 +61,7 @@ export function SeleccionJugadoresPage() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
+      <BackButton />
       {/* Background */}
       <img src={sjBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-black/40" aria-hidden />

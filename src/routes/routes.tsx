@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router';
 import { LandingLayout } from '../components/LandingLayout';
-import { AuthenticatedLayout } from '../components/AuthenticatedLayout';
 import { Home } from '../pages/Home';
 import AuthContainer from '../pages/AuthContainer';
 import { GruposPage } from '../pages/GruposPage';
@@ -84,5 +83,9 @@ export const router = createBrowserRouter([
   {
     path: '/player/sports-profile',
     element: <SportsProfilePage />,
+  },
+  {
+    path: '/player/estadisticas',
+    element: <EstadisticasPage />,
   },
 ]);

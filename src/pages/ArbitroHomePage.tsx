@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 import '../styles/player.css';
+import { useAuth } from '../store/AuthContext';
 
 import logoBlanco from '../assets/logoBlanco.png';
 import bgVideo    from '../assets/menuArbitro.mp4';
@@ -28,8 +29,7 @@ function BellIcon() {
 
 export function ArbitroHomePage() {
   const navigate = useNavigate();
-
-  const handleLogout = () => navigate('/login');
+  const { logout } = useAuth();
 
   return (
     <div className="player-wrapper">
@@ -43,7 +43,7 @@ export function ArbitroHomePage() {
         <header className="player-topbar">
           <img src={logoBlanco} alt="TechCup Fútbol" className="player-logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/arbitro/menu')} />
           <span className="player-welcome-text">¡Bienvenido Raúl!</span>
-          <button className="player-avatar" onClick={() => navigate('/arbitro/perfil')} aria-label="Perfil">
+          <button className="player-avatar" onClick={() => navigate('/arbitro/menu')} aria-label="Perfil">
             <UserIcon />
           </button>
         </header>
@@ -63,7 +63,10 @@ export function ArbitroHomePage() {
           <button className="player-notif-btn" aria-label="Notificaciones">
             <BellIcon />
           </button>
-          <button className="player-logout-btn" onClick={handleLogout}>
+          <button className="player-logout-btn" onClick={() => navigate(-1)}>
+            ← Volver
+          </button>
+          <button className="player-logout-btn" onClick={() => { logout(); navigate('/auth'); }}>
             Cerrar Sesión
           </button>
         </footer>
