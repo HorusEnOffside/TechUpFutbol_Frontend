@@ -1,0 +1,48 @@
+import apiClient from './api';
+import type { MatchDTO, MatchResultDTO } from '../types/match';
+
+const MatchService = {
+  /**
+   * Obtener todos los partidos
+   * GET /matches  — requiere rol: USER, ADMIN o REFEREE
+   */
+  getAllMatches: async (): Promise<MatchDTO[]> => {
+    try {
+      const { data } = await apiClient.get<MatchDTO[]>('/matches');
+      return data;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Error inesperado');
+    }
+  },
+
+  /**
+   * Obtener partido por ID
+   * GET /matches/{id}
+   */
+  getMatch: async (id: string): Promise<MatchDTO> => {
+    const { data } = await apiClient.get<MatchDTO>(`/matches/${id}`);
+    return data;
+  },
+
+  /** Alias semántico de getMatch para uso en estadísticas */
+  getMatchById: async (matchId: string): Promise<MatchDTO> => {
+    try {
+      const { data } = await apiClient.get<MatchDTO>(`/matches/${matchId}`);
+      return data;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Error inesperado');
+    }
+  },
+
+  /**
+   * Registrar resultado de un partido
+   * POST /matches/{id}/result
+   */
+  createResult: async (id: string, result: MatchResultDTO): Promise<void> => {
+    await apiClient.post(`/matches/${id}/result`, result);
+  },
+};
+
+export default MatchService;
