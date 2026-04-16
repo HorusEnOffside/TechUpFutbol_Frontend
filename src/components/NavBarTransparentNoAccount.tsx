@@ -1,4 +1,4 @@
-import { User, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { NotificationDropdown } from "./NotificationDropdown";
 import { useNavigate, useLocation } from "react-router";
 import logoBlanco from "../assets/logoBlanco.png";
@@ -60,14 +60,7 @@ export function NavBarTransparent({ onLogoClick, showBack = true }: NavBarTransp
               headerBg="bg-gradient-to-r from-[#144C9F]/90 to-[#071F4A]/90 text-white"
             />
 
-            <button
-              onClick={() => navigate("/app")}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white font-semibold text-sm hover:bg-white/20 transition-all"
-              aria-label="Mi cuenta"
-            >
-              <User className="w-4 h-4" />
-              <span className="hidden sm:inline">Mi Cuenta</span>
-            </button>
+           
           </div>
         </div>
       </div>

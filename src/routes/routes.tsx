@@ -20,6 +20,8 @@ import SportsProfilePage from '../pages/SportsProfilePage';
 import OrganizadorPaymentManagement from '../pages/OrganizadorPaymentManagement';
 import HistorialPagosPage from '../pages/HistorialPagosPage';
 import OrganizadorCreationTournamentPage from '../pages/OrganizadorCreationTournamentPage';
+import OrganizadorProfilePage from '../pages/OrganizadorProfilePage';
+import ArbitroProfilePage from '../pages/ArbitroProfilePage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -48,12 +50,20 @@ export const router = createBrowserRouter([
     element: <ArbitroHomePage />,
   },
   {
+    path: '/arbitro/perfil',
+    element: <ArbitroProfilePage />,
+  },
+  {
     path: '/arbitro/menu',
     element: <ArbitroMenuPage />,
   },
   {
     path: '/organizador',
     element: <OrganizadorHomePage />,
+  },
+  {
+    path: '/organizador/perfil',
+    element: <OrganizadorProfilePage />,
   },
   {
     path: '/organizador/menu',
