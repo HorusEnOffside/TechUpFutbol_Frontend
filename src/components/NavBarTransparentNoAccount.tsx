@@ -1,4 +1,5 @@
-import { Bell, User, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { NotificationDropdown } from "./NotificationDropdown";
 import { useNavigate, useLocation } from "react-router";
 import logoBlanco from "../assets/logoBlanco.png";
 
@@ -49,16 +50,15 @@ export function NavBarTransparent({ onLogoClick, showBack = true }: NavBarTransp
 
           {/* Derecha: notificaciones + perfil */}
           <div className="flex items-center gap-3">
-            <button
-              className="relative p-2 rounded-full hover:bg-white/10 transition-colors"
-              aria-label="Notificaciones"
-            >
-              <Bell className="w-6 h-6 text-white" />
-              <span
-                className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#39D17D] rounded-full"
-                aria-hidden="true"
-              />
-            </button>
+            <NotificationDropdown
+              iconClass="text-white"
+              bellBg="hover:bg-white/10"
+              bellDot="bg-[#39D17D]"
+              dropdownBg="bg-white"
+              border="border-gray-200"
+              shadow="shadow-lg"
+              headerBg="bg-gradient-to-r from-[#144C9F]/90 to-[#071F4A]/90 text-white"
+            />
 
            
           </div>
