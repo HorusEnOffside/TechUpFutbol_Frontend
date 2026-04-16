@@ -4,6 +4,6 @@ export interface PaymentRespondDTO {
   id: string;
   status: PaymentStatus;
   description: string;
-  paymentDate: string; // ISO string
+  paymentDate: string;
   urlComprobante: string;
 }

@@ -8,50 +8,29 @@ import canchaImg from "../assets/cancha.png";
 import { useNavigate } from "react-router";
 
 import { useState, useEffect } from "react";
+import { useAllPayments } from "../hooks/usePendingPayments";
+import type { PaymentRespondDTO } from "../types/payment";
 
 export default function OrganizadorPaymentManagement() {
   const navigate = useNavigate();
-  // Simulación de pagos pendientes
-  const pagosPendientes = [
-    {
-      id: '10000088456',
-      status: 'PENDING' as const,
-      equipo: 'Los Tigres',
-      description: 'Monto de $80.000 confirmado. Inscripción exitosa para la fase de grupos.',
-      descripcionComprobante: 'Pago realizado por el equipo Los Tigres. Referencia: 123456.',
-      paymentDate: '2026-04-15T10:30:00Z',
-    },
-    {
-      id: '10000088457',
-      status: 'PENDING' as const,
-      equipo: 'Los Leones',
-      description: 'Pago pendiente de verificación.',
-      descripcionComprobante: 'Pago realizado por el equipo Los Leones. Referencia: 654321.',
-      paymentDate: '2026-04-14T15:00:00Z',
-    },
-    {
-      id: '10000088458',
-      status: 'PENDING' as const,
-      equipo: 'Las Águilas',
-      description: 'Pago recibido, falta comprobante.',
-      descripcionComprobante: 'Pago realizado por el equipo Las Águilas. Referencia: 789012.',
-      paymentDate: '2026-04-13T18:45:00Z',
-    }
-    
-  ];
+  // Usar hook para obtener todos los pagos
+  const { payments, loading, error } = useAllPayments();
   const [busqueda, setBusqueda] = useState("");
-  const [pagoSeleccionado, setPagoSeleccionado] = useState<typeof pagosPendientes[0] | null>(null);
+  const [pagoSeleccionado, setPagoSeleccionado] = useState<PaymentRespondDTO | null>(null);
+
+  // Filtrar solo pagos pendientes o en revisión
+  const pagosPendientesRevision = payments.filter(p => p.status === 'PENDING' || p.status === 'IN_REVIEW');
+  // Filtrar por búsqueda (por description, puedes ajustar a equipo si lo agregas al DTO)
+  const pagosFiltrados = pagosPendientesRevision.filter(p =>
+    (p.description?.toLowerCase() ?? '').includes(busqueda.toLowerCase())
+  );
 
   // Limpiar selección si el pago seleccionado ya no está en la lista filtrada
   useEffect(() => {
     if (pagoSeleccionado && !pagosFiltrados.some(p => p.id === pagoSeleccionado.id)) {
       setPagoSeleccionado(null);
     }
-  }, [busqueda]);
-
-  const pagosFiltrados = pagosPendientes.filter(p =>
-    p.equipo.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  }, [busqueda, payments]);
 
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
@@ -106,7 +85,6 @@ export default function OrganizadorPaymentManagement() {
                 <div className="w-full lg:w-[340px] rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col gap-4 h-fit" style={{background: "rgba(7,31,74,0.92)"}}>
                   <div className="text-[#39D17D] font-black text-2xl mb-2" style={{fontFamily: 'Montserrat, sans-serif'}}>Acciones Rápidas</div>
                   <QuickActionButton label="Historial de Pagos" icon={<Calendar className="w-5 h-5" />} primary onClick={() => { navigate('/organizador/historial-pagos') }} />
-                  <QuickActionButton label="Volver" icon={<ArrowLeft className="w-5 h-5" />} onClick={() => navigate('/organizador')} primary={false} />
                 </div>
               </div>
             </section>
@@ -123,10 +101,16 @@ export default function OrganizadorPaymentManagement() {
                 onChange={e => setBusqueda(e.target.value)}
               />
               <div className="flex flex-col gap-2 overflow-y-auto max-h-[350px] scrollbar-hide">
-                {pagosFiltrados.length === 0 && (
-                  <div className="text-white/60 text-center py-8">No hay pagos para mostrar.</div>
+                {loading && (
+                  <div className="text-white/60 text-center py-8">Cargando pagos…</div>
                 )}
-                {pagosFiltrados.map((pago) => (
+                {!loading && error && (
+                  <div className="text-red-400 text-center py-8">{error}</div>
+                )}
+                {!loading && !error && pagosFiltrados.length === 0 && (
+                  <div className="text-white/60 text-center py-8">No hay pagos para revisar.</div>
+                )}
+                {!loading && !error && pagosFiltrados.map((pago) => (
                   <button
                     key={pago.id}
                     type="button"
@@ -137,7 +121,7 @@ export default function OrganizadorPaymentManagement() {
                     `}
                     onClick={() => setPagoSeleccionado(pago)}
                   >
-                    <span className="font-bold text-white text-base">{pago.equipo}</span>
+                    <span className="font-bold text-white text-base">{pago.description}</span>
                     <span className="text-xs text-white/60">{new Date(pago.paymentDate).toLocaleDateString()} {new Date(pago.paymentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </button>
                 ))}
@@ -145,15 +129,16 @@ export default function OrganizadorPaymentManagement() {
             </div>
             <div className="col-span-2 rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col justify-center items-center bg-[#071F4A]/80 min-h-[400px]">
               {!pagoSeleccionado ? (
-                <div className="text-white/60 text-lg text-center">Escoge un pago de la lista para revisarlo.</div>
+                <div className="text-white/60 text-lg text-center">Escoge un pago pendiente o en revisión para revisarlo.</div>
               ) : (
                 <PagoDetalleCard
                   id={pagoSeleccionado.id}
                   status={pagoSeleccionado.status}
                   description={pagoSeleccionado.description}
-                  descripcionComprobante={pagoSeleccionado.descripcionComprobante}
+                  // descripcionComprobante={pagoSeleccionado.descripcionComprobante}
                   monto={undefined}
                   fecha={pagoSeleccionado.paymentDate}
+                  urlComprobante={pagoSeleccionado.urlComprobante}
                   onAprobar={() => {}}
                   onRechazar={() => {}}
                 />

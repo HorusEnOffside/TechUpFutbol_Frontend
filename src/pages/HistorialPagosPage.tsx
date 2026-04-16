@@ -5,45 +5,17 @@ import { PagoHistorialCard } from "../components/PagoHistorialCard";
 import { QuickActionButton } from "../components/QuickActionButton";
 
 import canchaImg from "../assets/cancha.png";
+
+import { useAllPayments } from "../hooks/usePendingPayments";
+import type { PaymentStatus } from "../types/payment";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 export default function HistorialPagosPage() {
   const navigate = useNavigate();
-  // Simulación de historial de pagos
-  const pagosHistorial = [
-    {
-      id: '10000088456',
-      status: 'PENDING' as const,
-      description: 'Monto de $80.000 confirmado. Inscripción exitosa para la fase de grupos.',
-      descripcionComprobante: 'Pago realizado por el equipo Los Tigres. Referencia: 123456.',
-      paymentDate: '2026-04-15T10:30:00Z',
-    },
-    {
-      id: '10000088457',
-      status: 'IN_REVIEW' as const,
-      description: 'Pago en revisión por el administrador.',
-      descripcionComprobante: 'Pago realizado por el equipo Los Leones. Referencia: 654321.',
-      paymentDate: '2026-04-14T15:00:00Z',
-    },
-    {
-      id: '10000088458',
-      status: 'APPROVED' as const,
-      description: 'Pago aprobado y registrado.',
-      descripcionComprobante: 'Pago realizado por el equipo Las Águilas. Referencia: 789012.',
-      paymentDate: '2026-04-13T18:45:00Z',
-    },
-    {
-      id: '10000088459',
-      status: 'REJECTED' as const,
-      description: 'Pago rechazado por comprobante inválido.',
-      descripcionComprobante: 'Pago realizado por el equipo Los Halcones. Referencia: 111222.',
-      paymentDate: '2026-04-12T12:00:00Z',
-    },
-  ];
-
-  // Estado de filtro (sin hooks, solo variable local para demo)
-  let filtro: 'ALL' | 'PENDING' | 'IN_REVIEW' | 'APPROVED' | 'REJECTED' = 'ALL';
-  // Para demo, puedes cambiar el valor de filtro arriba para ver el resultado
+  // Estado de filtro interactivo
+  const [filtro, setFiltro] = useState<'ALL' | PaymentStatus>('ALL');
+  const { payments: pagosHistorial, loading, error } = useAllPayments();
 
   const etiquetasEstado = {
     ALL: 'Todos',
@@ -106,12 +78,6 @@ export default function HistorialPagosPage() {
                     <p className="text-base md:text-lg text-white/80">Revisa el historial de los pagos</p>
                   </div>
                 </div>
-                {/* Acciones rápidas */}
-                <div className="w-full lg:w-[340px] rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col gap-4 h-fit" style={{background: "rgba(7,31,74,0.92)"}}>
-                  <div className="text-[#39D17D] font-black text-2xl mb-2" style={{fontFamily: 'Montserrat, sans-serif'}}>Acciones Rápidas</div>
-                  <QuickActionButton label="Inicio" icon={<Home className="w-5 h-5" />} primary onClick={() => { navigate('/organizador') }} />
-                  <QuickActionButton label="Volver" icon={<ArrowLeft className="w-5 h-5" />} onClick={() => navigate('/organizador/Payments')} primary={false} />
-                </div>
               </div>
             </section>
 
@@ -124,27 +90,41 @@ export default function HistorialPagosPage() {
                 {/* Filtros tipo viñetas */}
                 <div className="flex gap-2 mb-4">
                   {(['ALL', 'PENDING', 'IN_REVIEW', 'APPROVED', 'REJECTED'] as const).map((key) => (
-                    <span
+                    <button
+                      type="button"
                       key={key}
-                      className={`px-3 py-1 rounded-full cursor-pointer border-2 text-sm font-semibold transition-all ${filtro === key ? 'bg-[#144C9F] border-[#39D17D] text-[#39D17D]' : 'bg-transparent border-white/20 text-white/60 hover:border-[#39D17D]/60'}`}
+                      onClick={() => setFiltro(key)}
+                      className={`px-3 py-1 rounded-full border-2 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-[#39D17D] ${filtro === key ? 'bg-[#144C9F] border-[#39D17D] text-[#39D17D]' : 'bg-transparent border-white/20 text-white/60 hover:border-[#39D17D]/60'}`}
                     >
                       {etiquetasEstado[key]}
-                    </span>
+                    </button>
                   ))}
                 </div>
-                {pagosFiltrados.length === 0 && (
+                {loading && (
+                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
+                    <Loader2 className="w-7 h-7 animate-spin text-[#39D17D]" />
+                    <span className="text-sm">Cargando pagos…</span>
+                  </div>
+                )}
+                {!loading && error && (
+                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
+                    <AlertCircle className="w-7 h-7 text-red-400" />
+                    <span className="text-sm">{error}</span>
+                  </div>
+                )}
+                {!loading && !error && pagosFiltrados.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
                     <User className="w-7 h-7" />
                     <span className="text-sm">No hay pagos para mostrar.</span>
                   </div>
                 )}
-                {pagosFiltrados.map((pago) => (
+                {!loading && !error && pagosFiltrados.length > 0 && pagosFiltrados.map((pago) => (
                   <PagoHistorialCard
                     key={pago.id}
                     id={pago.id}
                     status={pago.status}
                     description={pago.description}
-                    descripcionComprobante={pago.descripcionComprobante}
+                    descripcionComprobante={pago.description}
                     monto={undefined}
                     fecha={pago.paymentDate}
                   />

@@ -1,37 +1,25 @@
 
+
 import { User, Users, Calendar, AlertCircle, DollarSign, Loader2, ChartColumnBig, History } from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
 import { PagoPendienteCard } from "../components/PagoPendienteCard";
 import { QuickActionButton } from "../components/QuickActionButton";
 import canchaImg from "../assets/cancha.png";
-// import { usePendingPayments } from "../hooks/usePendingPayments";
+import { usePaymentsByStatus } from "../hooks/usePendingPayments";
 import { useNavigate } from "react-router";
 
-
-
 export default function OrganizadorHomePage() {
+
   const navigate = useNavigate();
-  // Lista quemada de pagos pendientes
-  const pagosPendientes = [
-    {
-      id: '1',
-      status: 'PENDING',
-      description: 'Equipo Los Tigres',
-      paymentDate: '2026-04-15 10:30',
-      urlComprobante: '',
-      monto: 80000,
-    },
-    {
-      id: '2',
-      status: 'PENDING',
-      description: 'Equipo Los Leones',
-      paymentDate: '2026-04-14 15:00',
-      urlComprobante: '',
-      monto: 90000,
-    },
-  ];
-  const loading = false;
-  const error = null;
+  // Hook para obtener pagos pendientes
+  // Hooks para obtener pagos pendientes y en revisión
+  const { payments: pagosPendientes, loading: loadingPendientes, error: errorPendientes } = usePaymentsByStatus('PENDING');
+  const { payments: pagosRevision, loading: loadingRevision, error: errorRevision } = usePaymentsByStatus('IN_REVIEW');
+
+  const loading = loadingPendientes || loadingRevision;
+  const error = errorPendientes || errorRevision;
+  // Unir y mostrar solo los primeros 5
+  const pagosMostrar = [...pagosPendientes, ...pagosRevision].slice(0, 5);
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
       {/* Fondo */}
@@ -88,7 +76,7 @@ export default function OrganizadorHomePage() {
             <div className="lg:col-span-2 rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col" style={{background: "rgba(7,31,74,0.92)"}}>
               <div className="flex justify-between items-center mb-4">
                 <div className="text-[#17A65B] font-black text-2xl" style={{fontFamily: 'Montserrat, sans-serif'}}>Pagos Pendientes de Aprobación</div>
-                <span className="text-xs bg-white/10 px-3 py-1 rounded-full text-white font-bold">{pagosPendientes.length}</span>
+                <span className="text-xs bg-white/10 px-3 py-1 rounded-full text-white font-bold">{pagosMostrar.length}</span>
               </div>
               <div className="text-base text-white/80 mb-4">Revisa y aprueba los pagos de los equipos</div>
               <div className="flex flex-col gap-3 min-h-[120px]">
@@ -104,25 +92,23 @@ export default function OrganizadorHomePage() {
                     <span className="text-sm">{error}</span>
                   </div>
                 )}
-                {!loading && !error && pagosPendientes.length === 0 && (
+                {!loading && !error && pagosPendientes.length === 0 && pagosRevision.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
                     <User className="w-7 h-7" />
-                    <span className="text-sm">Aún no hay pagos pendientes.</span>
+                    <span className="text-sm">Aún no hay pagos pendientes ni en revisión.</span>
                   </div>
                 )}
-                {!loading && !error && pagosPendientes.length > 0 &&
-                  pagosPendientes
-                    .filter((pago) => pago.status === 'PENDING')
-                    .map((pago) => (
-                      <PagoPendienteCard
-                        key={pago.id}
-                        equipo={pago.description}
-                        monto={pago.monto}
-                        fecha={pago.paymentDate}
-                        onVer={() => navigate('/organizador/Payments')}
-                        revisarMode
-                      />
-                    ))}
+                {!loading && !error && pagosMostrar.length > 0 &&
+                  pagosMostrar.map((pago) => (
+                    <PagoPendienteCard
+                      key={pago.id}
+                      equipo={pago.description}
+                      monto={(pago as any).monto ?? 0}
+                      fecha={typeof pago.paymentDate === 'string' ? pago.paymentDate : new Date(pago.paymentDate).toLocaleString('es-CO')}
+                      onVer={() => navigate('/organizador/Payments')}
+                      revisarMode
+                    />
+                  ))}
               </div>
             </div>
             {/* Acciones rápidas */}

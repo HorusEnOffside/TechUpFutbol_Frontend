@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import type { PaymentStatus } from "../types/payment";
 
 interface PagoHistorialCardProps {
@@ -65,15 +65,35 @@ export const PagoHistorialCard: React.FC<PagoHistorialCardProps> = ({
         )}
       </div>
       {/* Columna derecha: foto comprobante */}
-      {urlComprobante && (
-        <div className="flex-shrink-0 flex items-center justify-center md:w-64 w-full mt-6 md:mt-0">
-          <img
-            src={urlComprobante}
-            alt="Comprobante de pago"
-            className="rounded-xl border border-white/20 max-h-64 object-contain bg-white/10"
-          />
-        </div>
-      )}
+      <div className="flex-shrink-0 flex items-center justify-center md:w-64 w-full mt-6 md:mt-0">
+        {urlComprobante ? (
+          <ComprobanteImage url={urlComprobante} />
+        ) : (
+          <div className="w-full h-40 rounded-xl border border-white/20 flex items-center justify-center bg-white/10 text-white/60 text-center">
+            [Foto del comprobante]
+          </div>
+        )}
+      </div>
     </div>
+  );
+};
+
+// Componente auxiliar para manejar carga y error de la imagen
+const ComprobanteImage: React.FC<{ url: string }> = ({ url }) => {
+  const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  return error ? (
+    <div className="w-full h-40 rounded-xl border border-white/20 flex items-center justify-center bg-white/10 text-red-300 text-center">
+      Error al cargar la imagen
+    </div>
+  ) : (
+    <img
+      src={url}
+      alt="Comprobante de pago"
+      className="rounded-xl border border-white/20 max-h-64 object-contain bg-white/10 w-full h-40"
+      onError={() => setError(true)}
+      onLoad={() => setLoaded(true)}
+      style={{ display: loaded ? 'block' : 'none' }}
+    />
   );
 };

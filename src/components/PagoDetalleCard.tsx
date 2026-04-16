@@ -18,6 +18,7 @@ interface PagoDetalleCardProps {
 
 const statusOptions: { value: PaymentStatus; label: string }[] = [
   { value: "PENDING", label: "Pendiente" },
+  { value: "IN_REVIEW", label: "En revisión" },
   { value: "APPROVED", label: "Aprobado" },
   { value: "REJECTED", label: "Rechazado" },
 ];
@@ -50,6 +51,7 @@ export const PagoDetalleCard: React.FC<PagoDetalleCardProps> = ({
             <span className={`px-3 py-1 rounded-lg font-bold ${
               status === "APPROVED" ? "bg-green-600/30 text-green-300" :
               status === "REJECTED" ? "bg-red-600/30 text-red-300" :
+              status === "IN_REVIEW" ? "bg-blue-600/30 text-blue-300" :
               "bg-yellow-500/20 text-yellow-300"}`}>{
                 statusOptions.find(opt => opt.value === status)?.label || status
             }</span>
