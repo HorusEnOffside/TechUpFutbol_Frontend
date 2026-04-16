@@ -52,9 +52,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
       if (result.roles.includes('ADMIN')) {
         navigate('/admin');
       } else if (result.roles.includes('ORGANIZER')) {
-        navigate('/organizer');
+        navigate('/organizador');
       } else if (result.roles.includes('REFEREE')) {
-        navigate('/referee');
+        navigate('/arbitro');
       } else {
         navigate('/player');
       }
@@ -133,13 +133,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
         Google
       </button>
-
-      <p className="text-center text-sm text-gray-500 mt-6">
-        ¿No tienes cuenta?{' '}
-        <button type="button" onClick={onSwitch} className="text-[#17A65B] font-semibold hover:underline">
-          Regístrate
-        </button>
-      </p>
     </form>
   );
 };

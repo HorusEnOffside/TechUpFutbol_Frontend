@@ -20,13 +20,9 @@ const PlayerService = {
     profilePicture?: File | null
   ): Promise<PlayerResponseDTO> => {
     const formData = new FormData();
-    formData.append('player', JSON.stringify(player));
+    formData.append('player', new Blob([JSON.stringify(player)], { type: 'application/json' }));
     if (profilePicture) formData.append('profilePicture', profilePicture);
-    const { data } = await apiClient.post<PlayerResponseDTO>(
-      '/players/students/sports-profile',
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
+    const { data } = await apiClient.post<PlayerResponseDTO>('/players/students/sports-profile', formData);
     return data;
   },
 
@@ -41,13 +37,9 @@ const PlayerService = {
     profilePicture?: File | null
   ): Promise<PlayerResponseDTO> => {
     const formData = new FormData();
-    formData.append('player', JSON.stringify(player));
+    formData.append('player', new Blob([JSON.stringify(player)], { type: 'application/json' }));
     if (profilePicture) formData.append('profilePicture', profilePicture);
-    const { data } = await apiClient.post<PlayerResponseDTO>(
-      '/players/teachers/sports-profile',
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
+    const { data } = await apiClient.post<PlayerResponseDTO>('/players/teachers/sports-profile', formData);
     return data;
   },
 
@@ -62,13 +54,9 @@ const PlayerService = {
     profilePicture?: File | null
   ): Promise<PlayerResponseDTO> => {
     const formData = new FormData();
-    formData.append('player', JSON.stringify(player));
+    formData.append('player', new Blob([JSON.stringify(player)], { type: 'application/json' }));
     if (profilePicture) formData.append('profilePicture', profilePicture);
-    const { data } = await apiClient.post<PlayerResponseDTO>(
-      '/players/familiars/sports-profile',
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
+    const { data } = await apiClient.post<PlayerResponseDTO>('/players/familiars/sports-profile', formData);
     return data;
   },
 
@@ -83,13 +71,9 @@ const PlayerService = {
     profilePicture?: File | null
   ): Promise<PlayerResponseDTO> => {
     const formData = new FormData();
-    formData.append('player', JSON.stringify(player));
+    formData.append('player', new Blob([JSON.stringify(player)], { type: 'application/json' }));
     if (profilePicture) formData.append('profilePicture', profilePicture);
-    const { data } = await apiClient.post<PlayerResponseDTO>(
-      '/players/graduates/sports-profile',
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
+    const { data } = await apiClient.post<PlayerResponseDTO>('/players/graduates/sports-profile', formData);
     return data;
   },
 

@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { LandingLayout } from '../components/LandingLayout';
 import { AuthenticatedLayout } from '../components/AuthenticatedLayout';
-import { ProtectedRoute } from '../components/ProtectedRoute';
 import { Home } from '../pages/Home';
 import AuthContainer from '../pages/AuthContainer';
 import { GruposPage } from '../pages/GruposPage';
@@ -9,10 +8,15 @@ import { PlayerHomePage } from '../pages/PlayerHomePage';
 import { PlayerMenuPage } from '../pages/PlayerMenuPage';
 import { ArbitroHomePage } from '../pages/ArbitroHomePage';
 import { ArbitroMenuPage } from '../pages/ArbitroMenuPage';
-import { OrganizadorHomePage } from '../pages/OrganizadorHomePage';
+import OrganizadorHomePage from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
+import { CapitanesPage } from '../pages/CapitanesPage';
+import { SeleccionJugadoresPage } from '../pages/SeleccionJugadoresPage';
+import { SancionesPage } from '../pages/SancionesPage';
 import Standings from '../pages/Standings';
+import MatchManagementPage from '../pages/MatchManagementPage';
 
+//cambio
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -20,7 +24,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    element: <LandingLayout><AuthContainer /></LandingLayout>,
+    element: <AuthContainer />,
   },
   {
     path: '/grupos',
@@ -51,12 +55,23 @@ export const router = createBrowserRouter([
     element: <OrganizadorMenuPage />,
   },
   {
-    path: '/app',
-    element: <AuthenticatedLayout><Home /></AuthenticatedLayout>,
-    // children: [...]
+    path: '/organizador/sanciones',
+    element: <SancionesPage />,
+  },
+  {
+    path: '/player/capitanes',
+    element: <CapitanesPage />,
+  },
+  {
+    path: '/player/capitanes/jugadores',
+    element: <SeleccionJugadoresPage />,
   },
   {
     path: '/standings',
     element: <Standings />,
+  },
+  {
+    path: '/organizador/match',
+    element: <MatchManagementPage />,
   },
 ]);

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import AuthService from '../services/auth.service';
 import type { LoginRequest, LoginResponse } from '../types/auth';
@@ -9,6 +9,7 @@ interface AuthContextType {
   error: string | null;
   login: (credentials: LoginRequest) => Promise<LoginResponse>;
   logout: () => void;
+  refreshSession: () => Promise<void>;
   isAuthenticated: boolean;
   hasRole: (role: string) => boolean;
 }
@@ -53,11 +54,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     AuthService.logout().catch(() => undefined);
   };
 
+  /**
+   * Refresca el JWT para que roles nuevos (ej: CAPTAIN tras createTeam)
+   * queden reflejados en el token antes de llamar endpoints protegidos.
+   */
+  const refreshSession = async (): Promise<void> => {
+    const currentToken = localStorage.getItem('token');
+    if (!currentToken) return;
+    const data = await AuthService.refresh(currentToken);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data));
+    setUser(data);
+  };
+
   const isAuthenticated = !!user;
   const hasRole = (role: string) => user?.roles.includes(role) ?? false;
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, login, logout, isAuthenticated, hasRole }}>
+    <AuthContext.Provider value={{ user, loading, error, login, logout, refreshSession, isAuthenticated, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

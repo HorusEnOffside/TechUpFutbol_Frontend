@@ -3,18 +3,45 @@ import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import { AuthSidePanel } from "../components/AuthSidePanel";
 import { ImageCarousel } from "../components/ImageCarousel";
-import bgImage from '../assets/Background1.png';
-
+import canchaImg from "../assets/cancha.png";
+import { HomeNavbar } from "../components/NavbarHomeTransparente";
 
 export default function AuthContainer() {
   const [showLogin, setShowLogin] = useState(true);
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative">
-      {/* Fondo de pantalla */}
-      <div className="grupos-bg" style={{ backgroundImage: `url(${bgImage})` }} />
+    <div className="h-screen overflow-hidden flex items-center justify-center relative">
+      <HomeNavbar />
 
-      <div className="relative w-full max-w-7xl flex z-10 gap-8 items-center" style={{ minHeight: 600 }}>
+      {/* Fondo de pantalla */}
+      <div
+        className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${canchaImg})`,
+          filter: "blur(3px) brightness(0.35)",
+          transform: "scale(1.06)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-0 left-0 w-full h-full"
+        style={{
+          background:
+            "linear-gradient(105deg, rgba(5,13,26,0.92) 0%, rgba(7,31,74,0.75) 40%, transparent 70%)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-0 left-0 w-full h-full"
+        style={{
+          background:
+            "radial-gradient(ellipse at 85% 55%, rgba(23,166,91,0.22) 0%, transparent 60%)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Padding para navbar fijo */}
+      <div className="relative w-full max-w-7xl flex z-10 gap-8 items-center pt-20" style={{ minHeight: 600 }}>
         {/* Carrusel: 2/5 */}
         <div className="w-2/5 flex items-center justify-center" style={{ height: '500px' }}>
           <div className="w-full h-full flex items-center justify-center">
