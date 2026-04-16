@@ -3,7 +3,7 @@ import '../styles/player.css';
 import { useAuth } from '../store/AuthContext';
 
 import { Users, Calendar} from "lucide-react";
-import { NavBarTransparent } from "../components/NavBarTransparent";
+import { NavBarTransparent } from "../components/NavBarTransparentNoBack";
 import canchaImg from "../assets/cancha.png";
 
 

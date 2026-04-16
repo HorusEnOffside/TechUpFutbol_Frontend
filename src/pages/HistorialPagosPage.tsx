@@ -106,12 +106,6 @@ export default function HistorialPagosPage() {
                     <p className="text-base md:text-lg text-white/80">Revisa el historial de los pagos</p>
                   </div>
                 </div>
-                {/* Acciones rápidas */}
-                <div className="w-full lg:w-[340px] rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col gap-4 h-fit" style={{background: "rgba(7,31,74,0.92)"}}>
-                  <div className="text-[#39D17D] font-black text-2xl mb-2" style={{fontFamily: 'Montserrat, sans-serif'}}>Acciones Rápidas</div>
-                  <QuickActionButton label="Inicio" icon={<Home className="w-5 h-5" />} primary onClick={() => { navigate('/organizador') }} />
-                  <QuickActionButton label="Volver" icon={<ArrowLeft className="w-5 h-5" />} onClick={() => navigate('/organizador/Payments')} primary={false} />
-                </div>
               </div>
             </section>
 
