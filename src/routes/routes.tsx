@@ -5,7 +5,7 @@ import AuthContainer from '../pages/AuthContainer';
 import { GruposPage } from '../pages/GruposPage';
 import { PlayerHomePage } from '../pages/PlayerHomePage';
 import { PlayerMenuPage } from '../pages/PlayerMenuPage';
-import { ArbitroHomePage } from '../pages/ArbitroHomePage';
+import ArbitroHomePage  from '../pages/ArbitroHomePage';
 import { ArbitroMenuPage } from '../pages/ArbitroMenuPage';
 import OrganizadorHomePage from '../pages/OrganizadorHomePage';
 import { OrganizadorMenuPage } from '../pages/OrganizadorMenuPage';
@@ -17,6 +17,9 @@ import { EstadisticasPage } from '../pages/EstadisticasPage';
 import { PlantillaPage } from '../pages/PlantillaPage';
 import MatchManagementPage from '../pages/MatchManagementPage';
 import SportsProfilePage from '../pages/SportsProfilePage';
+import OrganizadorPaymentManagement from '../pages/OrganizadorPaymentManagement';
+import HistorialPagosPage from '../pages/HistorialPagosPage';
+import OrganizadorCreationTournamentPage from '../pages/OrganizadorCreationTournamentPage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -55,6 +58,18 @@ export const router = createBrowserRouter([
   {
     path: '/organizador/menu',
     element: <OrganizadorMenuPage />,
+  },
+  {
+    path: '/organizador/Payments',
+    element: <OrganizadorPaymentManagement />,
+  },
+  {
+    path: '/organizador/historial-pagos',
+    element: <HistorialPagosPage />,
+  },
+  {
+    path: '/organizador/creacion-torneo',
+    element: <OrganizadorCreationTournamentPage />,
   },
   {
     path: '/organizador/sanciones',

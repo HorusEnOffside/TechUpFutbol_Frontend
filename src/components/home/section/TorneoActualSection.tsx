@@ -99,7 +99,7 @@ export function TorneoActualSection() {
           <div className="bg-gradient-to-br from-white to-gray-50 p-10 rounded-3xl border-2 border-gray-100 shadow-xl">
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-3xl font-black text-[#071F4A] font-montserrat">
-                  TechCup 2026-I
+                  TechCup Equipos
                 </h3>
                 {badgeText && (
                   <div className={badgeClass}>
