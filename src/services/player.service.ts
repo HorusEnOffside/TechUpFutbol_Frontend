@@ -1,10 +1,10 @@
-
 import apiClient from './api';
 import type {
   PlayerResponseDTO,
   PlayerDTO,
   StudentPlayerDTO,
 } from '../types/player';
+import type { PlayerSearchParams } from '../types/standings';
 
 // Servicio de jugadores basado en PlayerController del backend
 
@@ -94,6 +94,23 @@ const PlayerService = {
   getPlayerByUserId: async (userId: string): Promise<PlayerResponseDTO> => {
     const { data } = await apiClient.get<PlayerResponseDTO>(`/players/${userId}`);
     return data;
+  },
+
+  /**
+   * Buscar jugadores por filtros opcionales
+   * GET /players/search  — requiere rol: CAPTAIN, ADMIN u ORGANIZER
+   * @param {PlayerSearchParams} params - Filtros opcionales (position, semester, age, gender, name)
+   */
+  searchPlayers: async (params: PlayerSearchParams = {}): Promise<PlayerResponseDTO[]> => {
+    try {
+      const { data } = await apiClient.get<PlayerResponseDTO[]>('/players/search', {
+        params,
+      });
+      return data;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Error inesperado');
+    }
   },
 };
 

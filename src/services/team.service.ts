@@ -1,4 +1,5 @@
 import apiClient from './api';
+import type { TeamFullInfoDTO } from '../types/standings';
 
 export interface TeamResponseDTO {
   id: string;
@@ -46,6 +47,36 @@ const TeamService = {
       null,
       { params: message ? { message } : undefined },
     );
+  },
+
+  /**
+   * Información completa de un equipo con jugadores
+   * GET /teams/{teamId}/full  — requiere autenticación
+   */
+  getTeamFullInfo: async (teamId: string): Promise<TeamFullInfoDTO> => {
+    try {
+      const { data } = await apiClient.get<TeamFullInfoDTO>(`/teams/${teamId}/full`);
+      return data;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Error inesperado');
+    }
+  },
+
+  /**
+   * Todos los equipos de un torneo con jugadores incluidos
+   * GET /teams/tournament/{tournamentId}/full  — requiere autenticación
+   */
+  getTeamsByTournament: async (tournamentId: string): Promise<TeamFullInfoDTO[]> => {
+    try {
+      const { data } = await apiClient.get<TeamFullInfoDTO[]>(
+        `/teams/tournament/${tournamentId}/full`,
+      );
+      return data;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Error inesperado');
+    }
   },
 };
 
