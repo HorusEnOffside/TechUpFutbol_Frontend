@@ -1,10 +1,7 @@
 
-import { User, Users, Calendar, AlertCircle, DollarSign, Loader2, ChartColumnBig, History } from "lucide-react";
+import { Users, Calendar} from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
-import { PagoPendienteCard } from "../components/PagoPendienteCard";
-import { QuickActionButton } from "../components/QuickActionButton";
 import canchaImg from "../assets/cancha.png";
-// import { usePendingPayments } from "../hooks/usePendingPayments";
 import { useNavigate } from "react-router";
 
 
