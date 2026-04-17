@@ -6,6 +6,7 @@ import { Home } from '../pages/Home';
 import AuthContainer from '../pages/AuthContainer';
 import { GruposPage } from '../pages/GruposPage';
 import { PlayerHomePage } from '../pages/PlayerHomePage';
+import PlayerPagosPage from '../pages/PlayerPagosPage';
 import { PlayerMenuPage } from '../pages/PlayerMenuPage';
 import ArbitroHomePage  from '../pages/ArbitroHomePage';
 import { ArbitroMenuPage } from '../pages/ArbitroMenuPage';
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
     path: '/player',
     element: guard(<PlayerHomePage />),
   },
+    {
+      path: '/player/pagos',
+      element: <PlayerPagosPage />,
+    },
   {
     path: '/player/menu',
     element: guard(<PlayerMenuPage />),
