@@ -19,6 +19,7 @@ export interface RegisterRequest {
   dorsalNumber?: number;
   position?: 'GOALKEEPER' | 'DEFENDER' | 'MIDFIELDER' | 'FORWARD';
   semester?: number;
+  career?: 'ENGINEERING' | 'DATA_SCIENCE' | 'OTHER';
 }
 
 export interface UserProfile {

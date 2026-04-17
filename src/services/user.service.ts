@@ -1,85 +1,58 @@
 import apiClient from './api';
 import type { UserDTO, UserResponseDTO } from '../types/user';
 
-// Servicio de usuarios basado en UserController del backend
+// Helper: envuelve el DTO como Blob para que Spring pueda deserializarlo como @RequestPart
+function userBlob(dto: UserDTO): Blob {
+  return new Blob([JSON.stringify(dto)], { type: 'application/json' });
+}
+
 const UserService = {
   /**
    * Crear usuario administrador (requiere rol ADMIN)
-   * @param user - Objeto UserDTO con los datos del usuario
-   * @param profilePicture - Archivo de imagen opcional
-   * @returns {Promise<UserResponseDTO>}
+   * POST /users/admin — multipart/form-data
    */
   createAdminUser: async (user: UserDTO, profilePicture?: File): Promise<UserResponseDTO> => {
     const formData = new FormData();
-    formData.append('user', JSON.stringify(user));
-    if (profilePicture) {
-      formData.append('profilePicture', profilePicture);
-    }
-    const response = await apiClient.post<UserResponseDTO>('/users/admin', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
+    formData.append('user', userBlob(user), 'user.json');
+    if (profilePicture) formData.append('profilePicture', profilePicture);
+    const { data } = await apiClient.post<UserResponseDTO>('/users/admin', formData);
+    return data;
   },
 
   /**
    * Crear usuario organizador (requiere rol ADMIN)
-   * @param user - Objeto UserDTO con los datos del usuario
-   * @param profilePicture - Archivo de imagen opcional
-   * @returns {Promise<UserResponseDTO>}
+   * POST /users/organizer — multipart/form-data
    */
   createOrganizerUser: async (user: UserDTO, profilePicture?: File): Promise<UserResponseDTO> => {
     const formData = new FormData();
-    formData.append('user', JSON.stringify(user));
-    if (profilePicture) {
-      formData.append('profilePicture', profilePicture);
-    }
-    const response = await apiClient.post<UserResponseDTO>('/users/organizer', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
+    formData.append('user', userBlob(user), 'user.json');
+    if (profilePicture) formData.append('profilePicture', profilePicture);
+    const { data } = await apiClient.post<UserResponseDTO>('/users/organizer', formData);
+    return data;
   },
 
   /**
    * Crear usuario árbitro (requiere rol ADMIN)
-   * @param user - Objeto UserDTO con los datos del usuario
-   * @param profilePicture - Archivo de imagen opcional
-   * @returns {Promise<UserResponseDTO>}
+   * POST /users/referee — multipart/form-data
    */
   createRefereeUser: async (user: UserDTO, profilePicture?: File): Promise<UserResponseDTO> => {
     const formData = new FormData();
-    formData.append('user', JSON.stringify(user));
-    if (profilePicture) {
-      formData.append('profilePicture', profilePicture);
-    }
-    const response = await apiClient.post<UserResponseDTO>('/users/referee', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
+    formData.append('user', userBlob(user), 'user.json');
+    if (profilePicture) formData.append('profilePicture', profilePicture);
+    const { data } = await apiClient.post<UserResponseDTO>('/users/referee', formData);
+    return data;
   },
 
-  /**
-   * Obtener todos los usuarios (requiere rol ADMIN)
-   * @returns {Promise<UserResponseDTO[]>}
-   */
+  /** GET /users — requiere rol ADMIN */
   getAllUsers: async (): Promise<UserResponseDTO[]> => {
-    const response = await apiClient.get<UserResponseDTO[]>('/users');
-    return response.data;
+    const { data } = await apiClient.get<UserResponseDTO[]>('/users');
+    return data;
   },
 
-  /**
-   * Obtener usuario por ID (requiere rol ADMIN)
-   * @param {string} id
-   * @returns {Promise<UserResponseDTO>}
-   */
+  /** GET /users/{id} — requiere rol ADMIN */
   getUserById: async (id: string): Promise<UserResponseDTO> => {
-    const response = await apiClient.get<UserResponseDTO>(`/users/${id}`);
-    return response.data;
+    const { data } = await apiClient.get<UserResponseDTO>(`/users/${id}`);
+    return data;
   },
 };
 

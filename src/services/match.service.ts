@@ -1,47 +1,35 @@
 import apiClient from './api';
-import type { MatchDTO, MatchResultDTO } from '../types/match';
-import type { Match } from '../types/bracket';
+import { ApiError } from './api';
+import type { MatchResponseDTO, MatchResultDTO } from '../types/match';
+import type { TeamFullInfoDTO } from '../types/standings';
+
+// GET /matches y GET /matches/{id} requieren rol ADMIN o REFEREE.
+// Si el usuario tiene otro rol (ORGANIZER, PLAYER) el backend responde 403.
+function handle(error: unknown): never {
+  if (error instanceof ApiError && error.statusCode === 403) {
+    throw new ApiError(
+      'No tienes permiso para ver los partidos. Se requiere rol ADMIN o REFEREE.',
+      'business',
+      403,
+    );
+  }
+  if (error instanceof Error) throw error;
+  throw new Error('Error inesperado');
+}
 
 const MatchService = {
-  /**
-   * Obtener todos los partidos
-   * GET /matches  — requiere rol: USER, ADMIN o REFEREE
-   */
-  getAllMatches: async (): Promise<MatchDTO[]> => {
+  getAllMatches: async (): Promise<MatchResponseDTO[]> => {
     try {
-      const { data } = await apiClient.get<MatchDTO[]>('/matches');
+      const { data } = await apiClient.get<MatchResponseDTO[]>('/matches');
       return data;
     } catch (error) {
-      if (error instanceof Error) throw error;
-      throw new Error('Error inesperado');
+      handle(error);
     }
-  },
-  /**
-   * Obtener partidos que arbitra el usuario autenticado (árbitro)
-   * GET /matches/my-matches — requiere rol: REFEREE
-   */
-  getMyMatches: async (): Promise<Match[]> => {
-    try {
-      const { data } = await apiClient.get<Match[]>("/matches/my-matches");
-      return data;
-    } catch (error) {
-      if (error instanceof Error) throw error;
-      throw new Error("Error inesperado");
-    }
-  },
-  /**
-   * Obtener partido por ID
-   * GET /matches/{id}
-   */
-  getMatch: async (id: string): Promise<MatchDTO> => {
-    const { data } = await apiClient.get<MatchDTO>(`/matches/${id}`);
-    return data;
   },
 
-  /** Alias semántico de getMatch para uso en estadísticas */
-  getMatchById: async (matchId: string): Promise<MatchDTO> => {
+  getMyMatches: async (): Promise<MatchResponseDTO[]> => {
     try {
-      const { data } = await apiClient.get<MatchDTO>(`/matches/${matchId}`);
+      const { data } = await apiClient.get<MatchResponseDTO[]>('/matches/my-matches');
       return data;
     } catch (error) {
       if (error instanceof Error) throw error;
@@ -49,40 +37,52 @@ const MatchService = {
     }
   },
 
-  /**
-   * Partidos de un torneo específico.
-   * GET /matches — el backend devuelve todos; filtramos por torneoId en frontend.
-   * Requiere rol: USER, ADMIN o REFEREE.
-   */
-  getMatchesByTournament: async (tournamentId: string): Promise<Match[]> => {
+  getMatch: async (id: string): Promise<MatchResponseDTO> => {
     try {
-      const { data } = await apiClient.get<Match[]>('/matches');
-      return data.filter(
-        (m) =>
-          m.teamA?.tournament?.id === tournamentId ||
-          m.teamB?.tournament?.id === tournamentId,
+      const { data } = await apiClient.get<MatchResponseDTO>(`/matches/${id}`);
+      return data;
+    } catch (error) {
+      handle(error);
+    }
+  },
+
+  getMatchById: async (matchId: string): Promise<MatchResponseDTO> => {
+    return MatchService.getMatch(matchId);
+  },
+
+  /**
+   * Filtra partidos por torneo:
+   * GET /teams/tournament/{id}/full  → obtiene teamIds del torneo
+   * GET /matches                     → filtra por esos teamIds
+   * (MatchResponseDTO.teamA/B solo tiene {id,name,uniformColor}, sin tournamentId)
+   */
+  getMatchesByTournament: async (tournamentId: string): Promise<MatchResponseDTO[]> => {
+    try {
+      const [matchesRes, teamsRes] = await Promise.all([
+        apiClient.get<MatchResponseDTO[]>('/matches'),
+        apiClient.get<TeamFullInfoDTO[]>(`/teams/tournament/${tournamentId}/full`),
+      ]);
+      const teamIds = new Set(teamsRes.data.map((t) => t.teamId));
+      return matchesRes.data.filter(
+        (m) => teamIds.has(m.teamA.id) || teamIds.has(m.teamB.id),
       );
     } catch (error) {
-      if (error instanceof Error) throw error;
-      throw new Error('Error inesperado');
+      handle(error);
     }
   },
 
-  /**
-   * Partidos de fase de grupos de un torneo (PENDING y FINISHED).
-   * Retorna todos los partidos del torneo — el componente usa el status
-   * para mostrar el estado actual de cada partido en la vista de grupo.
-   */
-  getGroupPhaseMatches: async (tournamentId: string): Promise<Match[]> => {
+  getGroupPhaseMatches: async (tournamentId: string): Promise<MatchResponseDTO[]> => {
     return MatchService.getMatchesByTournament(tournamentId);
   },
 
-  /**
-   * Registrar resultado de un partido
-   * POST /matches/{id}/result
-   */
-  createResult: async (id: string, result: MatchResultDTO): Promise<void> => {
-    await apiClient.post(`/matches/${id}/result`, result);
+  createResult: async (id: string, result: MatchResultDTO): Promise<MatchResponseDTO> => {
+    try {
+      const { data } = await apiClient.post<MatchResponseDTO>(`/matches/${id}/result`, result);
+      return data;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Error inesperado');
+    }
   },
 };
 

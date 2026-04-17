@@ -6,48 +6,55 @@ export interface Tournament {
   id: string;
   startDate: string;
   endDate: string;
-  closingDate: string;
+  closingDate: string | null;
   teamsMaxAmount: number;
   teamCost: number;
   status: TournamentStatus;
   reglamento: string | null;
-  canchas: string | null;
-  horarios: string | null;
   sanciones: string | null;
 }
 
-// ─── Match (full shape from GET /matches) ────────────────────────────────────
+// ─── Match (GET /matches) — usa MatchResponseDTO del backend ──────────────────
+// teamA/teamB son TeamSummaryDTO: {id, name, uniformColor} (sin tournament.id)
 
-export type MatchStatus = 'PENDING' | 'FINISHED';
+export type MatchStatus = 'PENDING' | 'FINISHED' | string;
 
 export interface MatchTeamRef {
   id: string;
   name: string;
   uniformColor: string;
-  formation: string | null;
-  tournament: { id: string };
 }
 
 export interface MatchEvent {
-  id: string;
-  type: 'GOAL' | 'YELLOW_CARD' | 'RED_CARD' | string;
-  playerId: string;
-  teamId: string;
   minute: number;
+  playerName: string;
+  description: string;
+  type?: 'RED' | 'YELLOW';  // presente solo en cards
 }
 
 export interface Match {
   id: string;
   dateTime: string;
+  status: MatchStatus;
+  localScore: number;
+  visitorScore: number;
   teamA: MatchTeamRef;
   teamB: MatchTeamRef;
-  referee: string | null;
-  soccerField: string | null;
-  events: MatchEvent[];
-  status: MatchStatus;
+  referee: { id: string; name: string; mail: string } | null;
+  soccerField: { id: string; name: string; location: string; foto: string | null } | null;
+  goals: MatchEvent[];
+  cards: MatchEvent[];
 }
 
 // ─── Elimination Bracket ──────────────────────────────────────────────────────
+// Backend retorna EliminationBracket directamente o 204 No Content
+
+export interface BracketPlayer {
+  userId: string;
+  name: string;
+  position: string;
+  dorsalNumber: number;
+}
 
 export interface BracketTeam {
   id: string;
@@ -55,13 +62,6 @@ export interface BracketTeam {
   uniformColor: string;
   formation: string | null;
   players: BracketPlayer[];
-}
-
-export interface BracketPlayer {
-  userId: string;
-  name: string;
-  position: string;
-  dorsalNumber: number;
 }
 
 export interface MatchPair {
@@ -76,7 +76,5 @@ export interface EliminationBracket {
   finals?: MatchPair[];
 }
 
-export interface BracketResponse {
-  eliminationBrackets: EliminationBracket | null;
-  message: string;
-}
+// El servicio retorna EliminationBracket | null
+// null = 204 No Content (partidos pendientes o equipos insuficientes)

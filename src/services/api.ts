@@ -1,8 +1,8 @@
 import axios from 'axios';
 import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
-const apiBaseUrl = (import.meta as ImportMeta & { env: { VITE_API_BASE_URL: string } }).env
-  .VITE_API_BASE_URL;
+const API_URL = (import.meta as ImportMeta & { env: { VITE_API_URL: string } }).env.VITE_API_URL;
+const apiBaseUrl = `${API_URL}/api`;
 
 // ─── Custom error class ───────────────────────────────────────────────────────
 export class ApiError extends Error {
@@ -25,9 +25,6 @@ export class ApiError extends Error {
 const apiClient: AxiosInstance = axios.create({
   baseURL: apiBaseUrl,
   timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // ─── Request interceptor — inject JWT token ───────────────────────────────────
@@ -57,7 +54,7 @@ apiClient.interceptors.response.use(
         if (status === 401) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          window.location.href = '/login';
+          window.location.href = '/auth';
         }
 
         return Promise.reject(new ApiError(message, 'business', status));

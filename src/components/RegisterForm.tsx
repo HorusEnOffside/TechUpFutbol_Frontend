@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { RegisterSteps } from "./RegisterSteps";
 import { User, Calendar, Venus, Briefcase, BookOpen, Shield, Hash, Mail, Lock, Camera } from "lucide-react";
-import PlayerService from "../services/player.service";
+import AuthService from "../services/auth.service";
 
 interface RegisterFormProps {
   onSwitch: () => void;
@@ -90,7 +90,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
     setLoading(true);
     setApiError(null);
     try {
-      const base = {
+      const payload: Parameters<typeof AuthService.register>[0] = {
         name:         values.name,
         mail:         values.email,
         dateOfBirth:  values.birth,
@@ -98,20 +98,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
         password:     values.password,
         dorsalNumber: Number(values.dorsal),
         position:     POSITION_MAP[values.posicion],
+        ...(values.carrera ? { career: CAREER_MAP[values.carrera] ?? 'OTHER' } : {}),
+        ...(values.tipo === 'estudiante' ? { semester: Number(values.semestre) } : {}),
       };
-      const career = CAREER_MAP[values.carrera] ?? 'OTHER';
 
-      if (values.tipo === 'estudiante') {
-        await PlayerService.createSportsProfileStudent(
-          { ...base, career, semester: Number(values.semestre) }, foto
-        );
-      } else if (values.tipo === 'profesor') {
-        await PlayerService.createSportsProfileTeacher({ ...base, career }, foto);
-      } else if (values.tipo === 'graduado') {
-        await PlayerService.createSportsProfileGraduate({ ...base, career }, foto);
-      } else {
-        await PlayerService.createSportsProfileFamiliar(base as any, foto);
-      }
+      await AuthService.register(payload, foto);
 
       setSuccessMsg('¡Cuenta creada! Ya puedes iniciar sesión.');
       setTimeout(() => onSwitch(), 2000);

@@ -1,62 +1,53 @@
 import apiClient from './api';
 import type { PaymentRespondDTO, PaymentStatus } from '../types/payment';
 
-
 const PaymentService = {
-  /**
-   * Obtener todos los pagos
-   * GET /api/payments
-   */
+  /** GET /payments */
   getAllPayments: async (): Promise<PaymentRespondDTO[]> => {
-    const response = await apiClient.get<PaymentRespondDTO[]>('/api/payments');
-    return response.data;
+    const { data } = await apiClient.get<PaymentRespondDTO[]>('/payments');
+    return data;
   },
 
-  /**
-   * Obtener pagos por estado
-   * GET /api/payments/filter-by-status?status=STATUS
-   */
+  /** GET /payments/filter-by-status?status=STATUS */
   getPaymentsByStatus: async (status: PaymentStatus): Promise<PaymentRespondDTO[]> => {
-    const response = await apiClient.get<PaymentRespondDTO[]>(`/api/payments/filter-by-status?status=${status}`);
-    return response.data;
+    const { data } = await apiClient.get<PaymentRespondDTO[]>('/payments/filter-by-status', {
+      params: { status },
+    });
+    return data;
   },
 
-  /**
-   * Obtener pago por ID
-   * GET /api/payments/{id}
-   */
+  /** GET /payments/{id} */
   getPaymentById: async (id: string): Promise<PaymentRespondDTO> => {
-    const response = await apiClient.get<PaymentRespondDTO>(`/api/payments/${id}`);
-    return response.data;
+    const { data } = await apiClient.get<PaymentRespondDTO>(`/payments/${id}`);
+    return data;
   },
 
   /**
-   * Crear un nuevo pago
-   * POST /api/payments (multipart/form-data)
+   * POST /payments — multipart/form-data
+   * No se pone Content-Type manual; axios lo establece con el boundary correcto.
    */
   createPayment: async (formData: FormData): Promise<PaymentRespondDTO> => {
-    const response = await apiClient.post<PaymentRespondDTO>('/api/payments', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-    return response.data;
+    const { data } = await apiClient.post<PaymentRespondDTO>('/payments', formData);
+    return data;
   },
 
-  /**
-   * Actualizar estado del pago
-   * PATCH /api/payments/{id}/status?status=STATUS
-   */
+  /** PATCH /payments/{id}/status?status=STATUS */
   updatePaymentStatus: async (id: string, status: PaymentStatus): Promise<PaymentRespondDTO> => {
-    const response = await apiClient.patch<PaymentRespondDTO>(`/api/payments/${id}/status?status=${status}`);
-    return response.data;
+    const { data } = await apiClient.patch<PaymentRespondDTO>(`/payments/${id}/status`, null, {
+      params: { status },
+    });
+    return data;
   },
 
-  /**
-   * Obtener comprobante (imagen) de pago
-   * GET /api/payments/{id}/voucher
-   */
+  /** GET /payments/{id}/voucher — devuelve el blob de la imagen */
   getVoucher: async (id: string): Promise<Blob> => {
-    const response = await apiClient.get(`/api/payments/${id}/voucher`, { responseType: 'blob' });
-    return response.data;
+    const { data } = await apiClient.get(`/payments/${id}/voucher`, { responseType: 'blob' });
+    return data;
+  },
+
+  /** DELETE /payments/{id} */
+  deletePayment: async (id: string): Promise<void> => {
+    await apiClient.delete(`/payments/${id}`);
   },
 };
 
