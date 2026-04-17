@@ -108,8 +108,8 @@ export default function OrganizadorConfigurarPartidoPage() {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Lista de partidos */}
             <div className="w-full lg:w-1/3">
-              <div className="rounded-2xl shadow-2xl overflow-hidden border-2 border-[#144C9F]/30 mb-4" style={{background: "rgba(7,31,74,0.92)"}}>
-                <div className="px-6 py-6">
+              <div className="h-full rounded-2xl shadow-2xl overflow-hidden border-2 border-[#144C9F]/30" style={{background: "rgba(7,31,74,0.92)"}}>
+                <div className="px-10 py-8">
                   <h3 className="text-xl font-bold text-white mb-4">Partidos actuales</h3>
                   <ul className="flex flex-col gap-2">
                     {partidos.map(p => (
@@ -128,7 +128,7 @@ export default function OrganizadorConfigurarPartidoPage() {
             </div>
             {/* Formulario de edición */}
             <div className="w-full lg:w-2/3">
-              <div className="max-w-2xl mx-auto rounded-2xl shadow-2xl overflow-hidden border-2 border-[#144C9F]/30" style={{background: "rgba(7,31,74,0.92)"}}>
+              <div className="h-full rounded-2xl shadow-2xl overflow-hidden border-2 border-[#144C9F]/30" style={{background: "rgba(7,31,74,0.92)"}}>
                 <div className="flex flex-col items-start gap-2 px-10 py-8">
                   <h2 className="text-2xl md:text-3xl font-black text-white mb-1" style={{fontFamily: 'Montserrat, sans-serif'}}>Detalles del Partido</h2>
                   <p className="text-base md:text-lg text-white/80 mb-6">Asigna la fecha, hora, árbitro y cancha para el partido</p>
