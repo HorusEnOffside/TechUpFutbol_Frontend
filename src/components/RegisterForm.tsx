@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { RegisterSteps } from "./RegisterSteps";
-import { User, Calendar, Venus, Briefcase, BookOpen, Shield, Hash, Mail, Lock } from "lucide-react";
+import { User, Calendar, Venus, Briefcase, BookOpen, Shield, Hash, Mail, Lock, Camera } from "lucide-react";
+import PlayerService from "../services/player.service";
+import type { StudentPlayerDTO, PlayerDTO } from "../types/player";
 
 interface RegisterFormProps {
   onSwitch: () => void;
@@ -9,6 +11,15 @@ interface RegisterFormProps {
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
   const [step, setStep] = useState(0);
   const [values, setValues] = useState<any>({});
+  const [foto, setFoto] = useState<File | null>(null);
+  const [fotoPreview, setFotoPreview] = useState<string | null>(null);
+  const fotoRef = useRef<HTMLInputElement>(null);
+
+  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+
   // Validación de cada paso y mensajes de error
   const getStepErrors = () => {
     const errs: any = {};
@@ -41,20 +52,77 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
   };
   const [loading, setLoading] = useState(false);
 
+  // Mapeo de valores del form al formato del backend
+  const GENDER_MAP: Record<string, 'MALE' | 'FEMALE'> = {
+    masculino: 'MALE', femenino: 'FEMALE', otro: 'MALE',
+  };
+  const POSITION_MAP: Record<string, 'GOALKEEPER' | 'DEFENDER' | 'MIDFIELDER' | 'FORWARD'> = {
+    portero: 'GOALKEEPER', defensa: 'DEFENDER', mediocampo: 'MIDFIELDER', delantero: 'FORWARD',
+  };
+  const CAREER_MAP: Record<string, string> = {
+    sistemas:      'INGENIERIA_DE_SISTEMAS',
+    ia:            'INTELIGENCIA_ARTIFICIAL',
+    ciberseguridad:'CIBERSEGURIDAD',
+    estadistica:   'ESTADISTICA',
+  };
+
+  const handleFotoChange = (file: File) => {
+    setFoto(file);
+    setFotoPreview(URL.createObjectURL(file));
+  };
+
   const handleChange = (field: string, value: any) => {
     setValues((prev: any) => ({ ...prev, [field]: value }));
+    setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
   const handleNext = () => {
-    setStep((s) => s + 1);
+    setSubmitted(true);
+    if (validateStep()) {
+      setStep((s) => s + 1);
+      setTouched({});
+      setSubmitted(false);
+    }
   };
   const handleBack = () => {
     setStep((s) => s - 1);
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitted(true);
+    if (!validateStep()) return;
     setLoading(true);
-    setTimeout(() => setLoading(false), 1000);
+    setApiError(null);
+    try {
+      const base = {
+        name:         values.name,
+        mail:         values.email,
+        dateOfBirth:  values.birth,
+        gender:       GENDER_MAP[values.gender] ?? 'MALE',
+        password:     values.password,
+        dorsalNumber: Number(values.dorsal),
+        position:     POSITION_MAP[values.posicion],
+        career:       CAREER_MAP[values.carrera] ?? 'INGENIERIA_DE_SISTEMAS',
+      };
+
+      if (values.tipo === 'estudiante') {
+        const payload: StudentPlayerDTO = { ...base, semester: Number(values.semestre) };
+        await PlayerService.createSportsProfileStudent(payload, foto);
+      } else if (values.tipo === 'docente') {
+        await PlayerService.createSportsProfileTeacher(base as PlayerDTO, foto);
+      } else if (values.tipo === 'familiar') {
+        await PlayerService.createSportsProfileFamiliar(base as PlayerDTO, foto);
+      } else {
+        await PlayerService.createSportsProfileGraduate(base as PlayerDTO, foto);
+      }
+
+      setSuccessMsg('¡Cuenta creada! Ya puedes iniciar sesión.');
+      setTimeout(() => onSwitch(), 2000);
+    } catch (err: any) {
+      setApiError(err?.message ?? 'Error al crear la cuenta. Intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -83,7 +151,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
                 <User className="w-5 h-5 text-gray-400 mr-2" />
                 <input id="register-name" className={`flex-1 bg-transparent outline-none border-none text-[#071F4A] placeholder-gray-400 font-medium ${step === 0 && getStepErrors().name ? 'border-b-2 border-red-500' : ''}`} value={values.name || ""} onChange={e => handleChange("name", e.target.value)} placeholder="Nombre completo" />
               </div>
-              {step === 0 && getStepErrors().name && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().name}</div>}
+              {step === 0 && getStepErrors().name && (touched.name || submitted) && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().name}</div>}
             </div>
           </div>
           <div className="mb-4">
@@ -93,7 +161,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
                 <Calendar className="w-5 h-5 text-gray-400 mr-2" />
                 <input id="register-birth" type="date" className={`flex-1 bg-transparent outline-none border-none text-[#071F4A] font-medium ${step === 0 && getStepErrors().birth ? 'border-b-2 border-red-500' : ''}`} value={values.birth || ""} onChange={e => handleChange("birth", e.target.value)} />
               </div>
-              {step === 0 && getStepErrors().birth && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().birth}</div>}
+              {step === 0 && getStepErrors().birth && (touched.birth || submitted) && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().birth}</div>}
             </div>
           </div>
           <div className="mb-8">
@@ -114,7 +182,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
                   <option value="otro">Otro</option>
                 </select>
               </div>
-              {step === 0 && getStepErrors().gender && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().gender}</div>}
+              {step === 0 && getStepErrors().gender && (touched.gender || submitted) && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().gender}</div>}
             </div>
           </div>
           <button
@@ -222,7 +290,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
               {step === 2 && getStepErrors().posicion && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().posicion}</div>}
             </div>
           </div>
-          <div className="mb-8">
+          <div className="mb-4">
             <label htmlFor="register-dorsal" className="block mb-1 font-semibold">Número de dorsal</label>
             <div>
               <div className="flex items-center bg-[#F7F9FA] border border-gray-200 rounded-xl px-4 py-3">
@@ -231,6 +299,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
               </div>
               {step === 2 && getStepErrors().dorsal && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().dorsal}</div>}
             </div>
+          </div>
+          {/* Foto de perfil — opcional */}
+          <div className="mb-8">
+            <label className="block mb-1 font-semibold">Foto de perfil <span className="text-gray-400 font-normal text-xs">(opcional)</span></label>
+            <button type="button" onClick={() => fotoRef.current?.click()}
+              className="w-full flex items-center gap-3 bg-[#F7F9FA] border border-gray-200 rounded-xl px-4 py-3 hover:bg-gray-100 transition">
+              {fotoPreview
+                ? <img src={fotoPreview} alt="preview" className="w-8 h-8 rounded-full object-cover" />
+                : <Camera className="w-5 h-5 text-gray-400" />}
+              <span className="text-sm text-gray-500 truncate">{foto ? foto.name : 'Subir foto'}</span>
+            </button>
+            <input ref={fotoRef} type="file" accept="image/*" className="hidden"
+              onChange={e => { if (e.target.files?.[0]) handleFotoChange(e.target.files[0]); }} />
           </div>
           <div className="flex gap-2">
             <button type="button" className="w-1/2 bg-gray-200 text-[#071F4A] font-bold py-2 rounded-lg" onClick={handleBack}>Atrás</button>
@@ -276,6 +357,16 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
               {step === 3 && getStepErrors().password2 && <div className="text-red-500 text-xs mt-1 ml-1">{getStepErrors().password2}</div>}
             </div>
           </div>
+          {apiError && (
+            <div className="mb-3 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+              {apiError}
+            </div>
+          )}
+          {successMsg && (
+            <div className="mb-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm font-semibold">
+              {successMsg}
+            </div>
+          )}
           <div className="flex gap-2">
             <button type="button" className="w-1/2 bg-gray-200 text-[#071F4A] font-bold py-2 rounded-lg" onClick={handleBack}>Atrás</button>
             <button

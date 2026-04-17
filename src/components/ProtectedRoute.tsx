@@ -3,15 +3,18 @@ import { useAuth } from '../store/AuthContext';
 import type { ReactNode } from 'react';
 
 interface ProtectedRouteProps {
-  role: string;
+  role?: string;
   children: ReactNode;
 }
 
 export function ProtectedRoute({ role, children }: ProtectedRouteProps) {
-  const { isAuthenticated, hasRole } = useAuth();
+  const { isAuthenticated, hasRole, initializing } = useAuth();
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (!hasRole(role))    return <Navigate to="/login" replace />;
+  // Wait for localStorage hydration before making any redirect decision
+  if (initializing) return null;
+
+  if (!isAuthenticated) return <Navigate to="/auth" replace />;
+  if (role && !hasRole(role)) return <Navigate to="/auth" replace />;
 
   return <>{children}</>;
 }

@@ -1,45 +1,11 @@
 import { useState } from 'react';
 import AuthService from '../services/auth.service';
-import type { LoginRequest, LoginResponse } from '../types/auth';
+import type { LoginResponse } from '../types/auth';
 
-// Hook para login de usuario
-export function useLogin() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [networkError, setNetworkError] = useState<string | null>(null);
-  const [businessError, setBusinessError] = useState<string | null>(null);
-  const [user, setUser] = useState<LoginResponse | null>(null);
-
-  const login = async (credentials: LoginRequest) => {
-    setLoading(true);
-    setError(null);
-    setNetworkError(null);
-    setBusinessError(null);
-    try {
-      const data = await AuthService.login(credentials);
-      setUser(data);
-      return data;
-    } catch (err: any) {
-      // Axios error: err.response = error de negocio, err.request = error de red
-      if (err.response) {
-        setBusinessError(err.response.data?.message || 'Error de negocio');
-        setError(err.response.data?.message || 'Error de negocio');
-      } else if (err.request) {
-        setNetworkError('No hay respuesta del servidor');
-        setError('No hay respuesta del servidor');
-      } else {
-        setError('Error desconocido');
-      }
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { user, loading, error, networkError, businessError, login };
-}
-
-// Hook para refrescar el token JWT
+/**
+ * Hook para refrescar el token JWT manualmente.
+ * Para login/logout usa useAuth() de AuthContext.
+ */
 export function useRefreshToken() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,8 +18,9 @@ export function useRefreshToken() {
       const data = await AuthService.refresh(token);
       setTokenData(data);
       return data;
-    } catch (err) {
-      setError('No se pudo refrescar el token');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'No se pudo refrescar el token';
+      setError(message);
       throw err;
     } finally {
       setLoading(false);

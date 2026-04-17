@@ -1,151 +1,141 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { GruposCard, LlavesCard } from '../features/grupos';
-import type { Group, Bracket, GruposTab } from '../features/grupos';
-import '../styles/grupos.css';
+import { Trophy, GitBranch } from 'lucide-react';
+import { NavBarTransparent } from '../components/NavBarTransparent';
+import canchaImg from '../assets/cancha.png';
 
-// ─── Assets ──────────────────────────────────────────────────────────────────
-import bgImage from '../assets/Background1.png';
-import techcupLogo from '../assets/image 88.png';
-import logo1 from '../assets/descarga 1.png';
-import logo2 from '../assets/descarga (1) 1.png';
-import logo3 from '../assets/pngtree-thats-the-football-logo-vector-png-image_13885485 1.png';
+type Tab = 'GRUPOS' | 'LLAVES';
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-const GROUPS: Group[] = [
-  {
-    id: 'A',
-    name: 'Grupo A',
-    teams: [
-      { id: '1', name: 'EQUIPO 1', logo: logo1, points: 1 },
-      { id: '2', name: 'EQUIPO 2', logo: logo2, points: 1 },
-      { id: '3', name: 'EQUIPO 3', logo: logo3, points: 1 },
-    ],
-  },
-  {
-    id: 'B',
-    name: 'Grupo B',
-    teams: [
-      { id: '4', name: 'EQUIPO 4', logo: logo1, points: 3 },
-      { id: '5', name: 'EQUIPO 5', logo: logo2, points: 0 },
-      { id: '6', name: 'EQUIPO 6', logo: logo3, points: 1 },
-    ],
-  },
-];
-
-const BRACKETS: Bracket[] = [
-  {
-    id: '1',
-    stage: 'Octavos de final 1',
-    matches: [
-      { id: 'm1', homeTeam: { name: 'EQUIPO 1', logo: logo1 }, awayTeam: { name: 'EQUIPO 5', logo: logo3 }, date: 'Miercoles 10 de Marzo', time: '11:30 am' },
-      { id: 'm2', homeTeam: { name: 'EQUIPO 2', logo: logo2 }, awayTeam: { name: 'EQUIPO 6', logo: logo1 }, date: 'Miercoles 10 de Marzo', time: '11:30 am' },
-      { id: 'm3', homeTeam: { name: 'EQUIPO 3', logo: logo3 }, awayTeam: { name: 'EQUIPO 7', logo: logo2 }, date: 'Miercoles 11 de Marzo', time: '11:30 am' },
-      { id: 'm4', homeTeam: { name: 'EQUIPO 4', logo: logo2 }, awayTeam: { name: 'EQUIPO 8', logo: logo3 }, date: 'Miercoles 11 de Marzo', time: '11:30 am' },
-    ],
-  },
-  {
-    id: '2',
-    stage: 'Cuartos de final',
-    matches: [
-      { id: 'm5', homeTeam: { name: 'EQUIPO 1', logo: logo1 }, awayTeam: { name: 'EQUIPO 5', logo: logo3 }, date: 'Viernes 12 de Marzo', time: '10:00 am' },
-      { id: 'm6', homeTeam: { name: 'EQUIPO 2', logo: logo2 }, awayTeam: { name: 'EQUIPO 6', logo: logo1 }, date: 'Viernes 12 de Marzo', time: '11:30 am' },
-      { id: 'm7', homeTeam: { name: 'EQUIPO 3', logo: logo3 }, awayTeam: { name: 'EQUIPO 7', logo: logo2 }, date: 'Viernes 12 de Marzo', time: '01:00 pm' },
-      { id: 'm8', homeTeam: { name: 'EQUIPO 4', logo: logo2 }, awayTeam: { name: 'EQUIPO 8', logo: logo3 }, date: 'Viernes 12 de Marzo', time: '02:30 pm' },
-    ],
-  },
-  {
-    id: '3',
-    stage: 'Semifinales',
-    matches: [
-      { id: 'm9',  homeTeam: { name: 'EQUIPO 1', logo: logo1 }, awayTeam: { name: 'EQUIPO 5', logo: logo3 }, date: 'Sabado 13 de Marzo', time: '10:00 am' },
-      { id: 'm10', homeTeam: { name: 'EQUIPO 2', logo: logo2 }, awayTeam: { name: 'EQUIPO 6', logo: logo1 }, date: 'Sabado 13 de Marzo', time: '12:00 pm' },
-    ],
-  },
-  {
-    id: '4',
-    stage: 'Final',
-    matches: [
-      { id: 'm11', homeTeam: { name: 'EQUIPO 2', logo: logo2 }, awayTeam: { name: 'EQUIPO 5', logo: logo3 }, date: 'Domingo 14 de Marzo', time: '11:00 am', winner: 'EQUIPO 2' },
-    ],
-  },
-];
-
-// ─── User icon ────────────────────────────────────────────────────────────────
-function UserIcon() {
-  return (
-    <svg width="28" height="32" viewBox="0 0 40 46" fill="none">
-      <path
-        d="M33.3337 40.25V36.4167C33.3337 34.3833 32.6313 32.4333 31.381 30.9955C30.1308 29.5577 28.4351 28.75 26.667 28.75H13.3337C11.5655 28.75 9.86986 29.5577 8.61961 30.9955C7.36937 32.4333 6.66699 34.3833 6.66699 36.4167V40.25M26.667 13.4167C26.667 17.6508 23.6822 21.0833 20.0003 21.0833C16.3184 21.0833 13.3337 17.6508 13.3337 13.4167C13.3337 9.18248 16.3184 5.75 20.0003 5.75C23.6822 5.75 26.667 9.18248 26.667 13.4167Z"
-        stroke="white"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 export function GruposPage() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<GruposTab>('GRUPOS');
-  const [groupIndex, setGroupIndex] = useState(0);
-  const [bracketIndex, setBracketIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState<Tab>('GRUPOS');
+  const [teamId, setTeamId] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    const savedTeamId = localStorage.getItem('teamId');
+    setTeamId(savedTeamId);
+    setChecked(true);
+  }, []);
 
   return (
-    <div className="grupos-wrapper">
-      <div className="grupos-page">
-        <div className="grupos-bg" style={{ backgroundImage: `url(${bgImage})` }} />
-        <div className="grupos-left-overlay" />
+    <div className="min-h-screen relative overflow-hidden bg-[#050d1a]">
 
-        {/* ── Top bar ── */}
-        <header className="grupos-topbar">
-          <img src={techcupLogo} alt="TechCup Fútbol" className="grupos-topbar-logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/player/menu')} />
-          <button className="grupos-avatar" onClick={() => navigate('/login')} aria-label="Perfil">
-            <UserIcon />
-          </button>
-        </header>
+      {/* Fondo */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${canchaImg})`,
+          filter: 'blur(3px) brightness(0.35)',
+          transform: 'scale(1.06)',
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(105deg, rgba(5,13,26,0.92) 0%, rgba(7,31,74,0.75) 40%, transparent 70%)',
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse at 85% 55%, rgba(23,166,91,0.22) 0%, transparent 60%)',
+        }}
+        aria-hidden="true"
+      />
 
-        {/* ── Tabs ── */}
-        <nav className="grupos-tabs" aria-label="Secciones">
-          <button
-            className={`grupos-tab ${activeTab === 'GRUPOS' ? 'grupos-tab--active' : ''}`}
-            onClick={() => setActiveTab('GRUPOS')}
+      <NavBarTransparent onLogoClick={() => navigate('/player/menu')} />
+
+      <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-28 pb-16">
+
+        {/* Sin equipo */}
+        {checked && !teamId && (
+          <div
+            className="w-full max-w-4xl rounded-2xl border border-white/10 shadow-2xl flex flex-col items-center justify-center py-20 gap-4"
+            style={{ background: 'rgba(5, 13, 26, 0.70)', backdropFilter: 'blur(16px)' }}
           >
-            GRUPOS
-          </button>
-          <button
-            className={`grupos-tab ${activeTab === 'LLAVES' ? 'grupos-tab--active' : ''}`}
-            onClick={() => setActiveTab('LLAVES')}
+            <Trophy className="w-10 h-10 text-white/30" />
+            <p className="text-white/60 text-base text-center" style={{ fontFamily: "'Russo One', sans-serif" }}>
+              Primero debes crear un equipo
+            </p>
+            <button
+              onClick={() => navigate('/player/capitanes')}
+              className="mt-2 px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90"
+              style={{ background: 'linear-gradient(90deg, #144C9F, #17A65B)' }}
+            >
+              Ir a Capitanes
+            </button>
+          </div>
+        )}
+
+        {/* Tarjeta */}
+        {checked && teamId && (
+        <>
+        <div
+          className="w-full max-w-4xl rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+          style={{ background: 'rgba(5, 13, 26, 0.70)', backdropFilter: 'blur(16px)' }}
+        >
+          {/* Encabezado con tabs */}
+          <div
+            className="px-6 sm:px-8 py-5 flex items-center gap-6"
+            style={{
+              borderRadius: '20px',
+              background: 'linear-gradient(90deg, rgba(4,107,16,0.90) 0%, rgba(4,21,107,0.90) 100%)',
+            }}
           >
-            LLAVES
-          </button>
-        </nav>
+            <button
+              onClick={() => setActiveTab('GRUPOS')}
+              className={`flex items-center gap-2 pb-1 border-b-2 transition-all ${
+                activeTab === 'GRUPOS'
+                  ? 'border-white text-white'
+                  : 'border-transparent text-white/50 hover:text-white/80'
+              }`}
+            >
+              <Trophy className="w-5 h-5 shrink-0" aria-hidden="true" />
+              <span className="text-xl sm:text-2xl tracking-wide" style={{ fontFamily: "'Russo One', sans-serif" }}>
+                Grupos
+              </span>
+            </button>
 
-        {/* ── Content ── */}
-        <main className="grupos-content">
-          {activeTab === 'GRUPOS' && (
-            <GruposCard
-              group={GROUPS[groupIndex]}
-              onPrev={() => setGroupIndex((i) => Math.max(0, i - 1))}
-              onNext={() => setGroupIndex((i) => Math.min(GROUPS.length - 1, i + 1))}
-              hasPrev={groupIndex > 0}
-              hasNext={groupIndex < GROUPS.length - 1}
-            />
-          )}
+            <button
+              onClick={() => setActiveTab('LLAVES')}
+              className={`flex items-center gap-2 pb-1 border-b-2 transition-all ${
+                activeTab === 'LLAVES'
+                  ? 'border-white text-white'
+                  : 'border-transparent text-white/50 hover:text-white/80'
+              }`}
+            >
+              <GitBranch className="w-5 h-5 shrink-0" aria-hidden="true" />
+              <span className="text-xl sm:text-2xl tracking-wide" style={{ fontFamily: "'Russo One', sans-serif" }}>
+                Llaves
+              </span>
+            </button>
+          </div>
 
-          {activeTab === 'LLAVES' && (
-            <LlavesCard
-              bracket={BRACKETS[bracketIndex]}
-              onPrev={() => setBracketIndex((i) => Math.max(0, i - 1))}
-              onNext={() => setBracketIndex((i) => Math.min(BRACKETS.length - 1, i + 1))}
-              hasPrev={bracketIndex > 0}
-              hasNext={bracketIndex < BRACKETS.length - 1}
-            />
-          )}
-        </main>
-      </div>
+          {/* Contenido */}
+          <div className="flex flex-col items-center justify-center py-20 gap-3 text-white/50">
+            {activeTab === 'GRUPOS' ? (
+              <Trophy className="w-8 h-8" />
+            ) : (
+              <GitBranch className="w-8 h-8" />
+            )}
+            <p className="text-sm" style={{ fontFamily: "'Russo One', sans-serif" }}>
+              Próximamente
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-6 text-white/30 text-xs text-center">
+          Los 3 primeros equipos de cada grupo clasifican a las llaves eliminatorias
+        </p>
+        </>
+        )}
+
+      </main>
     </div>
   );
 }

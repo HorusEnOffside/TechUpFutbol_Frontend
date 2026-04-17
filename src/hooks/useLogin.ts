@@ -1,24 +1,42 @@
-import { useState } from "react";
-import { login } from "../services/auth.service";
-import { LoginPayload } from "../types/auth";
+import { useState } from 'react';
+import AuthService from '../services/auth.service';
+import { ApiError } from '../services/api';
+import type { LoginPayload, LoginResponse } from '../types/auth';
 
 export function useLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [networkError, setNetworkError] = useState<string | null>(null);
+  const [businessError, setBusinessError] = useState<string | null>(null);
+  const [user, setUser] = useState<LoginResponse | null>(null);
 
   const handleLogin = async (payload: LoginPayload) => {
     setLoading(true);
     setError(null);
+    setNetworkError(null);
+    setBusinessError(null);
     try {
-      const result = await login(payload);
-      return result;
-    } catch (err: any) {
-      setError(err.message || "Error al iniciar sesión");
-      return null;
+      const data = await AuthService.login(payload);
+      setUser(data);
+      return data;
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        if (err.type === 'network') {
+          setNetworkError(err.message);
+        } else {
+          setBusinessError(err.message);
+        }
+        setError(err.message);
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Error desconocido');
+      }
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  return { handleLogin, loading, error };
+  return { user, loading, error, networkError, businessError, handleLogin };
 }
