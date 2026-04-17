@@ -1,4 +1,5 @@
 import apiClient from './api';
+import type { UUID } from '../types/common';
 import type { EliminationBracket } from '../types/bracket';
 
 const BracketService = {
@@ -10,7 +11,7 @@ const BracketService = {
    *   - EliminationBracket  → cuando todos los partidos de grupo finalizaron
    *   - null                → 204 No Content (partidos pendientes o equipos insuficientes)
    */
-  getBrackets: async (tournamentId: string): Promise<EliminationBracket | null> => {
+  getBrackets: async (tournamentId: UUID): Promise<EliminationBracket | null> => {
     try {
       const response = await apiClient.get<EliminationBracket>(`/brackets/${tournamentId}`);
       // 204 No Content: axios devuelve data vacía

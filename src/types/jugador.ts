@@ -1,8 +1,10 @@
+import type { UUID } from './common';
+
 export type Posicion = 'DL' | 'DF' | 'MD' | 'AR';
 export type Genero = 'M' | 'F';
 
 export interface Jugador {
-  id: string;
+  id: UUID;
   nombre: string;
   carrera: string;
   posicion: Posicion;

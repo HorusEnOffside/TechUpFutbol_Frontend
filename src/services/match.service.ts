@@ -1,5 +1,6 @@
 import apiClient from './api';
 import { ApiError } from './api';
+import type { UUID } from '../types/common';
 import type { MatchResponseDTO, MatchResultDTO } from '../types/match';
 import type { TeamFullInfoDTO } from '../types/standings';
 
@@ -37,7 +38,7 @@ const MatchService = {
     }
   },
 
-  getMatch: async (id: string): Promise<MatchResponseDTO> => {
+  getMatch: async (id: UUID): Promise<MatchResponseDTO> => {
     try {
       const { data } = await apiClient.get<MatchResponseDTO>(`/matches/${id}`);
       return data;
@@ -46,7 +47,7 @@ const MatchService = {
     }
   },
 
-  getMatchById: async (matchId: string): Promise<MatchResponseDTO> => {
+  getMatchById: async (matchId: UUID): Promise<MatchResponseDTO> => {
     return MatchService.getMatch(matchId);
   },
 
@@ -56,7 +57,7 @@ const MatchService = {
    * GET /matches                     → filtra por esos teamIds
    * (MatchResponseDTO.teamA/B solo tiene {id,name,uniformColor}, sin tournamentId)
    */
-  getMatchesByTournament: async (tournamentId: string): Promise<MatchResponseDTO[]> => {
+  getMatchesByTournament: async (tournamentId: UUID): Promise<MatchResponseDTO[]> => {
     try {
       const [matchesRes, teamsRes] = await Promise.all([
         apiClient.get<MatchResponseDTO[]>('/matches'),
@@ -71,11 +72,11 @@ const MatchService = {
     }
   },
 
-  getGroupPhaseMatches: async (tournamentId: string): Promise<MatchResponseDTO[]> => {
+  getGroupPhaseMatches: async (tournamentId: UUID): Promise<MatchResponseDTO[]> => {
     return MatchService.getMatchesByTournament(tournamentId);
   },
 
-  createResult: async (id: string, result: MatchResultDTO): Promise<MatchResponseDTO> => {
+  createResult: async (id: UUID, result: MatchResultDTO): Promise<MatchResponseDTO> => {
     try {
       const { data } = await apiClient.post<MatchResponseDTO>(`/matches/${id}/result`, result);
       return data;

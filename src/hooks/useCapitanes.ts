@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../store/AuthContext';
 import TeamService from '../services/team.service';
 
@@ -55,6 +55,14 @@ export function useCapitanes(): UseCapitanesReturn {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // Si ya tiene equipo guardado, saltar directo a jugadores
+  useEffect(() => {
+    const savedTeamId = localStorage.getItem('teamId');
+    if (savedTeamId) {
+      setIsSuccess(true);
+    }
+  }, []);
+
   const isNameValid = teamName.trim().length >= 5;
   const canGoNext   = step === 1 ? isNameValid : step < 3;
   const canGoBack   = step > 1;
@@ -95,13 +103,24 @@ export function useCapitanes(): UseCapitanesReturn {
       // Guardar el teamId para que SeleccionJugadoresPage lo use en las invitaciones
       localStorage.setItem('teamId', team.id);
 
-      // Refrescar el token: el backend ya asignó rol CAPTAIN al usuario,
-      // necesitamos un JWT nuevo que lo incluya antes de llamar invitePlayer
-      await refreshSession();
+      // Refrescar el token para incluir el rol CAPTAIN asignado por el backend.
+      // Si falla, navegamos igual — la selección de jugadores seguirá funcionando.
+      try {
+        await refreshSession();
+      } catch {
+        // refresh no crítico: el equipo ya fue creado
+      }
 
       setIsSuccess(true);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'No se pudo crear el equipo. Inténtalo de nuevo.';
+      let message = 'No se pudo crear el equipo. Inténtalo de nuevo.';
+      if (err instanceof Error) {
+        if (err.message.toLowerCase().includes('500') || err.message.toLowerCase().includes('internal')) {
+          message = 'Error del servidor. Asegúrate de tener tu perfil deportivo creado antes de crear un equipo.';
+        } else {
+          message = err.message;
+        }
+      }
       setError(message);
     } finally {
       setIsLoading(false);

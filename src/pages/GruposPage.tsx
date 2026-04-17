@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Trophy, GitBranch } from 'lucide-react';
 import { NavBarTransparent } from '../components/NavBarTransparent';
@@ -9,6 +9,14 @@ type Tab = 'GRUPOS' | 'LLAVES';
 export function GruposPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('GRUPOS');
+  const [teamId, setTeamId] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    const savedTeamId = localStorage.getItem('teamId');
+    setTeamId(savedTeamId);
+    setChecked(true);
+  }, []);
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-[#050d1a]">
@@ -44,7 +52,29 @@ export function GruposPage() {
 
       <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-28 pb-16">
 
+        {/* Sin equipo */}
+        {checked && !teamId && (
+          <div
+            className="w-full max-w-4xl rounded-2xl border border-white/10 shadow-2xl flex flex-col items-center justify-center py-20 gap-4"
+            style={{ background: 'rgba(5, 13, 26, 0.70)', backdropFilter: 'blur(16px)' }}
+          >
+            <Trophy className="w-10 h-10 text-white/30" />
+            <p className="text-white/60 text-base text-center" style={{ fontFamily: "'Russo One', sans-serif" }}>
+              Primero debes crear un equipo
+            </p>
+            <button
+              onClick={() => navigate('/player/capitanes')}
+              className="mt-2 px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90"
+              style={{ background: 'linear-gradient(90deg, #144C9F, #17A65B)' }}
+            >
+              Ir a Capitanes
+            </button>
+          </div>
+        )}
+
         {/* Tarjeta */}
+        {checked && teamId && (
+        <>
         <div
           className="w-full max-w-4xl rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
           style={{ background: 'rgba(5, 13, 26, 0.70)', backdropFilter: 'blur(16px)' }}
@@ -102,6 +132,9 @@ export function GruposPage() {
         <p className="mt-6 text-white/30 text-xs text-center">
           Los 3 primeros equipos de cada grupo clasifican a las llaves eliminatorias
         </p>
+        </>
+        )}
+
       </main>
     </div>
   );

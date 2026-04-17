@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import SancionService from '../services/sancion.service';
+import type { UUID } from '../types/common';
 
 export type TipoSancion = 'equipo' | 'jugador';
 
 export interface EntidadSancionada {
-  id:     string;
+  id:     UUID;
   tipo:   TipoSancion;
   nombre: string;
 }
@@ -16,7 +17,7 @@ export interface EntidadSancionada {
 export type BuscarFn = (
   tipo:   TipoSancion,
   nombre: string,
-) => Promise<{ id: string; nombre: string } | null>;
+) => Promise<{ id: UUID; nombre: string } | null>;
 
 const buscarEnBackend: BuscarFn = async (tipo, nombre) => {
   const resultado =

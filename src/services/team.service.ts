@@ -1,8 +1,9 @@
 import apiClient from './api';
+import type { UUID } from '../types/common';
 import type { TeamFullInfoDTO } from '../types/standings';
 
 export interface TeamResponseDTO {
-  id: string;
+  id: UUID;
   name: string;
   uniformColor: string;
   logo: string | null;
@@ -19,17 +20,18 @@ const TeamService = {
   createTeam: async (
     name: string,
     uniformColors: string,
-    captainUserId: string,
+    captainUserId: UUID,
     logo?: File | null,
   ): Promise<TeamResponseDTO> => {
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('uniformColors', uniformColors);
-    formData.append('captainUserId', captainUserId);
-    if (logo) formData.append('logo', logo);
+    const params = { name, uniformColors, captainUserId };
 
-    // No fijar Content-Type manualmente: axios lo setea con el boundary correcto
-    const { data } = await apiClient.post<TeamResponseDTO>('/teams', formData);
+    let body: FormData | null = null;
+    if (logo) {
+      body = new FormData();
+      body.append('logo', logo);
+    }
+
+    const { data } = await apiClient.post<TeamResponseDTO>('/teams', body, { params });
     return data;
   },
 
@@ -38,8 +40,8 @@ const TeamService = {
    * POST /teams/{teamId}/invite/{playerId}?message=...
    */
   invitePlayer: async (
-    teamId: string,
-    playerId: string,
+    teamId: UUID,
+    playerId: UUID,
     message?: string,
   ): Promise<void> => {
     await apiClient.post(
@@ -53,7 +55,7 @@ const TeamService = {
    * Información completa de un equipo con jugadores
    * GET /teams/{teamId}/full  — requiere autenticación
    */
-  getTeamFullInfo: async (teamId: string): Promise<TeamFullInfoDTO> => {
+  getTeamFullInfo: async (teamId: UUID): Promise<TeamFullInfoDTO> => {
     try {
       const { data } = await apiClient.get<TeamFullInfoDTO>(`/teams/${teamId}/full`);
       return data;
@@ -67,7 +69,7 @@ const TeamService = {
    * Todos los equipos de un torneo con jugadores incluidos
    * GET /teams/tournament/{tournamentId}/full  — requiere autenticación
    */
-  getTeamsByTournament: async (tournamentId: string): Promise<TeamFullInfoDTO[]> => {
+  getTeamsByTournament: async (tournamentId: UUID): Promise<TeamFullInfoDTO[]> => {
     try {
       const { data } = await apiClient.get<TeamFullInfoDTO[]>(
         `/teams/tournament/${tournamentId}/full`,

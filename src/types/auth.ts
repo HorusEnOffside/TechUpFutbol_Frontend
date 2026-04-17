@@ -1,3 +1,5 @@
+import type { UUID } from './common';
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -5,7 +7,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  id: string;
+  id: UUID;
   mail: string;
   roles: string[];
 }
@@ -19,11 +21,11 @@ export interface RegisterRequest {
   dorsalNumber?: number;
   position?: 'GOALKEEPER' | 'DEFENDER' | 'MIDFIELDER' | 'FORWARD';
   semester?: number;
-  career?: 'ENGINEERING' | 'DATA_SCIENCE' | 'OTHER';
+  career?: 'INGENIERIA_DE_SISTEMAS' | 'INTELIGENCIA_ARTIFICIAL' | 'CIBERSEGURIDAD' | 'ESTADISTICA';
 }
 
 export interface UserProfile {
-  id: string;
+  id: UUID;
   name: string;
   mail: string;
   dateOfBirth: string;

@@ -61,7 +61,7 @@ export function SeleccionJugadoresPage() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
-      <BackButton />
+      <BackButton to="/player/menu" />
       {/* Background */}
       <img src={sjBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-black/40" aria-hidden />

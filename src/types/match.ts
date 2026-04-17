@@ -1,19 +1,21 @@
+import type { UUID } from './common';
+
 // ─── Supporting types ─────────────────────────────────────────────────────────
 
 export interface TeamSummaryDTO {
-  id: string;
+  id: UUID;
   name: string;
   uniformColor: string;
 }
 
 export interface RefereeSummaryDTO {
-  id: string;
+  id: UUID;
   name: string;
   mail: string;
 }
 
 export interface SoccerFieldResponseDTO {
-  id: string;
+  id: UUID;
   name: string;
   location: string;
   foto: string | null;
@@ -35,7 +37,7 @@ export interface CardResponseDTO {
 // ─── Match ────────────────────────────────────────────────────────────────────
 
 export interface MatchResponseDTO {
-  id: string;
+  id: UUID;
   dateTime: string;           // LocalDateTime → ISO string
   status: string;
   localScore: number;
@@ -54,7 +56,7 @@ export type MatchDTO = MatchResponseDTO;
 // ─── Match result (POST /matches/{id}/result) ─────────────────────────────────
 
 export interface PlayerMatchStats {
-  playerId: string;
+  playerId: UUID;
   yellowCards: number;
   redCards: number;
   goals: number;

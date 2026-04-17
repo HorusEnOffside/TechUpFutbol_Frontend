@@ -64,6 +64,7 @@ export function SancionesPage() {
           </span>
           <button
             aria-label="Perfil"
+            onClick={() => navigate('/organizador/perfil')}
             style={{
               width: 48, height: 48, borderRadius: '50%',
               background: 'rgba(255,255,255,0.10)',

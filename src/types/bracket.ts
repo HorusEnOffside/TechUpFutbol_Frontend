@@ -1,9 +1,10 @@
+import type { UUID } from './common';
 import type { TournamentStatus } from './tournament';
 
 // ─── Tournament (full shape used in phases module) ────────────────────────────
 
 export interface Tournament {
-  id: string;
+  id: UUID;
   startDate: string;
   endDate: string;
   closingDate: string | null;
@@ -20,7 +21,7 @@ export interface Tournament {
 export type MatchStatus = 'PENDING' | 'FINISHED' | string;
 
 export interface MatchTeamRef {
-  id: string;
+  id: UUID;
   name: string;
   uniformColor: string;
 }
@@ -33,15 +34,15 @@ export interface MatchEvent {
 }
 
 export interface Match {
-  id: string;
+  id: UUID;
   dateTime: string;
   status: MatchStatus;
   localScore: number;
   visitorScore: number;
   teamA: MatchTeamRef;
   teamB: MatchTeamRef;
-  referee: { id: string; name: string; mail: string } | null;
-  soccerField: { id: string; name: string; location: string; foto: string | null } | null;
+  referee: { id: UUID; name: string; mail: string } | null;
+  soccerField: { id: UUID; name: string; location: string; foto: string | null } | null;
   goals: MatchEvent[];
   cards: MatchEvent[];
 }
@@ -50,14 +51,14 @@ export interface Match {
 // Backend retorna EliminationBracket directamente o 204 No Content
 
 export interface BracketPlayer {
-  userId: string;
+  userId: UUID;
   name: string;
   position: string;
   dorsalNumber: number;
 }
 
 export interface BracketTeam {
-  id: string;
+  id: UUID;
   name: string;
   uniformColor: string;
   formation: string | null;

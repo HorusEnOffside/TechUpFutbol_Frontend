@@ -47,7 +47,7 @@ export function CapitanesPage() {
     isLoading, error, isSuccess,
     isNameValid, canGoNext, canGoBack, fileRef,
     setTeamName, setMainColor,
-    handleNext, handleStepBack, handleShieldChange, handleSubmit, resetError,
+    handleNext, handleStepBack, handleShieldChange, handleSubmit,
   } = useCapitanes();
 
   const handleBack = () => {
@@ -73,7 +73,12 @@ export function CapitanesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <img src={logoBlanco} alt="Logo" className="h-12 sm:h-14 w-auto object-contain cursor-pointer transition-transform hover:scale-105"
             onClick={() => navigate('/')} />
-          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/10 border border-white/20 cursor-pointer hover:bg-white/20 transition-all">
+          <div
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-white/10 border border-white/20 cursor-pointer hover:bg-white/20 transition-all"
+            onClick={() => navigate('/player/sports-profile')}
+            role="button"
+            aria-label="Mi perfil deportivo"
+          >
             <UserIcon />
           </div>
         </div>
@@ -186,6 +191,14 @@ export function CapitanesPage() {
                     </div>
                   )}
                 </div>
+
+                {/* Error visible */}
+                {error && (
+                  <div className="w-full px-4 py-3 rounded-xl bg-red-500/20 border border-red-400/50 text-red-300 text-sm font-medium">
+                    {error}
+                  </div>
+                )}
+
                 <button
                   type="button"
                   onClick={handleConfirm}

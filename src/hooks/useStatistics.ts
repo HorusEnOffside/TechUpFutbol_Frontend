@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 import { useApiQuery } from './useApiQuery';
 import StandingsService from '../services/standings.service';
 import TeamService from '../services/team.service';
+import type { UUID } from '../types/common';
 
 /**
  * Tabla de posiciones de un torneo.
  * Re-ejecuta automáticamente cuando cambia tournamentId.
  */
-export function useStandingsTable(tournamentId: string | undefined) {
+export function useStandingsTable(tournamentId: UUID | undefined) {
   const result = useApiQuery(
     () => StandingsService.getStandingsTable(tournamentId!),
     { immediate: false },
@@ -25,7 +26,7 @@ export function useStandingsTable(tournamentId: string | undefined) {
  * Goleadores de un torneo.
  * Re-ejecuta automáticamente cuando cambia tournamentId.
  */
-export function useTopScorers(tournamentId: string | undefined) {
+export function useTopScorers(tournamentId: UUID | undefined) {
   const result = useApiQuery(
     () => StandingsService.getTopScorers(tournamentId!),
     { immediate: false },
@@ -44,8 +45,8 @@ export function useTopScorers(tournamentId: string | undefined) {
  * Re-ejecuta cuando cambia tournamentId o playerOrTeamId.
  */
 export function useCardsHistory(
-  tournamentId: string | undefined,
-  playerOrTeamId?: string | null,
+  tournamentId: UUID | undefined,
+  playerOrTeamId?: UUID | null,
 ) {
   const result = useApiQuery(
     () => StandingsService.getCardsHistory(tournamentId!, playerOrTeamId),
@@ -64,7 +65,7 @@ export function useCardsHistory(
  * Todos los equipos de un torneo con sus jugadores.
  * Re-ejecuta automáticamente cuando cambia tournamentId.
  */
-export function useTeamsByTournament(tournamentId: string | undefined) {
+export function useTeamsByTournament(tournamentId: UUID | undefined) {
   const result = useApiQuery(
     () => TeamService.getTeamsByTournament(tournamentId!),
     { immediate: false },
