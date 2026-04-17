@@ -1,8 +1,7 @@
-
-import { ArrowLeft } from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
-import { QuickActionButton } from "../components/QuickActionButton";
-
+import { Input } from "../components/ui/Input";
+import { Textarea } from "../components/ui/Textarea";
+import { Button } from "../components/ui/Button";
 import canchaImg from "../assets/cancha.png";
 import { useNavigate } from "react-router";
 import { useState } from "react";
@@ -13,27 +12,45 @@ export default function OrganizadorCreationTournamentPage() {
   // Estados del formulario
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
-  const [cierreInscripciones, setCierreInscripciones] = useState("");
   const [maxEquipos, setMaxEquipos] = useState("");
   const [costoEquipo, setCostoEquipo] = useState("");
+  const [enviando] = useState(false);
+  const [costoEquipoError, setCostoEquipoError] = useState("");
+  const [maxEquiposError, setMaxEquiposError] = useState("");
+  // Paso 2: configuración avanzada
+  const [showConfig, setShowConfig] = useState(false);
   const [reglamento, setReglamento] = useState("");
-  const [enviando, setEnviando] = useState(false);
+  const [closingDate, setClosingDate] = useState("");
+  const [sanciones, setSanciones] = useState("");
+  // Canchas: [{ nombre, foto }]
+  type Cancha = { nombre: string; foto: File | null };
+  const [canchas, setCanchas] = useState<Cancha[]>([{ nombre: "", foto: null }]);
+  // Horarios: [{ fecha, descripcion }]
+  const [horarios, setHorarios] = useState([{ fecha: "", descripcion: "" }]);
 
   // Validación simple: todos los campos requeridos deben estar llenos
   const formularioValido =
-    fechaInicio && fechaFin && cierreInscripciones && maxEquipos && costoEquipo && reglamento;
+    fechaInicio && fechaFin && maxEquipos && costoEquipo;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formularioValido) return;
-    setEnviando(true);
-    // Aquí iría la lógica para crear el torneo (API, etc.)
-    setTimeout(() => {
-      setEnviando(false);
-      alert("¡Torneo creado exitosamente!");
-      // navigate("/alguna-ruta");
-    }, 1200);
+    setShowConfig(true);
   };
+
+  // Handlers para canchas
+  const handleCanchaChange = (idx: number, field: string, value: string) => {
+    setCanchas((prev) => prev.map((c, i) => i === idx ? { ...c, [field]: value } : c));
+  };
+  const addCancha = () => setCanchas((prev) => [...prev, { nombre: "", foto: null }]);
+  const removeCancha = (idx: number) => setCanchas((prev) => prev.filter((_, i) => i !== idx));
+
+  // Handlers para horarios
+  const handleHorarioChange = (idx: number, field: string, value: string) => {
+    setHorarios((prev) => prev.map((h, i) => i === idx ? { ...h, [field]: value } : h));
+  };
+  const addHorario = () => setHorarios((prev) => [...prev, { fecha: "", descripcion: "" }]);
+  const removeHorario = (idx: number) => setHorarios((prev) => prev.filter((_, i) => i !== idx));
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
       {/* Fondo */}
@@ -88,109 +105,154 @@ export default function OrganizadorCreationTournamentPage() {
 
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">    
             <div className="lg:col-span-3 rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col" style={{background: "rgba(7,31,74,0.92)"}}>
-                <div className="text-[#39D17D] font-black text-2xl mb-6" style={{fontFamily: 'Montserrat, sans-serif'}}>Formulario de Creación de Torneo</div>  
+                <div className="text-[#39D17D] font-black text-2xl mb-6" style={{fontFamily: 'Montserrat, sans-serif'}}>
+                  {showConfig ? 'Configuración de Torneo' : 'Formulario de Creación de Torneo'}
+                </div>
                 <div className="flex flex-col gap-8">
-
-
-
-                      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-                        {/* Fechas */}
-                        <div className="rounded-xl bg-white/10 border border-white/20 p-6">
-                          <h3 className="font-bold text-lg mb-4 text-[#39D17D]">Fechas</h3>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block mb-1 text-white/80">Fecha de inicio</label>
-                              <input
-                                type="datetime-local"
-                                className="w-full rounded px-3 py-2 bg-white/10 border border-white/30 text-white focus:ring-2 focus:ring-[#39D17D]/30 focus:border-[#39D17D]/30 transition"
-                                required
-                                value={fechaInicio}
-                                onChange={e => setFechaInicio(e.target.value)}
-                              />
-                            </div>
-                            <div>
-                              <label className="block mb-1 text-white/80">Fecha de fin</label>
-                              <input
-                                type="datetime-local"
-                                className="w-full rounded px-3 py-2 bg-white/10 border border-white/30 text-white focus:ring-2 focus:ring-[#39D17D]/30 focus:border-[#39D17D]/30 transition"
-                                required
-                                value={fechaFin}
-                                onChange={e => setFechaFin(e.target.value)}
-                              />
-                            </div>
-                            <div>
-                              <label className="block mb-1 text-white/80">Cierre de inscripciones</label>
-                              <input
-                                type="datetime-local"
-                                className="w-full rounded px-3 py-2 bg-white/10 border border-white/30 text-white focus:ring-2 focus:ring-[#39D17D]/30 focus:border-[#39D17D]/30 transition"
-                                value={cierreInscripciones}
-                                onChange={e => setCierreInscripciones(e.target.value)}
-                              />
-                            </div>
-                          </div>
+                  {!showConfig ? (
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                      {/* Fechas */}
+                      <div className="rounded-xl bg-white/10 border border-white/20 p-6">
+                        <h3 className="font-bold text-lg mb-4 text-[#39D17D]">Fechas</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Input
+                            label="Fecha de inicio"
+                            type="datetime-local"
+                            required
+                            value={fechaInicio}
+                            onChange={e => setFechaInicio(e.target.value)}
+                          />
+                          <Input
+                            label="Fecha de fin"
+                            type="datetime-local"
+                            required
+                            value={fechaFin}
+                            onChange={e => setFechaFin(e.target.value)}
+                          />
                         </div>
-
-                        {/* Equipos y costo */}
-                        <div className="rounded-xl bg-white/10 border border-white/20 p-6">
-                          <h3 className="font-bold text-lg mb-4 text-[#39D17D]">Equipos</h3>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <label className="block mb-1 text-white/80">Máximo de equipos</label>
-                              <input
-                                type="number"
-                                min={2}
-                                className="w-full rounded px-3 py-2 bg-white/10 border border-white/30 text-white focus:ring-2 focus:ring-[#39D17D]/30 focus:border-[#39D17D]/30 transition"
-                                required
-                                value={maxEquipos}
-                                onChange={e => setMaxEquipos(e.target.value)}
-                              />
-                            </div>
-                            <div>
-                              <label className="block mb-1 text-white/80">Costo por equipo</label>
-                              <input
-                                type="number"
-                                min={0}
-                                step={1000}
-                                className="w-full rounded px-3 py-2 bg-white/10 border border-white/30 text-white focus:ring-2 focus:ring-[#39D17D]/30 focus:border-[#39D17D]/30 transition"
-                                required
-                                value={costoEquipo}
-                                onChange={e => setCostoEquipo(e.target.value)}
-                              />
-                            </div>
-                          </div>
+                      </div>
+                      {/* Equipos y costo */}
+                      <div className="rounded-xl bg-white/10 border border-white/20 p-6">
+                        <h3 className="font-bold text-lg mb-4 text-[#39D17D]">Equipos</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Input
+                            label="Máximo de equipos"
+                            type="number"
+                            min={2}
+                            required
+                            value={maxEquipos}
+                            error={maxEquiposError}
+                            onChange={e => {
+                              setMaxEquipos(e.target.value);
+                              if (e.target.value && parseInt(e.target.value) < 2) {
+                                setMaxEquiposError('Debe ser al menos 2 equipos.');
+                              } else {
+                                setMaxEquiposError('');
+                              }
+                            }}
+                            onInvalid={e => {
+                              e.preventDefault();
+                              setMaxEquiposError('Debe ser al menos 2 equipos.');
+                            }}
+                          />
+                          <Input
+                            label="Costo por equipo"
+                            type="number"
+                            min={1}
+                            required
+                            value={costoEquipo}
+                            error={costoEquipoError}
+                            onChange={e => {
+                              setCostoEquipo(e.target.value);
+                              if (e.target.value && parseInt(e.target.value) < 1) {
+                                setCostoEquipoError('El costo debe ser mayor a 0.');
+                              } else {
+                                setCostoEquipoError('');
+                              }
+                            }}
+                            onInvalid={e => {
+                              e.preventDefault();
+                              setCostoEquipoError('El costo debe ser mayor a 0.');
+                            }}
+                          />
                         </div>
-
-                        {/* Reglamento */}
-                        <div className="rounded-xl bg-white/10 border border-white/20 p-6">
-                          <h3 className="font-bold text-lg mb-4 text-[#39D17D]">Reglamento</h3>
-                          <textarea
-                            className="w-full rounded px-3 py-2 min-h-[120px] bg-white/10 border border-white/30 text-white focus:ring-2 focus:ring-[#39D17D]/30 focus:border-[#39D17D]/30 transition"
+                      </div>
+                      <div className="flex justify-end">
+                        <Button
+                          type="submit"
+                          className={formularioValido && !enviando ? "bg-green-600/80 text-white hover:bg-green-600" : "bg-gray-400 text-white cursor-not-allowed"}
+                          disabled={!formularioValido || enviando}
+                          loading={enviando}
+                        >
+                          Siguiente
+                        </Button>
+                      </div>
+                    </form>
+                  ) : (
+                    <form className="flex flex-col gap-8">
+                      {/* Reglamento y sanciones */}
+                      <div className="rounded-xl bg-white/10 border border-white/20 p-6">
+                        <h3 className="font-bold text-lg mb-4 text-[#39D17D]">Reglamento y Sanciones</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Textarea
+                            label="Reglamento"
                             maxLength={2000}
                             placeholder="Escribe aquí el reglamento del torneo..."
-                            required
                             value={reglamento}
                             onChange={e => setReglamento(e.target.value)}
                           />
+                          <Textarea
+                            label="Sanciones"
+                            maxLength={2000}
+                            placeholder="Describe aquí las sanciones del torneo..."
+                            value={sanciones}
+                            onChange={e => setSanciones(e.target.value)}
+                          />
                         </div>
-
-                        <div className="flex justify-end">
-                          <button
-                            type="submit"
-                            className={`px-6 py-3 rounded-full font-semibold text-sm shadow-sm transition ${formularioValido && !enviando ? "bg-green-600/80 text-white hover:bg-green-600" : "bg-gray-400 text-white cursor-not-allowed"}`}
-                            disabled={!formularioValido || enviando}
-                          >
-                            {enviando ? "Creando..." : "Crear Torneo"}
-                          </button>
+                        <div className="mt-4">
+                          <Input
+                            label="Fecha de cierre de inscripciones"
+                            type="datetime-local"
+                            value={closingDate}
+                            onChange={e => setClosingDate(e.target.value)}
+                          />
                         </div>
-                      </form>
-
-                  
+                      </div>
+                      
+                      {/* Horarios */}
+                      <div className="rounded-xl bg-white/10 border border-white/20 p-6">
+                        <h3 className="font-bold text-lg mb-4 text-[#39D17D]">Horarios</h3>
+                        {horarios.map((horario, idx) => (
+                          <div key={horario.fecha + horario.descripcion + idx} className="flex flex-col md:flex-row gap-4 mb-4 items-end">
+                            <div className="flex-1">
+                              <Input
+                                label="Fecha"
+                                type="date"
+                                value={horario.fecha}
+                                onChange={e => handleHorarioChange(idx, 'fecha', e.target.value)}
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                label="Descripción"
+                                type="text"
+                                value={horario.descripcion}
+                                onChange={e => handleHorarioChange(idx, 'descripcion', e.target.value)}
+                              />
+                            </div>
+                            <Button type="button" className="text-red-400 font-bold px-2" onClick={() => removeHorario(idx)} disabled={horarios.length === 1}>Eliminar</Button>
+                          </div>
+                        ))}
+                        <Button type="button" className="mt-2 px-4 py-2 rounded bg-[#39D17D] text-white font-semibold" onClick={addHorario}>Agregar horario</Button>
+                      </div>
+                      <div className="flex justify-end">
+                        <Button type="button" className="bg-green-600/80 text-white hover:bg-green-600">Guardar configuración</Button>
+                      </div>
+                    </form>
+                  )}
                 </div>
             </div>
-
           </section>
-
-          
         </div>
     </div>
   );
