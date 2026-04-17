@@ -116,9 +116,8 @@ export default function OrganizadorHomePage() {
               <div className="text-[#39D17D] font-black text-2xl mb-2" style={{fontFamily: 'Montserrat, sans-serif'}}>Acciones Rápidas</div>
               <QuickActionButton label="Crear Torneo" icon={<Calendar className="w-5 h-5" />} primary onClick={() => {navigate('/organizador/creacion-torneo')}} />
               <QuickActionButton label="Revisar Pagos" icon={<DollarSign className="w-5 h-5" />} onClick={() => navigate('/organizador/Payments')} primary={false} />
-              <QuickActionButton label="Ver Equipos" icon={<Users className="w-5 h-5" />} onClick={() => {}} primary={false} />
               <QuickActionButton label="Reportes" icon={<ChartColumnBig className="w-5 h-5" />} onClick={() => {}} primary={false} />
-              <QuickActionButton label="Historial Torneos" icon={<History className="w-5 h-5" />} onClick={() => {}} primary={false} />
+              <QuickActionButton label="Historial Torneos" icon={<History className="w-5 h-5" />} onClick={() => {navigate('/organizador/historial-torneos')}} primary={false} />
             </div>
           </section>
         </div>

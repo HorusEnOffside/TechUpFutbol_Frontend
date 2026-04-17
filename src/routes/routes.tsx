@@ -22,6 +22,8 @@ import HistorialPagosPage from '../pages/HistorialPagosPage';
 import OrganizadorCreationTournamentPage from '../pages/OrganizadorCreationTournamentPage';
 import OrganizadorProfilePage from '../pages/OrganizadorProfilePage';
 import ArbitroProfilePage from '../pages/ArbitroProfilePage';
+import OrganizerTournamentHistory from '../pages/OrganizerTournamentHistory';
+import OrganizadorConfigurarPartidoPage from '../pages/OrganizadorConfigurarPartidoPage';
 
 //cambio
 export const router = createBrowserRouter([
@@ -76,6 +78,14 @@ export const router = createBrowserRouter([
   {
     path: '/organizador/historial-pagos',
     element: <HistorialPagosPage />,
+  },
+  {
+    path: '/organizador/editar-partidos',
+    element: <OrganizadorConfigurarPartidoPage />,
+  },
+  {
+    path: '/organizador/historial-torneos',
+    element: <OrganizerTournamentHistory />,
   },
   {
     path: '/organizador/creacion-torneo',

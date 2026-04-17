@@ -16,7 +16,19 @@ const MatchService = {
       throw new Error('Error inesperado');
     }
   },
-
+  /**
+   * Obtener partidos que arbitra el usuario autenticado (árbitro)
+   * GET /matches/my-matches — requiere rol: REFEREE
+   */
+  getMyMatches: async (): Promise<Match[]> => {
+    try {
+      const { data } = await apiClient.get<Match[]>("/matches/my-matches");
+      return data;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error("Error inesperado");
+    }
+  },
   /**
    * Obtener partido por ID
    * GET /matches/{id}
