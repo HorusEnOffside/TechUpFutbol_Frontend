@@ -3,6 +3,7 @@ import { Trophy, Clock, TrendingUp, Loader2, AlertCircle } from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
 import TournamentService from "../services/tournament.service";
 import StandingsService from "../services/standings.service";
+import { ApiError } from "../services/api";
 import type { StandingsEntryDTO } from "../types/standings";
 import canchaImg from "../assets/cancha.png";
 
@@ -39,7 +40,22 @@ export default function Standings() {
     TournamentService.getActiveTournament()
       .then((tournament) => StandingsService.getStandingsTable(tournament.id))
       .then((data) => setStandings(Array.isArray(data) ? data : []))
-      .catch(() => setError("No se pudo cargar la tabla de posiciones."))
+      .catch((err: unknown) => {
+        if (err instanceof ApiError) {
+          if (err.statusCode === 404) {
+            // No hay torneo activo — mostrar tabla vacía sin error
+            setStandings([]);
+          } else if (err.statusCode === 401 || err.statusCode === 403) {
+            setError("Debes iniciar sesión para ver la tabla de posiciones.");
+          } else {
+            setError(err.message ?? "No se pudo cargar la tabla de posiciones.");
+          }
+        } else if (err instanceof Error && err.message.includes('conexión')) {
+          setError("No hay conexión con el servidor. Verifica que el backend esté activo.");
+        } else {
+          setError("No se pudo cargar la tabla de posiciones.");
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -128,7 +144,7 @@ export default function Standings() {
           {!loading && !error && standings.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 gap-3 text-white/50">
               <Trophy className="w-8 h-8" />
-              <p className="text-sm">Aún no hay equipos en la tabla.</p>
+              <p className="text-sm">No hay torneo activo o aún no hay equipos en la tabla.</p>
             </div>
           )}
 

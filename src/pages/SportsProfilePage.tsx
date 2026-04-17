@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Pencil, Check, X, Upload, User, LogOut } from "lucide-react";
+import { Pencil, Check, X, Upload, User, LogOut, Loader2 } from "lucide-react";
 import { BackButton } from "../components/BackButton";
 import { useNavigate } from "react-router";
 import PlayerService from "../services/player.service";
@@ -87,6 +87,17 @@ function EditableField({
   );
 }
 
+function getUserIdFromToken(): string | null {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1])) as Record<string, unknown>;
+    return (payload.sub ?? payload.id ?? null) as string | null;
+  } catch {
+    return null;
+  }
+}
+
 // pagina principal
 export default function SportsProfilePage() {
   const { user } = useAuth();
@@ -101,16 +112,43 @@ export default function SportsProfilePage() {
   const [position,     setPosition]     = useState<Position>("FORWARD");
   const [semester,     setSemester]     = useState<number>(1);
   const [availability, setAvailability] = useState<Availability>("Para jugar");
+  const [dateOfBirth,  setDateOfBirth]  = useState<string>("");
+
+  const [saving,       setSaving]       = useState(false);
+  const [saveMsg,      setSaveMsg]      = useState<{ ok: boolean; text: string } | null>(null);
 
   // Estadísticas (mock hasta que el backend las exponga)
   const stats = { goals: 0, assists: 0, cards: 0 };
 
+  const AVAILABILITY_TO_STATUS: Record<Availability, 'AVAILABLE' | 'INJURED' | 'NOT_AVAILABLE'> = {
+    "Para jugar":    "AVAILABLE",
+    "No disponible": "NOT_AVAILABLE",
+    "Lesionado":     "INJURED",
+  };
+
+  async function handleSave() {
+    const userId = getUserIdFromToken() ?? user?.id;
+    if (!userId) return;
+    setSaving(true);
+    setSaveMsg(null);
+    try {
+      await PlayerService.updateStatus(userId, AVAILABILITY_TO_STATUS[availability]);
+      setSaveMsg({ ok: true, text: "Cambios guardados correctamente." });
+    } catch {
+      setSaveMsg({ ok: false, text: "No se pudieron guardar los cambios." });
+    } finally {
+      setSaving(false);
+    }
+  }
+
   useEffect(() => {
-    if (!user?.id) { setLoading(false); return; }
-    PlayerService.getPlayerByUserId(user.id)
+    const userId = getUserIdFromToken() ?? user?.id;
+    if (!userId) { setLoading(false); return; }
+    PlayerService.getPlayerByUserId(userId)
       .then(data => {
         setPlayer(data);
         setPosition(data.position);
+        setDateOfBirth(data.dateOfBirth ?? "");
       })
       .catch(() => setPlayer(null))
       .finally(() => setLoading(false));
@@ -138,7 +176,7 @@ export default function SportsProfilePage() {
   }
 
   const displayName = player?.name ?? user?.mail ?? "Jugador";
-  const age         = calcAge(player?.dateOfBirth);
+  const age         = calcAge(dateOfBirth);
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-[#050d1a]">
@@ -244,11 +282,24 @@ export default function SportsProfilePage() {
                     )}
                   </EditableField>
 
-                  {/* Edad */}
+                  {/* Fecha de nacimiento / Edad */}
                   <EditableField
-                    label="Edad"
-                    value={age > 0 ? String(age) : "—"}
-                  />
+                    label="Fecha de nac."
+                    value={dateOfBirth ? `${dateOfBirth}${age > 0 ? ` (${age} años)` : ""}` : "—"}
+                    onSave={() => {}}
+                  >
+                    {(setEdit) => (
+                      <input
+                        autoFocus
+                        type="date"
+                        value={dateOfBirth}
+                        onChange={e => setDateOfBirth(e.target.value)}
+                        onBlur={() => setEdit(false)}
+                        className="bg-[#071F4A] border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none colorScheme-dark"
+                        style={{ colorScheme: "dark" }}
+                      />
+                    )}
+                  </EditableField>
 
                   {/* Posición */}
                   <EditableField
@@ -289,6 +340,28 @@ export default function SportsProfilePage() {
                       </select>
                     )}
                   </EditableField>
+                </div>
+
+                {/* Confirmar cambios */}
+                <div className="px-6 pb-4 pt-2 flex flex-col gap-2">
+                  {!player && (
+                    <p className="text-xs text-white/35 italic">
+                      Perfil deportivo no creado aún.
+                    </p>
+                  )}
+                  {saveMsg && (
+                    <p className={`text-xs font-medium ${saveMsg.ok ? "text-[#39D17D]" : "text-red-400"}`}>
+                      {saveMsg.text}
+                    </p>
+                  )}
+                  <button
+                    onClick={handleSave}
+                    disabled={saving || !player}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-white font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ background: "linear-gradient(90deg, #144C9F, #17A65B)" }}
+                  >
+                    {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Guardando...</> : "Confirmar cambios"}
+                  </button>
                 </div>
 
                 {/* Estadísticas */}

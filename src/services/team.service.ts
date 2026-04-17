@@ -22,14 +22,17 @@ const TeamService = {
     captainUserId: string,
     logo?: File | null,
   ): Promise<TeamResponseDTO> => {
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('uniformColors', uniformColors);
-    formData.append('captainUserId', captainUserId);
-    if (logo) formData.append('logo', logo);
+    // El backend espera name, uniformColors y captainUserId como query params
+    // y el logo (opcional) como multipart/form-data
+    const params = { name, uniformColors, captainUserId };
 
-    // No fijar Content-Type manualmente: axios lo setea con el boundary correcto
-    const { data } = await apiClient.post<TeamResponseDTO>('/teams', formData);
+    let body: FormData | null = null;
+    if (logo) {
+      body = new FormData();
+      body.append('logo', logo);
+    }
+
+    const { data } = await apiClient.post<TeamResponseDTO>('/teams', body, { params });
     return data;
   },
 

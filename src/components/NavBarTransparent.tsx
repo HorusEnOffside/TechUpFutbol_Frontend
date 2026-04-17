@@ -1,6 +1,7 @@
 import { User, ChevronLeft } from "lucide-react";
 import { NotificationDropdown } from "./NotificationDropdown";
 import { useNavigate, useLocation } from "react-router";
+import { useAuth } from "../store/AuthContext";
 import logoBlanco from "../assets/logoBlanco.png";
 
 interface NavBarTransparentProps {
@@ -8,9 +9,16 @@ interface NavBarTransparentProps {
   showBack?: boolean;
 }
 
+function getProfilePath(roles: string[]): string {
+  if (roles.includes('ORGANIZER')) return '/organizador/perfil';
+  if (roles.includes('REFEREE'))   return '/arbitro/perfil';
+  return '/player/sports-profile';
+}
+
 export function NavBarTransparent({ onLogoClick, showBack = true }: NavBarTransparentProps = {}) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   const handleLogoClick = onLogoClick ?? (() =>
     location.pathname === "/"
@@ -61,7 +69,7 @@ export function NavBarTransparent({ onLogoClick, showBack = true }: NavBarTransp
             />
 
             <button
-              onClick={() => navigate("/app")}
+              onClick={() => navigate(getProfilePath(user?.roles ?? []))}
               className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white font-semibold text-sm hover:bg-white/20 transition-all"
               aria-label="Mi cuenta"
             >

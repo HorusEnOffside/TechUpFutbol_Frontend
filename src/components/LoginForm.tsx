@@ -128,6 +128,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
       {/* Google button */}
       <button
         type="button"
+        onClick={() => {
+          const authUrl = (import.meta as ImportMeta & { env: { VITE_AUTH_URL: string } }).env.VITE_AUTH_URL;
+          window.location.href = `${authUrl}/oauth2/authorization/google`;
+        }}
         className="w-full flex items-center justify-center gap-2 border border-gray-200 bg-white py-3 rounded-2xl font-semibold text-[#071F4A] hover:bg-gray-50 transition"
       >
         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />

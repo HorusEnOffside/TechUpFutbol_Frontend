@@ -9,6 +9,7 @@ interface AuthContextType {
   initializing: boolean;
   error: string | null;
   login: (credentials: LoginRequest) => Promise<LoginResponse>;
+  loginWithToken: (token: string) => LoginResponse;
   logout: () => void;
   refreshSession: () => Promise<void>;
   isAuthenticated: boolean;
@@ -30,6 +31,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     setInitializing(false);
   }, []);
+
+  const loginWithToken = (token: string): LoginResponse => {
+    // Decode JWT payload (base64) to extract id, email and roles
+    const payload = JSON.parse(atob(token.split('.')[1])) as {
+      sub: string;
+      email: string;
+      roles: string[];
+    };
+    const userData: LoginResponse = {
+      token,
+      id: payload.sub,
+      mail: payload.email,
+      roles: payload.roles,
+    };
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    return userData;
+  };
 
   const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
     setLoading(true);
@@ -71,7 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const hasRole = (role: string) => user?.roles.includes(role) ?? false;
 
   return (
-    <AuthContext.Provider value={{ user, loading, initializing, error, login, logout, refreshSession, isAuthenticated, hasRole }}>
+    <AuthContext.Provider value={{ user, loading, initializing, error, login, loginWithToken, logout, refreshSession, isAuthenticated, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

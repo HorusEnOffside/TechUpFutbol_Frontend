@@ -27,6 +27,7 @@ import OrganizadorProfilePage from '../pages/OrganizadorProfilePage';
 import ArbitroProfilePage from '../pages/ArbitroProfilePage';
 import OrganizerTournamentHistory from '../pages/OrganizerTournamentHistory';
 import OrganizadorConfigurarPartidoPage from '../pages/OrganizadorConfigurarPartidoPage';
+import OAuthCallbackPage from '../pages/OAuthCallbackPage';
 
 const guard = (children: ReactNode, role?: string) => (
   <ProtectedRoute role={role}>{children}</ProtectedRoute>
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
   {
     path: '/auth',
     element: <AuthContainer />,
+  },
+  {
+    path: '/oauth2/callback',
+    element: <OAuthCallbackPage />,
   },
   {
     path: '/grupos',

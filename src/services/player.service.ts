@@ -106,6 +106,15 @@ const PlayerService = {
    * GET /players/search  — requiere rol: CAPTAIN, ADMIN u ORGANIZER
    * Retorna PlayerSearchResultDTO[] (no PlayerResponseDTO)
    */
+  /**
+   * Actualizar disponibilidad del jugador
+   * PATCH /players/{userId}/status?status=AVAILABLE|INJURED|NOT_AVAILABLE
+   */
+  updateStatus: async (userId: string, status: 'AVAILABLE' | 'INJURED' | 'NOT_AVAILABLE'): Promise<PlayerResponseDTO> => {
+    const { data } = await apiClient.patch<PlayerResponseDTO>(`/players/${userId}/status`, null, { params: { status } });
+    return data;
+  },
+
   searchPlayers: async (params: PlayerSearchParams = {}): Promise<PlayerSearchResultDTO[]> => {
     try {
       const { data } = await apiClient.get<PlayerSearchResultDTO[]>('/players/search', {
