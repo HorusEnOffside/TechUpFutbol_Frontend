@@ -1,21 +1,21 @@
 import apiClient from './api';
-import type { BracketResponse } from '../types/bracket';
+import type { EliminationBracket } from '../types/bracket';
 
 const BracketService = {
   /**
    * Llaves eliminatorias de un torneo.
    * GET /brackets/{tournamentId}
    *
-   * No tiene @PreAuthorize — el interceptor adjunta el token si existe.
-   *
-   * Retorna la respuesta completa sin lanzar error cuando
-   * eliminationBrackets es null (partidos pendientes o equipos insuficientes).
-   * El componente decide qué mostrar según bracket.eliminationBrackets.
+   * Retorna:
+   *   - EliminationBracket  → cuando todos los partidos de grupo finalizaron
+   *   - null                → 204 No Content (partidos pendientes o equipos insuficientes)
    */
-  getBrackets: async (tournamentId: string): Promise<BracketResponse> => {
+  getBrackets: async (tournamentId: string): Promise<EliminationBracket | null> => {
     try {
-      const { data } = await apiClient.get<BracketResponse>(`/brackets/${tournamentId}`);
-      return data;
+      const response = await apiClient.get<EliminationBracket>(`/brackets/${tournamentId}`);
+      // 204 No Content: axios devuelve data vacía
+      if (response.status === 204 || !response.data) return null;
+      return response.data;
     } catch (error) {
       if (error instanceof Error) throw error;
       throw new Error('Error inesperado');

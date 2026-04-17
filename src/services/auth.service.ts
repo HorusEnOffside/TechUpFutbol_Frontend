@@ -1,5 +1,5 @@
 import apiClient from './api';
-import type { LoginRequest, LoginResponse, RegisterRequest, UserProfile } from '../types/auth';
+import type { LoginRequest, LoginResponse, RegisterRequest } from '../types/auth';
 
 const AuthService = {
   /**
@@ -14,34 +14,29 @@ const AuthService = {
   },
 
   /**
-   * POST /auth/register — registra un nuevo usuario
+   * POST /users/admin — registra un nuevo usuario.
+   * El backend espera multipart/form-data:
+   *   - "user": Blob JSON con los datos del usuario (@RequestPart)
+   *   - "profilePicture": archivo de imagen opcional
    */
-  register: async (userData: RegisterRequest): Promise<LoginResponse> => {
-    const response = await apiClient.post<LoginResponse>('/auth/register', userData);
-    return response.data;
+  register: async (userData: RegisterRequest, profilePicture?: File | null): Promise<void> => {
+    const formData = new FormData();
+    formData.append(
+      'user',
+      new Blob([JSON.stringify(userData)], { type: 'application/json' }),
+      'user.json',
+    );
+    if (profilePicture) {
+      formData.append('profilePicture', profilePicture);
+    }
+    await apiClient.post('/users/admin', formData);
   },
 
   /**
-   * GET /auth/profile — obtiene el perfil del usuario autenticado
+   * Cierra la sesión limpiando localStorage.
+   * El backend no expone un endpoint de logout.
    */
-  getProfile: async (): Promise<UserProfile> => {
-    const response = await apiClient.get<UserProfile>('/auth/profile');
-    return response.data;
-  },
-
-  /**
-   * PATCH /auth/profile — actualiza el perfil del usuario autenticado
-   */
-  updateProfile: async (data: Partial<UserProfile>): Promise<UserProfile> => {
-    const response = await apiClient.patch<UserProfile>('/auth/profile', data);
-    return response.data;
-  },
-
-  /**
-   * POST /auth/logout — cierra la sesión y limpia localStorage
-   */
-  logout: async (): Promise<void> => {
-    await apiClient.post('/auth/logout');
+  logout: (): void => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   },
@@ -58,6 +53,6 @@ const AuthService = {
 };
 
 // Named exports for hooks that import functions directly
-export const { login, register, getProfile, updateProfile, logout, refresh } = AuthService;
+export const { login, register, logout, refresh } = AuthService;
 
 export default AuthService;

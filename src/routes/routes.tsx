@@ -1,5 +1,7 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Navigate } from 'react-router';
+import type { ReactNode } from 'react';
 import { LandingLayout } from '../components/LandingLayout';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 import { Home } from '../pages/Home';
 import AuthContainer from '../pages/AuthContainer';
 import { GruposPage } from '../pages/GruposPage';
@@ -26,8 +28,12 @@ import ArbitroProfilePage from '../pages/ArbitroProfilePage';
 import OrganizerTournamentHistory from '../pages/OrganizerTournamentHistory';
 import OrganizadorConfigurarPartidoPage from '../pages/OrganizadorConfigurarPartidoPage';
 
-//cambio
+const guard = (children: ReactNode, role?: string) => (
+  <ProtectedRoute role={role}>{children}</ProtectedRoute>
+);
+
 export const router = createBrowserRouter([
+  // ── Public routes ──────────────────────────────────────────────────────────
   {
     path: '/',
     element: <LandingLayout><Home /></LandingLayout>,
@@ -41,8 +47,14 @@ export const router = createBrowserRouter([
     element: <GruposPage />,
   },
   {
+    path: '/standings',
+    element: <Standings />,
+  },
+
+  // ── Player routes ─────────────────────────────────────────────────────────
+  {
     path: '/player',
-    element: <PlayerHomePage />,
+    element: guard(<PlayerHomePage />),
   },
     {
       path: '/player/pagos',
@@ -50,82 +62,88 @@ export const router = createBrowserRouter([
     },
   {
     path: '/player/menu',
-    element: <PlayerMenuPage />,
-  },
-  {
-    path: '/arbitro',
-    element: <ArbitroHomePage />,
-  },
-  {
-    path: '/arbitro/perfil',
-    element: <ArbitroProfilePage />,
-  },
-  {
-    path: '/arbitro/menu',
-    element: <ArbitroMenuPage />,
-  },
-  {
-    path: '/organizador',
-    element: <OrganizadorHomePage />,
-  },
-  {
-    path: '/organizador/perfil',
-    element: <OrganizadorProfilePage />,
-  },
-  {
-    path: '/organizador/menu',
-    element: <OrganizadorMenuPage />,
-  },
-  {
-    path: '/organizador/Payments',
-    element: <OrganizadorPaymentManagement />,
-  },
-  {
-    path: '/organizador/historial-pagos',
-    element: <HistorialPagosPage />,
-  },
-  {
-    path: '/organizador/editar-partidos',
-    element: <OrganizadorConfigurarPartidoPage />,
-  },
-  {
-    path: '/organizador/historial-torneos',
-    element: <OrganizerTournamentHistory />,
-  },
-  {
-    path: '/organizador/creacion-torneo',
-    element: <OrganizadorCreationTournamentPage />,
-  },
-  {
-    path: '/organizador/sanciones',
-    element: <SancionesPage />,
+    element: guard(<PlayerMenuPage />),
   },
   {
     path: '/player/capitanes',
-    element: <CapitanesPage />,
+    element: guard(<CapitanesPage />),
   },
   {
     path: '/player/capitanes/jugadores',
-    element: <SeleccionJugadoresPage />,
-  },
-  {
-    path: '/standings',
-    element: <Standings />,
-  },
-  {
-    path: '/organizador/match',
-    element: <MatchManagementPage />,
+    element: guard(<SeleccionJugadoresPage />),
   },
   {
     path: '/player/plantilla',
-    element: <PlantillaPage />,
+    element: guard(<PlantillaPage />),
   },
   {
     path: '/player/sports-profile',
-    element: <SportsProfilePage />,
+    element: guard(<SportsProfilePage />),
   },
   {
     path: '/player/estadisticas',
-    element: <EstadisticasPage />,
+    element: guard(<EstadisticasPage />),
+  },
+
+  // ── Árbitro routes ────────────────────────────────────────────────────────
+  {
+    path: '/arbitro',
+    element: guard(<ArbitroHomePage />, 'REFEREE'),
+  },
+  {
+    path: '/arbitro/perfil',
+    element: guard(<ArbitroProfilePage />, 'REFEREE'),
+  },
+  {
+    path: '/arbitro/menu',
+    element: guard(<ArbitroMenuPage />, 'REFEREE'),
+  },
+
+  // ── Organizador routes ────────────────────────────────────────────────────
+  {
+    path: '/organizador',
+    element: guard(<OrganizadorHomePage />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/perfil',
+    element: guard(<OrganizadorProfilePage />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/menu',
+    element: guard(<OrganizadorMenuPage />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/Payments',
+    element: guard(<OrganizadorPaymentManagement />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/historial-pagos',
+    element: guard(<HistorialPagosPage />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/editar-partidos',
+    element: guard(<OrganizadorConfigurarPartidoPage />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/historial-torneos',
+    element: guard(<OrganizerTournamentHistory />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/creacion-torneo',
+    element: guard(<OrganizadorCreationTournamentPage />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/sanciones',
+    element: guard(<SancionesPage />, 'ORGANIZER'),
+  },
+  {
+    path: '/organizador/match',
+    element: guard(<MatchManagementPage />, 'ORGANIZER'),
+  },
+
+  // ── Catch-all ─────────────────────────────────────────────────────────────
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
   },
 ]);

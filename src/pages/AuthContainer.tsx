@@ -1,13 +1,26 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import { AuthSidePanel } from "../components/AuthSidePanel";
 import { ImageCarousel } from "../components/ImageCarousel";
 import canchaImg from "../assets/cancha.png";
 import { HomeNavbar } from "../components/NavbarHomeTransparente";
+import { useAuth } from "../store/AuthContext";
 
 export default function AuthContainer() {
+  const { isAuthenticated, initializing, user } = useAuth();
   const [showLogin, setShowLogin] = useState(true);
+
+  // Wait for localStorage hydration before deciding to redirect
+  if (initializing) return null;
+
+  // Already logged in — send to the right dashboard
+  if (isAuthenticated && user) {
+    if (user.roles.includes('ORGANIZER')) return <Navigate to="/organizador" replace />;
+    if (user.roles.includes('REFEREE'))   return <Navigate to="/arbitro"     replace />;
+    return <Navigate to="/player" replace />;
+  }
 
   return (
     <div className="h-screen overflow-hidden flex items-center justify-center relative">

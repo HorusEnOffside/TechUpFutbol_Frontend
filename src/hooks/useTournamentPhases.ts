@@ -7,7 +7,7 @@ import TeamService from '../services/team.service';
 import BracketService from '../services/bracket.service';
 import type { TournamentResponseDTO } from '../types/tournament';
 import type { StandingsEntryDTO } from '../types/standings';
-import type { Match, BracketResponse } from '../types/bracket';
+import type { Match, EliminationBracket } from '../types/bracket';
 import type { TeamFullInfoDTO } from '../types/standings';
 
 // ─── useActiveTournament ──────────────────────────────────────────────────────
@@ -77,8 +77,8 @@ export function useGroupPhase(tournamentId: string | undefined): GroupPhaseState
 // ─── useEliminationBracket ────────────────────────────────────────────────────
 
 interface EliminationBracketState {
-  bracket: BracketResponse | null;
-  message: string | null;
+  bracket: EliminationBracket | null;
+  /** true cuando el backend generó los brackets (204 → false, datos → true) */
   isReady: boolean;
   loading: boolean;
   error: string | null;
@@ -86,8 +86,8 @@ interface EliminationBracketState {
 
 /**
  * Carga las llaves eliminatorias de un torneo.
- * isReady = true cuando el backend ya generó los brackets
- * (es decir, eliminationBrackets !== null).
+ * - isReady = false → 204 No Content: partidos pendientes o equipos insuficientes
+ * - isReady = true  → bracket tiene roundOf16/quarterFinals/semiFinals/finals
  * Re-ejecuta cuando cambia tournamentId.
  */
 export function useEliminationBracket(
@@ -105,8 +105,7 @@ export function useEliminationBracket(
 
   return {
     bracket: result.data,
-    message: result.data?.message ?? null,
-    isReady: result.data?.eliminationBrackets != null,
+    isReady: result.isSuccess && result.data !== null,
     loading: result.isLoading,
     error: result.error,
   };

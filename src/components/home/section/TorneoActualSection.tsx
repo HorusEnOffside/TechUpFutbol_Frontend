@@ -56,24 +56,29 @@ export function TorneoActualSection() {
     badgeText = '';
   } else {
     switch (status) {
-      case 'DRAFT':
+      case 'PLANNING':
         estado = 'En planeación';
         badgeText = 'EN PLANEACIÓN';
         badgeClass += ' bg-gray-400';
         break;
-      case 'ACTIVE':
+      case 'REGISTRATION':
         estado = 'Inscripciones abiertas';
-        badgeText = 'ACTIVO';
+        badgeText = 'INSCRIPCIONES';
         break;
-      case 'IN_PROGRESS':
-        estado = 'Inscripciones cerradas';
+      case 'ACTIVE':
+        estado = 'Torneo en curso';
         badgeText = 'EN JUEGO';
         badgeClass += ' bg-blue-500';
         break;
-      case 'COMPLETED':
+      case 'FINISHED':
         estado = 'Finalizado';
         badgeText = 'FINALIZADO';
         badgeClass += ' bg-gray-700';
+        break;
+      case 'CANCELLED':
+        estado = 'Cancelado';
+        badgeText = 'CANCELADO';
+        badgeClass += ' bg-red-600';
         break;
       default:
         estado = '';

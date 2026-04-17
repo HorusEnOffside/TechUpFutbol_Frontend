@@ -25,17 +25,20 @@ export function HeroSection() {
   } else {
     let statusText = '';
     switch (status) {
-      case 'DRAFT':
+      case 'PLANNING':
         statusText = 'En planeación';
         break;
-      case 'ACTIVE':
+      case 'REGISTRATION':
         statusText = 'Inscripciones abiertas';
         break;
-      case 'IN_PROGRESS':
-        statusText = 'Inscripciones cerradas';
+      case 'ACTIVE':
+        statusText = 'En curso';
         break;
-      case 'COMPLETED':
+      case 'FINISHED':
         statusText = 'Finalizado';
+        break;
+      case 'CANCELLED':
+        statusText = 'Cancelado';
         break;
       default:
         statusText = '';

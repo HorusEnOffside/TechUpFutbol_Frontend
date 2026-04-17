@@ -4,7 +4,7 @@ import type {
   PlayerDTO,
   StudentPlayerDTO,
 } from '../types/player';
-import type { PlayerSearchParams } from '../types/standings';
+import type { PlayerSearchParams, PlayerSearchResultDTO } from '../types/standings';
 
 // Servicio de jugadores basado en PlayerController del backend
 
@@ -101,9 +101,14 @@ const PlayerService = {
    * GET /players/search  — requiere rol: CAPTAIN, ADMIN u ORGANIZER
    * @param {PlayerSearchParams} params - Filtros opcionales (position, semester, age, gender, name)
    */
-  searchPlayers: async (params: PlayerSearchParams = {}): Promise<PlayerResponseDTO[]> => {
+  /**
+   * Buscar jugadores por filtros opcionales
+   * GET /players/search  — requiere rol: CAPTAIN, ADMIN u ORGANIZER
+   * Retorna PlayerSearchResultDTO[] (no PlayerResponseDTO)
+   */
+  searchPlayers: async (params: PlayerSearchParams = {}): Promise<PlayerSearchResultDTO[]> => {
     try {
-      const { data } = await apiClient.get<PlayerResponseDTO[]>('/players/search', {
+      const { data } = await apiClient.get<PlayerSearchResultDTO[]>('/players/search', {
         params,
       });
       return data;

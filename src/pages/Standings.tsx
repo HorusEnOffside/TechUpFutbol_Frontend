@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Trophy, Clock, TrendingUp, Loader2, AlertCircle } from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
 import TournamentService from "../services/tournament.service";
-import type { StandingRowDTO } from "../types/tournament";
+import StandingsService from "../services/standings.service";
+import type { StandingsEntryDTO } from "../types/standings";
 import canchaImg from "../assets/cancha.png";
 
 const LEGEND = [
@@ -15,9 +16,6 @@ const LEGEND = [
   { key: "DG",  label: "Diferencia de Gol" },
   { key: "PTS", label: "Puntos"            },
 ];
-
-// TODO: reemplazar con endpoint de torneo activo cuando el backend lo exponga
-const ACTIVE_TOURNAMENT_ID = "1";
 
 function posBadgeClass(pos: number): string {
   if (pos === 1) return "bg-[#39D17D] text-[#071F4A]";
@@ -33,15 +31,14 @@ function dgClass(dg: number): string {
 }
 
 export default function Standings() {
-  const [standings, setStandings] = useState<StandingRowDTO[]>([]);
+  const [standings, setStandings] = useState<StandingsEntryDTO[]>([]);
   const [loading, setLoading]     = useState(true);
   const [error, setError]         = useState<string | null>(null);
 
   useEffect(() => {
-    TournamentService.getStandings(ACTIVE_TOURNAMENT_ID)
-      .then((data) => {
-        setStandings(Array.isArray(data) ? data : []);
-      })
+    TournamentService.getActiveTournament()
+      .then((tournament) => StandingsService.getStandingsTable(tournament.id))
+      .then((data) => setStandings(Array.isArray(data) ? data : []))
       .catch(() => setError("No se pudo cargar la tabla de posiciones."))
       .finally(() => setLoading(false));
   }, []);
@@ -166,72 +163,75 @@ export default function Standings() {
                 </thead>
 
                 <tbody>
-                  {standings.map((row, idx) => (
-                    <tr
-                      key={row.teamId}
-                      className={`border-b border-white/5 transition-colors duration-150 ${
-                        idx % 2 === 0 ? "bg-white/[0.04]" : "bg-transparent"
-                      } hover:bg-white/[0.09]`}
-                    >
-                      {/* Posición */}
-                      <td className="pl-5 sm:pl-6 pr-2 py-4">
-                        <div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${posBadgeClass(row.position)}`}
-                          style={{ fontFamily: "'Russo One', sans-serif" }}
-                        >
-                          {row.position}
-                        </div>
-                      </td>
+                  {standings.map((entry, idx) => {
+                    const pos = idx + 1;
+                    return (
+                      <tr
+                        key={entry.id}
+                        className={`border-b border-white/5 transition-colors duration-150 ${
+                          idx % 2 === 0 ? "bg-white/[0.04]" : "bg-transparent"
+                        } hover:bg-white/[0.09]`}
+                      >
+                        {/* Posición */}
+                        <td className="pl-5 sm:pl-6 pr-2 py-4">
+                          <div
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${posBadgeClass(pos)}`}
+                            style={{ fontFamily: "'Russo One', sans-serif" }}
+                          >
+                            {pos}
+                          </div>
+                        </td>
 
-                      {/* Equipo */}
-                      <td className="px-5 sm:px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          {row.position <= 3 && (
-                            <TrendingUp className="w-3.5 h-3.5 text-[#39D17D] shrink-0" aria-hidden="true" />
-                          )}
+                        {/* Equipo */}
+                        <td className="px-5 sm:px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            {pos <= 3 && (
+                              <TrendingUp className="w-3.5 h-3.5 text-[#39D17D] shrink-0" aria-hidden="true" />
+                            )}
+                            <span
+                              className="text-white font-semibold text-sm sm:text-base"
+                              style={{ fontFamily: "'Russo One', sans-serif" }}
+                            >
+                              {entry.name}
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Estadísticas */}
+                        {([entry.matchesPlayed, entry.wins, entry.draws, entry.losses, entry.goalsFor, entry.goalsAgainst] as number[]).map(
+                          (val, i) => (
+                            <td
+                              key={i}
+                              className="px-2 sm:px-3 py-4 text-center text-white/75 text-sm"
+                              style={{ fontFamily: "'Russo One', sans-serif" }}
+                            >
+                              {val}
+                            </td>
+                          )
+                        )}
+
+                        {/* DG */}
+                        <td className="px-2 sm:px-3 py-4 text-center">
                           <span
-                            className="text-white font-semibold text-sm sm:text-base"
+                            className={`text-sm font-bold ${dgClass(entry.goalDiff)}`}
                             style={{ fontFamily: "'Russo One', sans-serif" }}
                           >
-                            {row.teamName}
+                            {entry.goalDiff > 0 ? `+${entry.goalDiff}` : entry.goalDiff}
                           </span>
-                        </div>
-                      </td>
+                        </td>
 
-                      {/* Estadísticas */}
-                      {([row.matchesPlayed, row.wins, row.draws, row.losses, row.goalsFor, row.goalsAgainst] as number[]).map(
-                        (val, i) => (
-                          <td
-                            key={i}
-                            className="px-2 sm:px-3 py-4 text-center text-white/75 text-sm"
+                        {/* PTS */}
+                        <td className="px-2 sm:px-3 py-4 text-center">
+                          <span
+                            className="text-[#39D17D] font-bold text-base sm:text-lg"
                             style={{ fontFamily: "'Russo One', sans-serif" }}
                           >
-                            {val}
-                          </td>
-                        )
-                      )}
-
-                      {/* DG */}
-                      <td className="px-2 sm:px-3 py-4 text-center">
-                        <span
-                          className={`text-sm font-bold ${dgClass(row.goalDifference)}`}
-                          style={{ fontFamily: "'Russo One', sans-serif" }}
-                        >
-                          {row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}
-                        </span>
-                      </td>
-
-                      {/* PTS */}
-                      <td className="px-2 sm:px-3 py-4 text-center">
-                        <span
-                          className="text-[#39D17D] font-bold text-base sm:text-lg"
-                          style={{ fontFamily: "'Russo One', sans-serif" }}
-                        >
-                          {row.points}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                            {entry.points}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
