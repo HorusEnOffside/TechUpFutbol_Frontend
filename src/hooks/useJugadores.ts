@@ -3,6 +3,7 @@ import type { Jugador, FiltrosJugador, Posicion, Genero } from '../types/jugador
 import { FILTROS_INICIAL } from '../types/jugador';
 import type { PlayerResponseDTO, Position } from '../types/player';
 import PlayerService from '../services/player.service';
+import type { UUID } from '../types/common';
 
 import placeholder from '../assets/sj_player1.png';
 
@@ -44,15 +45,15 @@ function mapPlayer(p: PlayerResponseDTO): Jugador {
 interface UseJugadoresReturn {
   jugadores:  Jugador[];
   filtered:   Jugador[];
-  selected:   string | null;
-  addedIds:   string[];
+  selected:   UUID | null;
+  addedIds:   UUID[];
   isLoading:  boolean;
   error:      string | null;
   filtros:    FiltrosJugador;
   setFiltro:  <K extends keyof FiltrosJugador>(key: K, value: FiltrosJugador[K]) => void;
   resetFiltros: () => void;
-  selectJugador: (id: string) => void;
-  addJugador:    (id: string) => void;
+  selectJugador: (id: UUID) => void;
+  addJugador:    (id: UUID) => void;
   retry: () => void;
 }
 
@@ -60,8 +61,8 @@ export function useJugadores(): UseJugadoresReturn {
   const [jugadores,  setJugadores]  = useState<Jugador[]>([]);
   const [isLoading,  setIsLoading]  = useState(true);
   const [error,      setError]      = useState<string | null>(null);
-  const [selected,   setSelected]   = useState<string | null>(null);
-  const [addedIds,   setAddedIds]   = useState<string[]>([]);
+  const [selected,   setSelected]   = useState<UUID | null>(null);
+  const [addedIds,   setAddedIds]   = useState<UUID[]>([]);
   const [filtros,    setFiltros]    = useState<FiltrosJugador>(FILTROS_INICIAL);
   const [fetchKey,   setFetchKey]   = useState(0);
 
@@ -104,10 +105,10 @@ export function useJugadores(): UseJugadoresReturn {
 
   const resetFiltros = () => setFiltros(FILTROS_INICIAL);
 
-  const selectJugador = (id: string) =>
+  const selectJugador = (id: UUID) =>
     setSelected((prev) => (prev === id ? null : id));
 
-  const addJugador = (id: string) => {
+  const addJugador = (id: UUID) => {
     setAddedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
     setSelected(null);
   };

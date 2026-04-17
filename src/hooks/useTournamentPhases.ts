@@ -5,6 +5,7 @@ import MatchService from '../services/match.service';
 import StandingsService from '../services/standings.service';
 import TeamService from '../services/team.service';
 import BracketService from '../services/bracket.service';
+import type { UUID } from '../types/common';
 import type { TournamentResponseDTO } from '../types/tournament';
 import type { StandingsEntryDTO } from '../types/standings';
 import type { Match, EliminationBracket } from '../types/bracket';
@@ -42,7 +43,7 @@ interface GroupPhaseState {
  * Usa Promise.all — las 3 peticiones son simultáneas.
  * Re-ejecuta cuando cambia tournamentId.
  */
-export function useGroupPhase(tournamentId: string | undefined): GroupPhaseState {
+export function useGroupPhase(tournamentId: UUID | undefined): GroupPhaseState {
   const [standings, setStandings] = useState<StandingsEntryDTO[] | null>(null);
   const [matches, setMatches] = useState<Match[] | null>(null);
   const [teams, setTeams] = useState<TeamFullInfoDTO[] | null>(null);
@@ -91,7 +92,7 @@ interface EliminationBracketState {
  * Re-ejecuta cuando cambia tournamentId.
  */
 export function useEliminationBracket(
-  tournamentId: string | undefined,
+  tournamentId: UUID | undefined,
 ): EliminationBracketState {
   const result = useApiQuery(
     () => BracketService.getBrackets(tournamentId!),

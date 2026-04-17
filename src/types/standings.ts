@@ -1,7 +1,9 @@
+import type { UUID } from './common';
+
 // ─── Standings (GET /standings/{tournamentId}) ────────────────────────────────
 
 export interface StandingsEntryDTO {
-  id: string;
+  id: UUID;
   name: string;
   matchesPlayed: number;
   wins: number;
@@ -16,10 +18,10 @@ export interface StandingsEntryDTO {
 // ─── Top Scorers (GET /standings/{tournamentId}/top-scorers) ──────────────────
 
 export interface TopScorerDTO {
-  userId: string;
+  userId: UUID;
   name: string;
   goals: number;
-  teamId: string;
+  teamId: UUID;
 }
 
 // ─── Cards History (GET /standings/{tournamentId}/cards-history) ──────────────
@@ -27,18 +29,18 @@ export interface TopScorerDTO {
 export type CardType = 'YELLOW' | 'RED';
 
 export interface CardEventDTO {
-  id: string;
+  id: UUID;
   type: CardType;
-  playerId: string;
-  teamId: string;
-  matchId: string;
+  playerId: UUID;
+  teamId: UUID;
+  matchId: UUID;
   minute: number;
 }
 
 // ─── Team Full Info (GET /teams/{id}/full) ────────────────────────────────────
 
 export interface TeamPlayerInfoDTO {
-  playerId: string;
+  playerId: UUID;
   name: string;
   mail: string;
   position: string;
@@ -47,7 +49,7 @@ export interface TeamPlayerInfoDTO {
 }
 
 export interface TeamMatchInfoDTO {
-  matchId: string;
+  matchId: UUID;
   dateTime: string;
   opponentName: string;
   goalsFor: number;
@@ -65,10 +67,10 @@ export interface TeamStatsDTO {
 }
 
 export interface TeamFullInfoDTO {
-  teamId: string;           // backend usa teamId, no id
+  teamId: UUID;
   name: string;
   uniformColor: string;
-  tournamentId: string;
+  tournamentId: UUID;
   tournamentName: string;
   captainName: string;
   players: TeamPlayerInfoDTO[];
@@ -84,11 +86,11 @@ export interface PlayerSearchParams {
   age?: number;
   gender?: string;
   name?: string;
-  playerId?: string;
+  playerId?: UUID;
 }
 
 export interface PlayerSearchResultDTO {
-  playerId: string;
+  playerId: UUID;
   name: string;
   mail: string;
   position: string;

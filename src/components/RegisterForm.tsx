@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { RegisterSteps } from "./RegisterSteps";
 import { User, Calendar, Venus, Briefcase, BookOpen, Shield, Hash, Mail, Lock, Camera } from "lucide-react";
-import AuthService from "../services/auth.service";
+import PlayerService from "../services/player.service";
+import type { StudentPlayerDTO, PlayerDTO } from "../types/player";
 
 interface RegisterFormProps {
   onSwitch: () => void;
@@ -58,8 +59,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
   const POSITION_MAP: Record<string, 'GOALKEEPER' | 'DEFENDER' | 'MIDFIELDER' | 'FORWARD'> = {
     portero: 'GOALKEEPER', defensa: 'DEFENDER', mediocampo: 'MIDFIELDER', delantero: 'FORWARD',
   };
-  const CAREER_MAP: Record<string, 'ENGINEERING' | 'DATA_SCIENCE' | 'OTHER'> = {
-    sistemas: 'ENGINEERING', ia: 'DATA_SCIENCE', ciberseguridad: 'OTHER', estadistica: 'OTHER',
+  const CAREER_MAP: Record<string, string> = {
+    sistemas:      'INGENIERIA_DE_SISTEMAS',
+    ia:            'INTELIGENCIA_ARTIFICIAL',
+    ciberseguridad:'CIBERSEGURIDAD',
+    estadistica:   'ESTADISTICA',
   };
 
   const handleFotoChange = (file: File) => {
@@ -90,7 +94,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
     setLoading(true);
     setApiError(null);
     try {
-      const payload: Parameters<typeof AuthService.register>[0] = {
+      const base = {
         name:         values.name,
         mail:         values.email,
         dateOfBirth:  values.birth,
@@ -98,11 +102,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitch }) => {
         password:     values.password,
         dorsalNumber: Number(values.dorsal),
         position:     POSITION_MAP[values.posicion],
-        ...(values.carrera ? { career: CAREER_MAP[values.carrera] ?? 'OTHER' } : {}),
-        ...(values.tipo === 'estudiante' ? { semester: Number(values.semestre) } : {}),
+        career:       CAREER_MAP[values.carrera] ?? 'INGENIERIA_DE_SISTEMAS',
       };
 
-      await AuthService.register(payload, foto);
+      if (values.tipo === 'estudiante') {
+        const payload: StudentPlayerDTO = { ...base, semester: Number(values.semestre) };
+        await PlayerService.createSportsProfileStudent(payload, foto);
+      } else if (values.tipo === 'docente') {
+        await PlayerService.createSportsProfileTeacher(base as PlayerDTO, foto);
+      } else if (values.tipo === 'familiar') {
+        await PlayerService.createSportsProfileFamiliar(base as PlayerDTO, foto);
+      } else {
+        await PlayerService.createSportsProfileGraduate(base as PlayerDTO, foto);
+      }
 
       setSuccessMsg('¡Cuenta creada! Ya puedes iniciar sesión.');
       setTimeout(() => onSwitch(), 2000);

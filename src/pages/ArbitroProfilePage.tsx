@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
-import { Pencil, Check, X, Upload, User } from "lucide-react";
+import { Upload, User, LogOut } from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparentNoAccount";
 import canchaImg from "../assets/cancha.png";
-import logoBlanco from "../assets/logoBlanco.png";
 import { useNavigate } from "react-router";
+import { useAuth } from "../store/AuthContext";
 
 // Datos quemados de ejemplo
 const ARBITRO = {
@@ -28,8 +28,14 @@ function calcAge(dob?: string): number {
 
 export default function ArbitroProfilePage() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(ARBITRO.photo || null);
+
+  function handleLogout() {
+    logout();
+    navigate("/auth", { replace: true });
+  }
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -146,6 +152,13 @@ export default function ArbitroProfilePage() {
             >
               <Upload className="w-5 h-5" />
               {photoPreview ? "Cambiar foto" : "Subir foto"}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-7 py-3 rounded-xl border border-red-500/40 bg-red-900/20 text-red-400 text-base hover:bg-red-900/40 hover:border-red-500/70 transition-all"
+            >
+              <LogOut className="w-5 h-5" />
+              Cerrar sesión
             </button>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import apiClient from './api';
+import type { UUID } from '../types/common';
 import type { UserDTO, UserResponseDTO } from '../types/user';
 
-// Helper: envuelve el DTO como Blob para que Spring pueda deserializarlo como @RequestPart
 function userBlob(dto: UserDTO): Blob {
   return new Blob([JSON.stringify(dto)], { type: 'application/json' });
 }
@@ -50,7 +50,7 @@ const UserService = {
   },
 
   /** GET /users/{id} — requiere rol ADMIN */
-  getUserById: async (id: string): Promise<UserResponseDTO> => {
+  getUserById: async (id: UUID): Promise<UserResponseDTO> => {
     const { data } = await apiClient.get<UserResponseDTO>(`/users/${id}`);
     return data;
   },

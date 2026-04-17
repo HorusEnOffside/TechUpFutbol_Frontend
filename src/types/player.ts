@@ -1,9 +1,10 @@
+import type { UUID } from './common';
 import type { UserDTO, UserResponseDTO } from './user';
 
 export type Position = 'GOALKEEPER' | 'DEFENDER' | 'MIDFIELDER' | 'FORWARD';
 
 export interface PlayerResponseDTO extends UserResponseDTO {
-  id: string;
+  id: UUID;
   dorsalNumber: number;
   position: Position;
 }

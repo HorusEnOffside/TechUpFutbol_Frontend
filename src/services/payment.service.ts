@@ -1,4 +1,5 @@
 import apiClient from './api';
+import type { UUID } from '../types/common';
 import type { PaymentRespondDTO, PaymentStatus } from '../types/payment';
 
 const PaymentService = {
@@ -17,7 +18,7 @@ const PaymentService = {
   },
 
   /** GET /payments/{id} */
-  getPaymentById: async (id: string): Promise<PaymentRespondDTO> => {
+  getPaymentById: async (id: UUID): Promise<PaymentRespondDTO> => {
     const { data } = await apiClient.get<PaymentRespondDTO>(`/payments/${id}`);
     return data;
   },
@@ -32,7 +33,7 @@ const PaymentService = {
   },
 
   /** PATCH /payments/{id}/status?status=STATUS */
-  updatePaymentStatus: async (id: string, status: PaymentStatus): Promise<PaymentRespondDTO> => {
+  updatePaymentStatus: async (id: UUID, status: PaymentStatus): Promise<PaymentRespondDTO> => {
     const { data } = await apiClient.patch<PaymentRespondDTO>(`/payments/${id}/status`, null, {
       params: { status },
     });
@@ -40,13 +41,13 @@ const PaymentService = {
   },
 
   /** GET /payments/{id}/voucher — devuelve el blob de la imagen */
-  getVoucher: async (id: string): Promise<Blob> => {
+  getVoucher: async (id: UUID): Promise<Blob> => {
     const { data } = await apiClient.get(`/payments/${id}/voucher`, { responseType: 'blob' });
     return data;
   },
 
   /** DELETE /payments/{id} */
-  deletePayment: async (id: string): Promise<void> => {
+  deletePayment: async (id: UUID): Promise<void> => {
     await apiClient.delete(`/payments/${id}`);
   },
 };

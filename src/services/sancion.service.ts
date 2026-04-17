@@ -1,13 +1,14 @@
 import apiClient, { ApiError } from './api';
+import type { UUID } from '../types/common';
 
 export interface EntitySearchResult {
-  id:   string;
+  id: UUID;
   name: string;
 }
 
 export interface CreateSancionDTO {
   tipo:          'equipo' | 'jugador';
-  entidadId:     string;
+  entidadId:     UUID;
   entidadNombre: string;
   motivo:        string;
   fecha:         string; // "YYYY-MM-DD"
@@ -38,8 +39,8 @@ const SancionService = {
     }
   },
 
-  crearSancion: async (data: CreateSancionDTO): Promise<{ id: string }> => {
-    const res = await apiClient.post<{ id: string }>('/sanciones', data);
+  crearSancion: async (data: CreateSancionDTO): Promise<{ id: UUID }> => {
+    const res = await apiClient.post<{ id: UUID }>('/sanciones', data);
     return res.data;
   },
 };

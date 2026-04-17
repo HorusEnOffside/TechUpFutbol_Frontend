@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import PaymentService from '../services/payment.service';
 import type { PaymentRespondDTO, PaymentStatus } from '../types/payment';
+import type { UUID } from '../types/common';
 
 // Hook para obtener todos los pagos
 export function useAllPayments() {
@@ -39,7 +40,7 @@ export function usePaymentsByStatus(status: PaymentStatus) {
 }
 
 // Hook para obtener un pago por id
-export function usePaymentById(id: string | null) {
+export function usePaymentById(id: UUID | null) {
   const [payment, setPayment] = useState<PaymentRespondDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -1,18 +1,20 @@
+import type { UUID } from './common';
+
 // ─── Tournament Status ────────────────────────────────────────────────────────
 // Valores reales del backend (TournamentStatus enum en Java)
-export type TournamentStatus = 'PLANNING' | 'REGISTRATION' | 'ACTIVE' | 'FINISHED' | 'CANCELLED';
+export type TournamentStatus = 'DRAFT' | 'ACTIVE' | 'IN_PROGRESS' | 'COMPLETED';
 
 // ─── Supporting types ─────────────────────────────────────────────────────────
 
 export interface CanchaResponseDTO {
-  id: string;
+  id: UUID;
   tipo: string;
   nombre: string | null;
   fotoUrl: string | null;
 }
 
 export interface HorarioResponseDTO {
-  id: string;
+  id: UUID;
   fecha: string;        // LocalDate → ISO string "YYYY-MM-DD"
   descripcion: string;
 }
@@ -20,7 +22,7 @@ export interface HorarioResponseDTO {
 // ─── Tournament ───────────────────────────────────────────────────────────────
 
 export interface TournamentResponseDTO {
-  id: string;
+  id: UUID;
   startDate: string;        // LocalDateTime → ISO string
   endDate: string;
   closingDate: string | null;
@@ -33,10 +35,32 @@ export interface TournamentResponseDTO {
   horarios: HorarioResponseDTO[];
 }
 
-// ─── Standings row (GET /tournaments/{id}/standings — si existe) ──────────────
+// ─── Create / Configure DTOs ─────────────────────────────────────────────────
+
+export interface CreateTournamentDTO {
+  startDate: string;       // ISO datetime
+  endDate: string;         // ISO datetime
+  teamsMaxAmount: number;
+  teamCost: number;
+  status: TournamentStatus;
+  organizerId: UUID;
+}
+
+export interface ConfigureTournamentDTO {
+  reglamento?: string | null;
+  sanciones?: string | null;
+  closingDate?: string | null;  // ISO datetime
+}
+
+export interface CreateHorarioDTO {
+  fecha: string;        // "YYYY-MM-DD"
+  descripcion: string;
+}
+
+// ─── Standings row (legacy — mantenido por compatibilidad) ───────────────────
 export interface StandingRowDTO {
   position: number;
-  teamId: string;
+  teamId: UUID;
   teamName: string;
   teamLogo?: string;
   matchesPlayed: number;

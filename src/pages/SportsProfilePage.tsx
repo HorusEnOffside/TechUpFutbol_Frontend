@@ -100,8 +100,13 @@ function getUserIdFromToken(): string | null {
 
 // pagina principal
 export default function SportsProfilePage() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate         = useNavigate();
+
+  function handleLogout() {
+    logout();
+    navigate("/auth", { replace: true });
+  }
   const fileInputRef     = useRef<HTMLInputElement>(null);
 
   const [player,       setPlayer]       = useState<PlayerResponseDTO | null>(null);
@@ -113,6 +118,7 @@ export default function SportsProfilePage() {
   const [semester,     setSemester]     = useState<number>(1);
   const [availability, setAvailability] = useState<Availability>("Para jugar");
   const [dateOfBirth,  setDateOfBirth]  = useState<string>("");
+  const [dorsalNumber, setDorsalNumber] = useState<number>(1);
 
   const [saving,       setSaving]       = useState(false);
   const [saveMsg,      setSaveMsg]      = useState<{ ok: boolean; text: string } | null>(null);
@@ -132,8 +138,14 @@ export default function SportsProfilePage() {
     setSaving(true);
     setSaveMsg(null);
     try {
-      await PlayerService.updateStatus(userId, AVAILABILITY_TO_STATUS[availability]);
-      setSaveMsg({ ok: true, text: "Cambios guardados correctamente." });
+      if (!player) {
+        const created = await PlayerService.linkSportsProfile(userId, position, dorsalNumber);
+        setPlayer(created);
+        setSaveMsg({ ok: true, text: "Perfil deportivo creado correctamente." });
+      } else {
+        await PlayerService.updateStatus(userId, AVAILABILITY_TO_STATUS[availability]);
+        setSaveMsg({ ok: true, text: "Cambios guardados correctamente." });
+      }
     } catch {
       setSaveMsg({ ok: false, text: "No se pudieron guardar los cambios." });
     } finally {
@@ -321,6 +333,26 @@ export default function SportsProfilePage() {
                     )}
                   </EditableField>
 
+                  {/* Dorsal */}
+                  <EditableField
+                    label="Dorsal"
+                    value={String(dorsalNumber)}
+                    onSave={() => {}}
+                  >
+                    {(setEdit) => (
+                      <input
+                        autoFocus
+                        type="number"
+                        min={1}
+                        max={99}
+                        value={dorsalNumber}
+                        onChange={e => setDorsalNumber(Number(e.target.value))}
+                        onBlur={() => setEdit(false)}
+                        className="bg-[#071F4A] border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none w-20 text-right"
+                      />
+                    )}
+                  </EditableField>
+
                   {/* Disponibilidad */}
                   <EditableField
                     label="Disponibilidad"
@@ -356,11 +388,11 @@ export default function SportsProfilePage() {
                   )}
                   <button
                     onClick={handleSave}
-                    disabled={saving || !player}
+                    disabled={saving}
                     className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-white font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ background: "linear-gradient(90deg, #144C9F, #17A65B)" }}
                   >
-                    {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Guardando...</> : "Confirmar cambios"}
+                    {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Guardando...</> : (!player ? "Crear perfil deportivo" : "Confirmar cambios")}
                   </button>
                 </div>
 
@@ -431,6 +463,13 @@ export default function SportsProfilePage() {
               >
                 <Upload className="w-4 h-4" />
                 {photoPreview ? "Cambiar foto" : "Subir foto"}
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-5 py-2 rounded-xl border border-red-500/40 bg-red-900/20 text-red-400 text-sm hover:bg-red-900/40 hover:border-red-500/70 transition-all"
+              >
+                <LogOut className="w-4 h-4" />
+                Cerrar sesión
               </button>
             </div>
 

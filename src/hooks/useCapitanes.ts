@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../store/AuthContext';
 import TeamService from '../services/team.service';
 
@@ -54,6 +54,14 @@ export function useCapitanes(): UseCapitanesReturn {
   const [isSuccess,     setIsSuccess]     = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Si ya tiene equipo guardado, saltar directo a jugadores
+  useEffect(() => {
+    const savedTeamId = localStorage.getItem('teamId');
+    if (savedTeamId) {
+      setIsSuccess(true);
+    }
+  }, []);
 
   const isNameValid = teamName.trim().length >= 5;
   const canGoNext   = step === 1 ? isNameValid : step < 3;

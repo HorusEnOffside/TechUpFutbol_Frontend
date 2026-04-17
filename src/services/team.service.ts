@@ -1,8 +1,9 @@
 import apiClient from './api';
+import type { UUID } from '../types/common';
 import type { TeamFullInfoDTO } from '../types/standings';
 
 export interface TeamResponseDTO {
-  id: string;
+  id: UUID;
   name: string;
   uniformColor: string;
   logo: string | null;
@@ -19,11 +20,9 @@ const TeamService = {
   createTeam: async (
     name: string,
     uniformColors: string,
-    captainUserId: string,
+    captainUserId: UUID,
     logo?: File | null,
   ): Promise<TeamResponseDTO> => {
-    // El backend espera name, uniformColors y captainUserId como query params
-    // y el logo (opcional) como multipart/form-data
     const params = { name, uniformColors, captainUserId };
 
     let body: FormData | null = null;
@@ -41,8 +40,8 @@ const TeamService = {
    * POST /teams/{teamId}/invite/{playerId}?message=...
    */
   invitePlayer: async (
-    teamId: string,
-    playerId: string,
+    teamId: UUID,
+    playerId: UUID,
     message?: string,
   ): Promise<void> => {
     await apiClient.post(
@@ -56,7 +55,7 @@ const TeamService = {
    * Información completa de un equipo con jugadores
    * GET /teams/{teamId}/full  — requiere autenticación
    */
-  getTeamFullInfo: async (teamId: string): Promise<TeamFullInfoDTO> => {
+  getTeamFullInfo: async (teamId: UUID): Promise<TeamFullInfoDTO> => {
     try {
       const { data } = await apiClient.get<TeamFullInfoDTO>(`/teams/${teamId}/full`);
       return data;
@@ -70,7 +69,7 @@ const TeamService = {
    * Todos los equipos de un torneo con jugadores incluidos
    * GET /teams/tournament/{tournamentId}/full  — requiere autenticación
    */
-  getTeamsByTournament: async (tournamentId: string): Promise<TeamFullInfoDTO[]> => {
+  getTeamsByTournament: async (tournamentId: UUID): Promise<TeamFullInfoDTO[]> => {
     try {
       const { data } = await apiClient.get<TeamFullInfoDTO[]>(
         `/teams/tournament/${tournamentId}/full`,

@@ -1,8 +1,7 @@
 import apiClient from './api';
+import type { UUID } from '../types/common';
 import type { StandingsEntryDTO, TopScorerDTO, CardEventDTO } from '../types/standings';
 
-// El interceptor de api.ts ya convierte errores de axios en ApiError (instanceof Error).
-// Si el error ya es una instancia de Error, lo re-lanzamos para no perder su mensaje.
 function rethrow(error: unknown): never {
   if (error instanceof Error) throw error;
   throw new Error('Error inesperado');
@@ -13,7 +12,7 @@ const StandingsService = {
    * Tabla de posiciones del torneo
    * GET /standings/{tournamentId}
    */
-  getStandingsTable: async (tournamentId: string): Promise<StandingsEntryDTO[]> => {
+  getStandingsTable: async (tournamentId: UUID): Promise<StandingsEntryDTO[]> => {
     try {
       const { data } = await apiClient.get<StandingsEntryDTO[]>(`/standings/${tournamentId}`);
       return data;
@@ -26,7 +25,7 @@ const StandingsService = {
    * Goleadores del torneo
    * GET /standings/{tournamentId}/top-scorers
    */
-  getTopScorers: async (tournamentId: string): Promise<TopScorerDTO[]> => {
+  getTopScorers: async (tournamentId: UUID): Promise<TopScorerDTO[]> => {
     try {
       const { data } = await apiClient.get<TopScorerDTO[]>(
         `/standings/${tournamentId}/top-scorers`,
@@ -42,8 +41,8 @@ const StandingsService = {
    * GET /standings/{tournamentId}/cards-history?playerOrTeamId={id}
    */
   getCardsHistory: async (
-    tournamentId: string,
-    playerOrTeamId?: string | null,
+    tournamentId: UUID,
+    playerOrTeamId?: UUID | null,
   ): Promise<CardEventDTO[]> => {
     try {
       const { data } = await apiClient.get<CardEventDTO[]>(
