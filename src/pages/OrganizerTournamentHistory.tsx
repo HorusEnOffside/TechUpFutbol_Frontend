@@ -1,35 +1,16 @@
+
+import { Loader2, AlertCircle, History } from "lucide-react";
 import { NavBarTransparent } from "../components/NavBarTransparent";
 import canchaImg from "../assets/cancha.png";
-import { SectionCard } from "../components/SectionCard";
 import { TournamentHistoryCard } from "../components/TournamentHistoryCard";
-
-
-// Simulación de datos, reemplazar por fetch real si es necesario
-const torneos = [
-  {
-    nombre: "Torneo Apertura 2025",
-    fechaInicio: "2025-01-15",
-    fechaFin: "2025-03-20",
-    jugadores: 120,
-    costoInscripcion: 500,
-  },
-  {
-    nombre: "Torneo Clausura 2025",
-    fechaInicio: "2025-04-10",
-    fechaFin: "2025-06-15",
-    jugadores: 110,
-    costoInscripcion: 550,
-  },
-  {
-    nombre: "Torneo Relámpago 2024",
-    fechaInicio: "2024-11-01",
-    fechaFin: "2024-11-15",
-    jugadores: 80,
-    costoInscripcion: 300,
-  },
-];
+import { useAllTournaments } from "../hooks/useAllTournaments";
 
 export default function OrganizerTournamentHistory() {
+  const { tournaments, loading, error } = useAllTournaments();
+
+  // Solo mostrar torneos finalizados
+  const torneosFinalizados = (tournaments || []).filter(t => t.status === 'COMPLETED');
+
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
       {/* Fondo */}
@@ -81,18 +62,39 @@ export default function OrganizerTournamentHistory() {
         <section className="grid grid-cols-1 gap-8 mb-16">
           <div className="rounded-2xl p-8 shadow-2xl border-2 border-[#144C9F]/30 flex flex-col" style={{background: "rgba(7,31,74,0.92)"}}>
             <div className="text-[#39D17D] font-black text-2xl mb-6" style={{fontFamily: 'Montserrat, sans-serif'}}>Torneos finalizados</div>
-            <div className="flex flex-col gap-6">
-              {torneos.length === 0 ? (
-                <div className="text-white/70 text-center">No hay torneos finalizados aún.</div>
-              ) : (
-                torneos.map((t) => (
-                  <div key={t.nombre + t.fechaInicio} className="mb-4">
+            <div className="flex flex-col gap-6 min-h-[120px]">
+              {loading && (
+                <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
+                  <Loader2 className="w-7 h-7 animate-spin text-[#39D17D]" />
+                  <span className="text-sm">Cargando torneos…</span>
+                </div>
+              )}
+              {!loading && error && (
+                <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
+                  <AlertCircle className="w-7 h-7 text-red-400" />
+                  <span className="text-sm">{error}</span>
+                </div>
+              )}
+              {!loading && !error && torneosFinalizados.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-8 gap-2 text-white/60">
+                  <History className="w-7 h-7" />
+                  <span className="text-sm">No hay torneos finalizados aún.</span>
+                </div>
+              )}
+              {!loading && !error && torneosFinalizados.length > 0 &&
+                torneosFinalizados.map((t) => (
+                  <div key={t.id} className="mb-4">
                     <div className="rounded-2xl px-6 py-4 bg-[#12336a] border-2 border-[#39D17D]/40 shadow flex flex-col gap-2 text-white w-full">
-                      <TournamentHistoryCard {...t} />
+                      <TournamentHistoryCard
+                        nombre={t.name}
+                        fechaInicio={t.startDate}
+                        fechaFin={t.endDate}
+                        jugadores={t.teamsAmount}
+                        costoInscripcion={t.teamCost}
+                      />
                     </div>
                   </div>
-                ))
-              )}
+                ))}
             </div>
           </div>
         </section>
